@@ -15,7 +15,7 @@
     "esModuleInterop": true,
     "types": [],
     "rootDir": "src",
-    "outDir": "dist/app",
+    "outDir": "docs/app",
     "sourceMap": false
   },
   "include": ["src"]

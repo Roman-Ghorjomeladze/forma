@@ -1,4 +1,5 @@
-// Production build: tsc -> dist/app, copy public/ -> dist/, generate dist/sw.js with a precache list.
+// Production build: tsc -> docs/app, copy public/ -> docs/, generate docs/sw.js with a precache list.
+// (Output folder is "docs" — not "dist" — so it can be served directly by GitHub Pages' /docs option.)
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -6,7 +7,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const dist = path.join(root, 'dist');
+const dist = path.join(root, 'docs');
 const pub = path.join(root, 'public');
 
 function findTsc() {
@@ -15,10 +16,22 @@ function findTsc() {
   return process.platform === 'win32' ? 'tsc.cmd' : 'tsc';
 }
 
+// Plain per-file recursive copy. fs.cpSync's fast directory-clone path fails with EACCES
+// on some mounted/network filesystems (seen over the desktop-bridge FUSE mount) — this
+// avoids that native fast path entirely and just reads+writes each file.
+export function copyDirSync(src, dst) {
+  fs.mkdirSync(dst, { recursive: true });
+  for (const e of fs.readdirSync(src, { withFileTypes: true })) {
+    const s = path.join(src, e.name);
+    const d = path.join(dst, e.name);
+    if (e.isDirectory()) copyDirSync(s, d);
+    else fs.copyFileSync(s, d);
+  }
+}
+
 export function build({ watch = false } = {}) {
   fs.rmSync(dist, { recursive: true, force: true });
-  fs.mkdirSync(dist, { recursive: true });
-  fs.cpSync(pub, dist, { recursive: true });
+  copyDirSync(pub, dist);
 
   const tsc = findTsc();
   const args = ['-p', path.join(root, 'tsconfig.json')];
@@ -48,7 +61,7 @@ export function writeServiceWorker() {
     .replace('__VERSION__', version)
     .replace('__PRECACHE__', JSON.stringify(files.concat(['./']), null, 0));
   fs.writeFileSync(path.join(dist, 'sw.js'), sw);
-  console.log(`build ok — ${files.length} files, version ${version} -> dist/`);
+  console.log(`build ok — ${files.length} files, version ${version} -> docs/`);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) build();

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node tools/build.mjs",
     "dev": "node tools/dev.mjs",
-    "serve": "node tools/serve.mjs dist",
+    "serve": "node tools/serve.mjs docs",
     "typecheck": "tsc --noEmit",
     "icons": "node tools/icons.mjs"
   },

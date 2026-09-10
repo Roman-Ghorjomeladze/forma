@@ -1,18 +1,17 @@
-// Dev mode: rebuild on change (tsc --watch + public/ copy) and serve dist/ on the network.
+// Dev mode: rebuild on change (tsc --watch + public/ copy) and serve docs/ on the network.
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { writeServiceWorker } from './build.mjs';
+import { writeServiceWorker, copyDirSync } from './build.mjs';
 import { serve } from './serve.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const dist = path.join(root, 'dist');
+const dist = path.join(root, 'docs');
 const pub = path.join(root, 'public');
 
 fs.rmSync(dist, { recursive: true, force: true });
-fs.mkdirSync(dist, { recursive: true });
-fs.cpSync(pub, dist, { recursive: true });
+copyDirSync(pub, dist);
 
 const localTsc = path.join(root, 'node_modules', '.bin', 'tsc');
 const tsc = fs.existsSync(localTsc) ? localTsc : 'tsc';
