@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Forma</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="description" content="Workouts and meal planning, on your phone, offline.">
+  <meta name="theme-color" content="#F7F5F1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0B0B0C" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Forma">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "./vendor/react.js",
+        "react-dom": "./vendor/react-dom.js",
+        "react-dom/client": "./vendor/react-dom-client.js",
+        "react/jsx-runtime": "./vendor/jsx-runtime.js"
+      }
+    }
+  </script>
+  <script>
+    // Apply the saved theme before first paint to avoid a flash.
+    try {
+      var t = localStorage.getItem('forma:theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      else if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.classList.add('dark-system');
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <noscript>Forma needs JavaScript.</noscript>
+  <script type="module" src="./app/main.js"></script>
+</body>
+</html>
