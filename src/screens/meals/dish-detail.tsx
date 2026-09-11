@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { put, remove } from '../../lib/db.js';
 import { todayKey } from '../../lib/dates.js';
 import { useBlobUrl } from '../../lib/hooks.js';
+import { useT } from '../../lib/i18n.js';
 import { dishTotal, fmtAmount, perServing } from '../../lib/nutrition.js';
 import { useDish } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
@@ -14,21 +15,21 @@ import { MEAL_CATEGORIES, type MealCategory } from '../../lib/models.js';
 import { Sheet, Stepper } from '../../ui/components.js';
 import { toast } from '../../ui/dialogs.js';
 
-const LABEL: Record<string, string> = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack' };
-
 export function DishDetailScreen({ id }: { id: string }) {
+  const t = useT();
+  const LABEL: Record<string, string> = { breakfast: t('meal.breakfast'), lunch: t('meal.lunch'), dinner: t('meal.dinner'), snack: t('meal.snack') };
   const dish = useDish(id);
   const url = useBlobUrl(dish?.imageBlobId);
   const [tab, setTab] = useState<'ingredients' | 'steps'>('ingredients');
   const [adding, setAdding] = useState(false);
 
   if (dish === undefined) return <Screen />;
-  if (dish === null) return <Screen className="screen-no-tabs"><Empty title="Dish not found" action={<Button variant="secondary" onClick={() => navigate('/meals/dishes')}>Back to dishes</Button>} /></Screen>;
+  if (dish === null) return <Screen className="screen-no-tabs"><Empty title={t('dish.notFound')} action={<Button variant="secondary" onClick={() => navigate('/meals/dishes')}>{t('dish.backToDishes')}</Button>} /></Screen>;
 
   const n = perServing(dish);
   const total = dishTotal(dish);
   const del = async () => {
-    const ok = await confirmDialog({ title: `Delete “${dish.name}”?`, message: 'It will also disappear from any planned days.', confirmLabel: 'Delete', danger: true });
+    const ok = await confirmDialog({ title: t('dish.deleteTitle', { name: dish.name }), message: t('dish.deleteMsg'), confirmLabel: t('common.delete'), danger: true });
     if (ok) { await remove('dishes', dish.id); navigate('/meals/dishes', { replace: true }); }
   };
 
@@ -38,11 +39,11 @@ export function DishDetailScreen({ id }: { id: string }) {
         {url && <img src={url} alt="" />}
         {!url && <svg className="hero-deco" width="220" height="220" viewBox="0 0 220 220" fill="none" stroke="currentColor"><circle cx="110" cy="110" r="90" strokeWidth="10" /><circle cx="110" cy="110" r="55" strokeWidth="6" /></svg>}
         <div className="hero-actions">
-          <div><IconButton label="Back" onClick={() => history.length > 1 ? history.back() : navigate('/meals/dishes')}><IconBack /></IconButton></div>
+          <div><IconButton label={t('common.back')} onClick={() => history.length > 1 ? history.back() : navigate('/meals/dishes')}><IconBack /></IconButton></div>
           <div>
-            <IconButton label={dish.favorite ? 'Unfavorite' : 'Favorite'} onClick={() => put('dishes', { ...dish, favorite: !dish.favorite })}><IconHeart filled={dish.favorite} /></IconButton>
-            <IconButton label="Edit" onClick={() => navigate(`/meals/dish/${dish.id}/edit`)}><IconEdit /></IconButton>
-            <IconButton label="Delete" onClick={del}><IconTrash /></IconButton>
+            <IconButton label={dish.favorite ? t('dish.unfavorite') : t('dish.favorite')} onClick={() => put('dishes', { ...dish, favorite: !dish.favorite })}><IconHeart filled={dish.favorite} /></IconButton>
+            <IconButton label={t('common.edit')} onClick={() => navigate(`/meals/dish/${dish.id}/edit`)}><IconEdit /></IconButton>
+            <IconButton label={t('common.delete')} onClick={del}><IconTrash /></IconButton>
           </div>
         </div>
       </div>
@@ -50,42 +51,42 @@ export function DishDetailScreen({ id }: { id: string }) {
       <div className="stack" style={{ paddingTop: 18, paddingBottom: 90 }}>
         <div className="tags">
           <span className="tag tag-meals">{LABEL[dish.category]}</span>
-          {dish.tags.map((t) => <span key={t} className="tag">{t}</span>)}
+          {dish.tags.map((tag) => <span key={tag} className="tag">{tag}</span>)}
         </div>
         <h1 className="dish-title">{dish.name}</h1>
         <div className="meta">
-          {dish.prepMin + dish.cookMin > 0 && <span><IconClock size={15} strokeWidth={2.2} />{dish.prepMin + dish.cookMin} min{dish.cookMin > 0 && dish.prepMin > 0 ? ` (${dish.prepMin} prep)` : ''}</span>}
-          <span><IconUser size={15} strokeWidth={2.2} />{dish.servings} {dish.servings === 1 ? 'serving' : 'servings'}</span>
+          {dish.prepMin + dish.cookMin > 0 && <span><IconClock size={15} strokeWidth={2.2} />{dish.prepMin + dish.cookMin} {t('unit.min')}{dish.cookMin > 0 && dish.prepMin > 0 ? ` (${dish.prepMin} ${t('dish.prepTime').toLowerCase()})` : ''}</span>}
+          <span><IconUser size={15} strokeWidth={2.2} />{dish.servings} {dish.servings === 1 ? t('unit.serving') : t('unit.servings')}</span>
         </div>
 
         <div className="stats mt">
-          <Stat tone="dark" value={Math.round(n.kcal)} label="kcal" />
-          <Stat tone="protein" value={`${Math.round(n.protein)}g`} label="protein" />
-          <Stat tone="carbs" value={`${Math.round(n.carbs)}g`} label="carbs" />
-          <Stat tone="fat" value={`${Math.round(n.fat)}g`} label="fat" />
+          <Stat tone="dark" value={Math.round(n.kcal)} label={t('dish.kcal')} />
+          <Stat tone="protein" value={`${Math.round(n.protein)}g`} label={t('dish.protein')} />
+          <Stat tone="carbs" value={`${Math.round(n.carbs)}g`} label={t('dish.carbs')} />
+          <Stat tone="fat" value={`${Math.round(n.fat)}g`} label={t('dish.fat')} />
         </div>
-        <div className="small muted" style={{ textAlign: 'center' }}>per serving{dish.nutritionOverride ? ' (entered manually)' : dish.servings > 1 ? ` · whole recipe ${Math.round(total.kcal)} kcal` : ''}</div>
+        <div className="small muted" style={{ textAlign: 'center' }}>{t('dish.perServing')}{dish.nutritionOverride ? t('dish.enteredManually') : dish.servings > 1 ? t('dish.wholeRecipe', { n: Math.round(total.kcal) }) : ''}</div>
 
         <div className="mt">
-          <Segmented value={tab} onChange={setTab} options={[{ value: 'ingredients', label: `Ingredients (${dish.ingredients.length})` }, { value: 'steps', label: `Steps (${dish.steps.length})` }]} />
+          <Segmented value={tab} onChange={setTab} options={[{ value: 'ingredients', label: t('dish.ingredientsCount', { n: dish.ingredients.length }) }, { value: 'steps', label: t('dish.stepsCount', { n: dish.steps.length }) }]} />
         </div>
 
         {tab === 'ingredients' ? (
           <div className="list">
-            {dish.ingredients.length === 0 && <div className="empty"><div className="empty-text">No ingredients listed.</div></div>}
+            {dish.ingredients.length === 0 && <div className="empty"><div className="empty-text">{t('dish.noIngredients')}</div></div>}
             {dish.ingredients.map((i) => (
               <div key={i.id} className="row">
                 <div className="row-main">
                   <div className="row-title">{i.name}</div>
                   <div className="row-sub">{fmtAmount(i.amount)} {i.unit}</div>
                 </div>
-                <div className="row-right muted small num">{Math.round(i.kcal)} kcal</div>
+                <div className="row-right muted small num">{Math.round(i.kcal)} {t('unit.kcal')}</div>
               </div>
             ))}
           </div>
         ) : (
           <div className="list steps">
-            {dish.steps.length === 0 && <div className="empty"><div className="empty-text">No cooking steps yet.</div></div>}
+            {dish.steps.length === 0 && <div className="empty"><div className="empty-text">{t('dish.noSteps')}</div></div>}
             {dish.steps.map((s, i) => (
               <div key={i} className="step"><div className="step-n">{i + 1}</div><div className="step-text">{s}</div></div>
             ))}
@@ -95,7 +96,7 @@ export function DishDetailScreen({ id }: { id: string }) {
       </div>
 
       <div className="sticky-cta">
-        <Button variant="meals" size="lg" full icon={<IconCalendar size={20} />} onClick={() => setAdding(true)}>Add to a day</Button>
+        <Button variant="meals" size="lg" full icon={<IconCalendar size={20} />} onClick={() => setAdding(true)}>{t('dish.addToDay')}</Button>
       </div>
       <AddToDaySheet open={adding} onClose={() => setAdding(false)} dishId={dish.id} />
     </Screen>
@@ -104,28 +105,30 @@ export function DishDetailScreen({ id }: { id: string }) {
 
 /** Pick a day, meal and servings for this dish. */
 function AddToDaySheet({ open, onClose, dishId }: { open: boolean; onClose: () => void; dishId: string }) {
+  const t = useT();
+  const LABEL: Record<string, string> = { breakfast: t('meal.breakfast'), lunch: t('meal.lunch'), dinner: t('meal.dinner'), snack: t('meal.snack') };
   const [date, setDate] = useState(todayKey());
   const [slot, setSlot] = useState<MealCategory>('lunch');
   const [servings, setServings] = useState(1);
   const days = Array.from({ length: 8 }, (_, i) => addDays(todayKey(), i));
   const add = async () => {
     await put('mealSlots', { id: uid('slot'), date, slot, dishId, servings, eaten: false, order: Date.now() });
-    toast(`Added to ${relativeDay(date)}`);
+    toast(t('dish.addedToDay', { day: relativeDay(date) }));
     onClose();
   };
   return (
-    <Sheet open={open} onClose={onClose} title="Add to a day" footer={<Button variant="meals" onClick={add}>Add to {LABEL[slot].toLowerCase()}</Button>}>
+    <Sheet open={open} onClose={onClose} title={t('dish.addToDay')} footer={<Button variant="meals" onClick={add}>{t('meals.addTo', { meal: LABEL[slot].toLowerCase() })}</Button>}>
       <div className="stack">
-        <div className="section-label">Day</div>
+        <div className="section-label">{t('dish.day')}</div>
         <div className="chips" style={{ margin: 0, padding: 0 }}>
           {days.map((d) => <button key={d} className={`chip chip-meals ${d === date ? 'chip-active' : ''}`} onClick={() => setDate(d)}>{relativeDay(d).replace(/,.*$/, '')}</button>)}
         </div>
-        <div className="section-label mt">Meal</div>
+        <div className="section-label mt">{t('meals.meal')}</div>
         <div className="hstack wrap" style={{ gap: 6 }}>
           {MEAL_CATEGORIES.map((c) => <button key={c} className={`chip chip-meals ${slot === c ? 'chip-active' : ''}`} onClick={() => setSlot(c)}>{LABEL[c]}</button>)}
         </div>
         <div className="spread mt">
-          <span className="bold">Servings</span>
+          <span className="bold">{t('meals.servings')}</span>
           <Stepper value={servings} min={0.5} max={10} step={0.5} onChange={setServings} />
         </div>
       </div>

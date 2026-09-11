@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { IconBack, IconChevronDown, IconClose, IconMinus, IconPlus } from './icons.js';
 import { back } from '../lib/router.js';
+import { useT } from '../lib/i18n.js';
 
 // ---- layout ---------------------------------------------------------------------------------
 export function Screen({ children, className = '', padded = true }: { children?: ReactNode; className?: string; padded?: boolean }) {
@@ -9,10 +10,11 @@ export function Screen({ children, className = '', padded = true }: { children?:
 }
 
 export function TopBar({ title, eyebrow, backTo, right, large = false, onBack }: { title: ReactNode; eyebrow?: ReactNode; backTo?: string; right?: ReactNode; large?: boolean; onBack?: () => void }) {
+  const t = useT();
   return (
     <header className={`topbar ${large ? 'topbar-large' : ''}`}>
       {(backTo || onBack) && (
-        <button className="iconbtn" aria-label="Back" onClick={() => (onBack ? onBack() : back(backTo!))}><IconBack /></button>
+        <button className="iconbtn" aria-label={t('common.back')} onClick={() => (onBack ? onBack() : back(backTo!))}><IconBack /></button>
       )}
       <div className="topbar-titles">
         {eyebrow && <div className="eyebrow">{eyebrow}</div>}
@@ -149,11 +151,12 @@ export function Stepper({ value, onChange, min = 0, max = 999, step = 1, format 
     holdRef.current = window.setInterval(() => { n++; bump(d * (n > 10 ? 5 : 1)); }, n > 10 ? 80 : 140);
   };
   const stop = () => { window.clearInterval(holdRef.current); };
+  const t = useT();
   return (
     <div className="stepper">
-      <button type="button" className="stepper-btn" aria-label="Decrease" onPointerDown={() => start(-step)} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}><IconMinus size={18} /></button>
+      <button type="button" className="stepper-btn" aria-label={t('common.decrease')} onPointerDown={() => start(-step)} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}><IconMinus size={18} /></button>
       <span className="stepper-value">{format ? format(value) : value}</span>
-      <button type="button" className="stepper-btn" aria-label="Increase" onPointerDown={() => start(step)} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}><IconPlus size={18} /></button>
+      <button type="button" className="stepper-btn" aria-label={t('common.increase')} onPointerDown={() => start(step)} onPointerUp={stop} onPointerLeave={stop} onPointerCancel={stop}><IconPlus size={18} /></button>
     </div>
   );
 }
@@ -185,6 +188,7 @@ export function MacroBar({ label, value, target, color }: { label: string; value
 
 // ---- bottom sheet ---------------------------------------------------------------------------
 export function Sheet({ open, onClose, title, children, footer, full = false }: { open: boolean; onClose: () => void; title?: ReactNode; children: ReactNode; footer?: ReactNode; full?: boolean }) {
+  const t = useT();
   useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
@@ -201,7 +205,7 @@ export function Sheet({ open, onClose, title, children, footer, full = false }: 
         {title && (
           <div className="sheet-head">
             <div className="sheet-title">{title}</div>
-            <button className="iconbtn" aria-label="Close" onClick={onClose}><IconClose /></button>
+            <button className="iconbtn" aria-label={t('common.close')} onClick={onClose}><IconClose /></button>
           </div>
         )}
         <div className="sheet-body">{children}</div>

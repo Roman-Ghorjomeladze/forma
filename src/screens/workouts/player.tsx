@@ -4,6 +4,7 @@ import { fmtClock, fmtDuration } from '../../lib/dates.js';
 import { expandWorkout, kcalFor } from '../../lib/calories.js';
 import { usePrefs, useProfile } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
+import { useT } from '../../lib/i18n.js';
 import type { Session, Step } from '../../lib/models.js';
 import { useExerciseMap, useWorkout } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
@@ -31,6 +32,7 @@ interface Timing {
 }
 
 export function PlayerScreen({ id }: { id: string }) {
+  const t = useT();
   const workout = useWorkout(id);
   const exMap = useExerciseMap();
   const [profile] = useProfile();
@@ -39,7 +41,7 @@ export function PlayerScreen({ id }: { id: string }) {
 
   const [phase, setPhase] = useState<Phase>('ready');
   const [now, setNow] = useState(() => Date.now());
-  const t = useRef<Timing>({ index: -1, stepStartedAt: 0, pausedAt: null, sessionStartedAt: 0, completedSeconds: 0, completedKcal: 0, activeSeconds: 0, cuedSecond: -1, announced: -2 });
+  const t2 = useRef<Timing>({ index: -1, stepStartedAt: 0, pausedAt: null, sessionStartedAt: 0, completedSeconds: 0, completedKcal: 0, activeSeconds: 0, cuedSecond: -1, announced: -2 });
   const [, force] = useState(0);
   const rerender = () => force((x) => x + 1);
   const savedRef = useRef(false);
@@ -55,16 +57,16 @@ export function PlayerScreen({ id }: { id: string }) {
     const s = stepAt(i);
     if (!s) return;
     if (soundOn) (s.type === 'rest' ? sounds.rest : sounds.go)();
-    if (s.type === 'rest') speak(`Rest, ${s.seconds} seconds`);
-    else speak(s.reps ? `${s.label}, ${s.reps} reps` : `${s.label}, ${s.seconds} seconds`);
-    t.current.announced = i;
+    if (s.type === 'rest') speak(t('player.say.rest', { n: s.seconds }));
+    else speak(s.reps ? t('player.say.exerciseReps', { label: s.label, reps: s.reps }) : t('player.say.exerciseSeconds', { label: s.label, n: s.seconds }));
+    t2.current.announced = i;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [steps, soundOn]);
+  }, [steps, soundOn, t]);
 
   const finish = useCallback(async () => {
     if (savedRef.current || !workout) return;
     savedRef.current = true;
-    const tm = t.current;
+    const tm = t2.current;
     const endedAt = Date.now();
     const completed = Math.max(0, Math.min(steps.length, tm.index));
     const s: Session = {
@@ -76,13 +78,13 @@ export function PlayerScreen({ id }: { id: string }) {
     keepAwake(false);
     stopSpeaking();
     if (soundOn) sounds.done();
-    speak('Workout complete. Nice work.');
+    speak(t('player.say.complete'));
     if (completed > 0) await put('sessions', s);
-  }, [workout, steps.length, soundOn]);
+  }, [workout, steps.length, soundOn, t]);
 
   /** Mark the current step as completed (fully or partially) and move to `next`. */
   const advanceTo = useCallback((next: number, opts: { partial?: boolean } = {}) => {
-    const tm = t.current;
+    const tm = t2.current;
     const cur = tm.index;
     if (cur >= 0) {
       const s = stepAt(cur);
@@ -106,7 +108,7 @@ export function PlayerScreen({ id }: { id: string }) {
   useEffect(() => {
     if (phase !== 'running') return;
     const tick = () => {
-      const tm = t.current;
+      const tm = t2.current;
       const nowMs = Date.now();
       setNow(nowMs);
       let remaining = durationOf(tm.index) - (nowMs - tm.stepStartedAt) / 1000;
@@ -135,7 +137,7 @@ export function PlayerScreen({ id }: { id: string }) {
         if (tm.index >= 0 || true) speak(String(secLeft), { rate: 1.2 });
       }
       const dur = durationOf(tm.index);
-      if (tm.index >= 0 && dur >= 40 && Math.abs(remaining - dur / 2) < 0.12 && tm.cuedSecond !== -2) { tm.cuedSecond = -2; if (soundOn) sounds.halfway(); speak('Halfway'); }
+      if (tm.index >= 0 && dur >= 40 && Math.abs(remaining - dur / 2) < 0.12 && tm.cuedSecond !== -2) { tm.cuedSecond = -2; if (soundOn) sounds.halfway(); speak(t('player.say.halfway')); }
     };
     tick();
     const idInt = window.setInterval(tick, 100);
@@ -143,32 +145,32 @@ export function PlayerScreen({ id }: { id: string }) {
     document.addEventListener('visibilitychange', onVis);
     return () => { window.clearInterval(idInt); document.removeEventListener('visibilitychange', onVis); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, steps, weight, prefs.countdownSeconds, soundOn]);
+  }, [phase, steps, weight, prefs.countdownSeconds, soundOn, t]);
 
   useEffect(() => () => { keepAwake(false); stopSpeaking(); }, []);
 
   const start = () => {
     unlockAudio();
-    const tm = t.current;
+    const tm = t2.current;
     tm.sessionStartedAt = Date.now();
     tm.index = -1;
     tm.stepStartedAt = Date.now();
     tm.cuedSecond = -1;
     setPhase('running');
     if (prefs.keepAwake) keepAwake(true);
-    speak(`Get ready. First up: ${steps[0]?.label ?? ''}`);
+    speak(t('player.say.getReadyFirstUp', { label: steps[0]?.label ?? '' }));
   };
-  const pause = () => { t.current.pausedAt = Date.now(); setPhase('paused'); stopSpeaking(); keepAwake(false); };
+  const pause = () => { t2.current.pausedAt = Date.now(); setPhase('paused'); stopSpeaking(); keepAwake(false); };
   const resume = () => {
-    const tm = t.current;
+    const tm = t2.current;
     if (tm.pausedAt) { tm.stepStartedAt += Date.now() - tm.pausedAt; tm.sessionStartedAt += 0; tm.pausedAt = null; }
     unlockAudio();
     setPhase('running');
     if (prefs.keepAwake) keepAwake(true);
   };
-  const skip = () => { unlockAudio(); advanceTo(t.current.index + 1, { partial: true }); if (phase === 'paused') resume(); };
+  const skip = () => { unlockAudio(); advanceTo(t2.current.index + 1, { partial: true }); if (phase === 'paused') resume(); };
   const previous = () => {
-    const tm = t.current;
+    const tm = t2.current;
     const elapsed = (Date.now() - tm.stepStartedAt) / 1000;
     if (elapsed > 3 || tm.index <= 0) { tm.stepStartedAt = Date.now(); tm.cuedSecond = -1; rerender(); return; }
     // going back: un-count the previous step
@@ -180,15 +182,15 @@ export function PlayerScreen({ id }: { id: string }) {
     if (phase === 'ready' || phase === 'done') { navigate(`/workouts/${id}`, { replace: true }); return; }
     const wasRunning = phase === 'running';
     if (wasRunning) pause();
-    const ok = await confirmDialog({ title: 'End workout?', message: 'What you have done so far will be saved.', confirmLabel: 'End', cancelLabel: 'Keep going', danger: true });
-    if (ok) { advanceTo(t.current.index, { partial: true }); t.current.index = Math.max(0, t.current.index); finish(); }
+    const ok = await confirmDialog({ title: t('player.endWorkoutTitle'), message: t('player.endWorkoutMsg'), confirmLabel: t('player.end'), cancelLabel: t('player.keepGoing'), danger: true });
+    if (ok) { advanceTo(t2.current.index, { partial: true }); t2.current.index = Math.max(0, t2.current.index); finish(); }
     else if (wasRunning) resume();
   };
 
   if (workout === undefined || !exMap) return <div className="player" />;
-  if (workout === null || steps.length === 0) return <div className="player"><Empty title="Nothing to play" text="This workout has no exercises yet." action={<Button variant="secondary" onClick={() => navigate('/workouts')}>Back</Button>} /></div>;
+  if (workout === null || steps.length === 0) return <div className="player"><Empty title={t('player.nothingToPlay')} text={t('player.noExercisesYet')} action={<Button variant="secondary" onClick={() => navigate('/workouts')}>{t('common.back')}</Button>} /></div>;
 
-  const tm = t.current;
+  const tm = t2.current;
   const idx = tm.index;
   const step = idx >= 0 ? steps[idx] : undefined;
   const nextStep = steps[idx + 1];
@@ -206,20 +208,20 @@ export function PlayerScreen({ id }: { id: string }) {
     const pct = Math.round((session.completedSteps / Math.max(1, session.totalSteps)) * 100);
     return (
       <div className="player">
-        <div className="player-head"><span /><div className="player-head-mid"><span className="t">{workout.name}</span></div><button className="iconbtn" aria-label="Close" onClick={() => navigate('/workouts', { replace: true })}><IconClose size={18} /></button></div>
+        <div className="player-head"><span /><div className="player-head-mid"><span className="t">{workout.name}</span></div><button className="iconbtn" aria-label={t('player.close')} onClick={() => navigate('/workouts', { replace: true })}><IconClose size={18} /></button></div>
         <div className="player-done">
           <div>
-            <div className="player-phase">{pct >= 100 ? 'COMPLETE' : `${pct}% DONE`}</div>
-            <div className="big">{pct >= 100 ? 'Nice work.' : 'Good effort.'}</div>
+            <div className="player-phase">{pct >= 100 ? t('player.complete') : t('player.pctDone', { pct })}</div>
+            <div className="big">{pct >= 100 ? t('player.niceWork') : t('player.goodEffort')}</div>
           </div>
           <div className="stats stats-3">
-            <Stat value={fmtClock(Math.round((session.endedAt - session.startedAt) / 1000))} label="total time" />
-            <Stat value={`${Math.round(session.kcal)}`} label="kcal burned" />
-            <Stat value={`${session.completedSteps}/${session.totalSteps}`} label="steps" />
+            <Stat value={fmtClock(Math.round((session.endedAt - session.startedAt) / 1000))} label={t('player.totalTime')} />
+            <Stat value={`${Math.round(session.kcal)}`} label={t('player.kcalBurned')} />
+            <Stat value={`${session.completedSteps}/${session.totalSteps}`} label={t('player.stepsLabel')} />
           </div>
-          <div className="small" style={{ color: '#9A978F' }}>{fmtDuration(session.activeSeconds)} of active work · estimated at {weight} kg body weight</div>
-          <Button size="lg" full onClick={() => navigate('/', { replace: true })}>Done</Button>
-          <Button variant="ghost" full onClick={() => navigate(`/workouts/${id}`, { replace: true })}>Back to workout</Button>
+          <div className="small" style={{ color: '#9A978F' }}>{t('player.activeOfWork', { d: fmtDuration(session.activeSeconds), kg: weight })}</div>
+          <Button size="lg" full onClick={() => navigate('/', { replace: true })}>{t('common.done')}</Button>
+          <Button variant="ghost" full onClick={() => navigate(`/workouts/${id}`, { replace: true })}>{t('player.backToWorkout')}</Button>
         </div>
       </div>
     );
@@ -229,9 +231,9 @@ export function PlayerScreen({ id }: { id: string }) {
     return (
       <div className="player">
         <div className="player-head">
-          <button className="iconbtn" aria-label="Close" onClick={quit}><IconClose size={18} /></button>
-          <div className="player-head-mid"><span className="t">{workout.name}</span><span className="s">{fmtDuration(totalSeconds)} · {steps.filter((s) => s.type === 'exercise').length} exercises · ~{Math.round(totalKcal)} kcal</span></div>
-          <button className="iconbtn" aria-label={soundOn ? 'Mute' : 'Unmute'} onClick={() => setPrefs({ sound: !soundOn, voice: !soundOn })}><IconVolume size={18} off={!soundOn} /></button>
+          <button className="iconbtn" aria-label={t('player.close')} onClick={quit}><IconClose size={18} /></button>
+          <div className="player-head-mid"><span className="t">{workout.name}</span><span className="s">{fmtDuration(totalSeconds)} · {steps.filter((s) => s.type === 'exercise').length} {t('unit.exercises')} · ~{Math.round(totalKcal)} {t('unit.kcal')}</span></div>
+          <button className="iconbtn" aria-label={soundOn ? t('common.mute') : t('common.unmute')} onClick={() => setPrefs({ sound: !soundOn, voice: !soundOn })}><IconVolume size={18} off={!soundOn} /></button>
         </div>
         <div className="player-ready">
           <div className="player-demo"><ExerciseVisual exercise={steps[0].exerciseId ? exMap.get(steps[0].exerciseId) : undefined} size="player" /></div>
@@ -239,13 +241,13 @@ export function PlayerScreen({ id }: { id: string }) {
             {steps.slice(0, 12).map((s) => (
               <Row key={s.index}>
                 <div className="row-main"><div className="row-title" style={s.type === 'rest' ? { color: '#9A978F', fontWeight: 500 } : undefined}>{s.label}{s.round && s.type === 'exercise' ? <span style={{ color: '#9A978F' }}> · R{s.round.n}</span> : ''}</div></div>
-                <div className="row-right" style={{ color: '#9A978F' }}>{s.reps ? `${s.reps} reps` : `${s.seconds} s`}</div>
+                <div className="row-right" style={{ color: '#9A978F' }}>{s.reps ? `${s.reps} ${t('unit.reps')}` : `${s.seconds} ${t('unit.s')}`}</div>
               </Row>
             ))}
-            {steps.length > 12 && <Row><div className="row-sub">…and {steps.length - 12} more steps</div></Row>}
+            {steps.length > 12 && <Row><div className="row-sub">{t('player.andMoreSteps', { n: steps.length - 12 })}</div></Row>}
           </div>
-          <Button size="lg" full icon={<IconPlay size={22} />} onClick={start}>Start</Button>
-          <div className="small" style={{ color: '#9A978F', textAlign: 'center' }}>Keep the screen on and the volume up for voice cues.</div>
+          <Button size="lg" full icon={<IconPlay size={22} />} onClick={start}>{t('today.start')}</Button>
+          <div className="small" style={{ color: '#9A978F', textAlign: 'center' }}>{t('player.keepScreenOnHint')}</div>
         </div>
       </div>
     );
@@ -255,12 +257,12 @@ export function PlayerScreen({ id }: { id: string }) {
   return (
     <div className="player">
       <div className="player-head">
-        <button className="iconbtn" aria-label="End workout" onClick={quit}><IconClose size={18} /></button>
+        <button className="iconbtn" aria-label={t('player.endWorkout')} onClick={quit}><IconClose size={18} /></button>
         <div className="player-head-mid">
           <span className="t">{workout.name}</span>
-          <span className="s">{step?.round ? `Round ${step.round.n} of ${step.round.of} · ` : ''}{fmtClock(sessionElapsed)} elapsed</span>
+          <span className="s">{step?.round ? t('player.roundOf', { n: step.round.n, of: step.round.of }) : ''}{t('player.elapsed', { clock: fmtClock(sessionElapsed) })}</span>
         </div>
-        <button className="iconbtn" aria-label={soundOn ? 'Mute' : 'Unmute'} onClick={() => setPrefs({ sound: !soundOn, voice: !soundOn })}><IconVolume size={18} off={!soundOn} /></button>
+        <button className="iconbtn" aria-label={soundOn ? t('common.mute') : t('common.unmute')} onClick={() => setPrefs({ sound: !soundOn, voice: !soundOn })}><IconVolume size={18} off={!soundOn} /></button>
       </div>
 
       <div className="player-progress" aria-hidden="true">
@@ -273,32 +275,32 @@ export function PlayerScreen({ id }: { id: string }) {
         {idx < 0 ? <ExerciseVisual exercise={steps[0].exerciseId ? exMap.get(steps[0].exerciseId) : undefined} size="player" />
           : step?.type === 'rest' ? <IconHourglass size={64} />
           : <ExerciseVisual exercise={exercise} size="player" animated={phase === 'running'} />}
-        {step?.type === 'exercise' && exercise?.demo.type === 'builtin' && <span className="player-badge">DEMO</span>}
-        {phase === 'paused' && <span className="player-badge" style={{ left: 14, right: 'auto', color: '#F3F1EC' }}>PAUSED</span>}
+        {step?.type === 'exercise' && exercise?.demo.type === 'builtin' && <span className="player-badge">{t('player.demo')}</span>}
+        {phase === 'paused' && <span className="player-badge" style={{ left: 14, right: 'auto', color: '#F3F1EC' }}>{t('player.paused')}</span>}
       </div>
 
       <div className="player-label">
-        <div className={`player-phase ${isRest ? 'rest' : ''}`}>{idx < 0 ? 'GET READY' : step?.type === 'rest' ? (step.label === 'Round rest' ? 'ROUND REST' : 'REST') : 'WORK'}</div>
-        <div className="player-name">{idx < 0 ? steps[0].label : step?.type === 'rest' ? (nextStep ? `Next: ${nextStep.label}` : 'Almost done') : step?.label}</div>
-        <div className="player-cue">{idx >= 0 && step?.type === 'exercise' ? (step.reps ? `${step.reps} reps · ${exercise?.cues[0] ?? ''}` : exercise?.cues[0] ?? '') : idx < 0 ? 'Starting in a moment' : nextStep?.reps ? `${nextStep.reps} reps` : nextStep ? `${nextStep.seconds} s` : ''}</div>
+        <div className={`player-phase ${isRest ? 'rest' : ''}`}>{idx < 0 ? t('player.getReady') : step?.type === 'rest' ? (step.label === 'Round rest' || step.label === t('step.roundRest') ? t('player.roundRestCaps') : t('player.restCaps')) : t('player.workCaps')}</div>
+        <div className="player-name">{idx < 0 ? steps[0].label : step?.type === 'rest' ? (nextStep ? t('player.nextLabel', { name: nextStep.label }) : t('player.almostDone')) : step?.label}</div>
+        <div className="player-cue">{idx >= 0 && step?.type === 'exercise' ? (step.reps ? t('player.repsWithCue', { reps: step.reps, cue: exercise?.cues[0] ?? '' }) : exercise?.cues[0] ?? '') : idx < 0 ? t('player.startingSoon') : nextStep?.reps ? `${nextStep.reps} ${t('unit.reps')}` : nextStep ? `${nextStep.seconds} ${t('unit.s')}` : ''}</div>
       </div>
 
       <div className="player-time">
         <div className={`player-clock ${remaining <= prefs.countdownSeconds && !isRest ? 'warn' : ''}`}>{fmtClock(Math.ceil(remaining))}</div>
-        <div className="player-kcal">~{Math.round(liveKcal)} kcal so far{step?.reps ? ' · tap ▸▸ when your reps are done' : ''}</div>
+        <div className="player-kcal">{t('player.kcalSoFar', { n: Math.round(liveKcal), extra: step?.reps ? t('player.tapWhenDone') : '' })}</div>
       </div>
 
       <div className="player-controls">
-        <button className="iconbtn" aria-label="Previous" onClick={previous}><IconPrev /></button>
-        <button className="player-main" aria-label={phase === 'running' ? 'Pause' : 'Resume'} onClick={phase === 'running' ? pause : resume}>{phase === 'running' ? <IconPause size={32} /> : <IconPlay size={32} />}</button>
-        <button className="iconbtn" aria-label="Next" onClick={skip}><IconNext /></button>
+        <button className="iconbtn" aria-label={t('player.previous')} onClick={previous}><IconPrev /></button>
+        <button className="player-main" aria-label={phase === 'running' ? t('player.pause') : t('player.resume')} onClick={phase === 'running' ? pause : resume}>{phase === 'running' ? <IconPause size={32} /> : <IconPlay size={32} />}</button>
+        <button className="iconbtn" aria-label={t('player.next')} onClick={skip}><IconNext /></button>
       </div>
 
       <div className="player-next">
-        <span className="k">NEXT</span>
+        <span className="k">{t('player.nextHeader')}</span>
         <span className="sep" />
         <div className="m">
-          {nextStep ? <><span className="t">{nextStep.label}</span><span className="s">{nextStep.reps ? `${nextStep.reps} reps` : `${nextStep.seconds} s`}{steps[idx + 2] ? `, then ${steps[idx + 2].label}` : ''}</span></> : <><span className="t">Finish</span><span className="s">Last step</span></>}
+          {nextStep ? <><span className="t">{nextStep.label}</span><span className="s">{nextStep.reps ? `${nextStep.reps} ${t('unit.reps')}` : `${nextStep.seconds} ${t('unit.s')}`}{steps[idx + 2] ? t('player.thenNext', { name: steps[idx + 2].label }) : ''}</span></> : <><span className="t">{t('player.finish')}</span><span className="s">{t('player.lastStep')}</span></>}
         </div>
       </div>
     </div>

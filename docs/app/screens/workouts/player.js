@@ -5,6 +5,7 @@ import { fmtClock, fmtDuration } from '../../lib/dates.js';
 import { expandWorkout, kcalFor } from '../../lib/calories.js';
 import { usePrefs, useProfile } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
+import { useT } from '../../lib/i18n.js';
 import { useExerciseMap, useWorkout } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
 import { sounds, speak, stopSpeaking, unlockAudio } from '../../lib/audio.js';
@@ -15,6 +16,7 @@ import { IconClose, IconHourglass, IconNext, IconPause, IconPlay, IconPrev, Icon
 import { ExerciseVisual } from './exercise-visual.js';
 const LEAD_IN = 5;
 export function PlayerScreen({ id }) {
+    const t = useT();
     const workout = useWorkout(id);
     const exMap = useExerciseMap();
     const [profile] = useProfile();
@@ -22,7 +24,7 @@ export function PlayerScreen({ id }) {
     const steps = useMemo(() => (workout && exMap ? expandWorkout(workout, exMap) : []), [workout, exMap]);
     const [phase, setPhase] = useState('ready');
     const [now, setNow] = useState(() => Date.now());
-    const t = useRef({ index: -1, stepStartedAt: 0, pausedAt: null, sessionStartedAt: 0, completedSeconds: 0, completedKcal: 0, activeSeconds: 0, cuedSecond: -1, announced: -2 });
+    const t2 = useRef({ index: -1, stepStartedAt: 0, pausedAt: null, sessionStartedAt: 0, completedSeconds: 0, completedKcal: 0, activeSeconds: 0, cuedSecond: -1, announced: -2 });
     const [, force] = useState(0);
     const rerender = () => force((x) => x + 1);
     const savedRef = useRef(false);
@@ -38,17 +40,17 @@ export function PlayerScreen({ id }) {
         if (soundOn)
             (s.type === 'rest' ? sounds.rest : sounds.go)();
         if (s.type === 'rest')
-            speak(`Rest, ${s.seconds} seconds`);
+            speak(t('player.say.rest', { n: s.seconds }));
         else
-            speak(s.reps ? `${s.label}, ${s.reps} reps` : `${s.label}, ${s.seconds} seconds`);
-        t.current.announced = i;
+            speak(s.reps ? t('player.say.exerciseReps', { label: s.label, reps: s.reps }) : t('player.say.exerciseSeconds', { label: s.label, n: s.seconds }));
+        t2.current.announced = i;
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [steps, soundOn]);
+    }, [steps, soundOn, t]);
     const finish = useCallback(async () => {
         if (savedRef.current || !workout)
             return;
         savedRef.current = true;
-        const tm = t.current;
+        const tm = t2.current;
         const endedAt = Date.now();
         const completed = Math.max(0, Math.min(steps.length, tm.index));
         const s = {
@@ -61,13 +63,13 @@ export function PlayerScreen({ id }) {
         stopSpeaking();
         if (soundOn)
             sounds.done();
-        speak('Workout complete. Nice work.');
+        speak(t('player.say.complete'));
         if (completed > 0)
             await put('sessions', s);
-    }, [workout, steps.length, soundOn]);
+    }, [workout, steps.length, soundOn, t]);
     /** Mark the current step as completed (fully or partially) and move to `next`. */
     const advanceTo = useCallback((next, opts = {}) => {
-        const tm = t.current;
+        const tm = t2.current;
         const cur = tm.index;
         if (cur >= 0) {
             const s = stepAt(cur);
@@ -95,7 +97,7 @@ export function PlayerScreen({ id }) {
         if (phase !== 'running')
             return;
         const tick = () => {
-            const tm = t.current;
+            const tm = t2.current;
             const nowMs = Date.now();
             setNow(nowMs);
             let remaining = durationOf(tm.index) - (nowMs - tm.stepStartedAt) / 1000;
@@ -139,7 +141,7 @@ export function PlayerScreen({ id }) {
                 tm.cuedSecond = -2;
                 if (soundOn)
                     sounds.halfway();
-                speak('Halfway');
+                speak(t('player.say.halfway'));
             }
         };
         tick();
@@ -149,11 +151,11 @@ export function PlayerScreen({ id }) {
         document.addEventListener('visibilitychange', onVis);
         return () => { window.clearInterval(idInt); document.removeEventListener('visibilitychange', onVis); };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [phase, steps, weight, prefs.countdownSeconds, soundOn]);
+    }, [phase, steps, weight, prefs.countdownSeconds, soundOn, t]);
     useEffect(() => () => { keepAwake(false); stopSpeaking(); }, []);
     const start = () => {
         unlockAudio();
-        const tm = t.current;
+        const tm = t2.current;
         tm.sessionStartedAt = Date.now();
         tm.index = -1;
         tm.stepStartedAt = Date.now();
@@ -161,11 +163,11 @@ export function PlayerScreen({ id }) {
         setPhase('running');
         if (prefs.keepAwake)
             keepAwake(true);
-        speak(`Get ready. First up: ${steps[0]?.label ?? ''}`);
+        speak(t('player.say.getReadyFirstUp', { label: steps[0]?.label ?? '' }));
     };
-    const pause = () => { t.current.pausedAt = Date.now(); setPhase('paused'); stopSpeaking(); keepAwake(false); };
+    const pause = () => { t2.current.pausedAt = Date.now(); setPhase('paused'); stopSpeaking(); keepAwake(false); };
     const resume = () => {
-        const tm = t.current;
+        const tm = t2.current;
         if (tm.pausedAt) {
             tm.stepStartedAt += Date.now() - tm.pausedAt;
             tm.sessionStartedAt += 0;
@@ -176,10 +178,10 @@ export function PlayerScreen({ id }) {
         if (prefs.keepAwake)
             keepAwake(true);
     };
-    const skip = () => { unlockAudio(); advanceTo(t.current.index + 1, { partial: true }); if (phase === 'paused')
+    const skip = () => { unlockAudio(); advanceTo(t2.current.index + 1, { partial: true }); if (phase === 'paused')
         resume(); };
     const previous = () => {
-        const tm = t.current;
+        const tm = t2.current;
         const elapsed = (Date.now() - tm.stepStartedAt) / 1000;
         if (elapsed > 3 || tm.index <= 0) {
             tm.stepStartedAt = Date.now();
@@ -209,10 +211,10 @@ export function PlayerScreen({ id }) {
         const wasRunning = phase === 'running';
         if (wasRunning)
             pause();
-        const ok = await confirmDialog({ title: 'End workout?', message: 'What you have done so far will be saved.', confirmLabel: 'End', cancelLabel: 'Keep going', danger: true });
+        const ok = await confirmDialog({ title: t('player.endWorkoutTitle'), message: t('player.endWorkoutMsg'), confirmLabel: t('player.end'), cancelLabel: t('player.keepGoing'), danger: true });
         if (ok) {
-            advanceTo(t.current.index, { partial: true });
-            t.current.index = Math.max(0, t.current.index);
+            advanceTo(t2.current.index, { partial: true });
+            t2.current.index = Math.max(0, t2.current.index);
             finish();
         }
         else if (wasRunning)
@@ -221,8 +223,8 @@ export function PlayerScreen({ id }) {
     if (workout === undefined || !exMap)
         return _jsx("div", { className: "player" });
     if (workout === null || steps.length === 0)
-        return _jsx("div", { className: "player", children: _jsx(Empty, { title: "Nothing to play", text: "This workout has no exercises yet.", action: _jsx(Button, { variant: "secondary", onClick: () => navigate('/workouts'), children: "Back" }) }) });
-    const tm = t.current;
+        return _jsx("div", { className: "player", children: _jsx(Empty, { title: t('player.nothingToPlay'), text: t('player.noExercisesYet'), action: _jsx(Button, { variant: "secondary", onClick: () => navigate('/workouts'), children: t('common.back') }) }) });
+    const tm = t2.current;
     const idx = tm.index;
     const step = idx >= 0 ? steps[idx] : undefined;
     const nextStep = steps[idx + 1];
@@ -237,13 +239,13 @@ export function PlayerScreen({ id }) {
     const exercise = step?.exerciseId ? exMap.get(step.exerciseId) : undefined;
     if (phase === 'done' && session) {
         const pct = Math.round((session.completedSteps / Math.max(1, session.totalSteps)) * 100);
-        return (_jsxs("div", { className: "player", children: [_jsxs("div", { className: "player-head", children: [_jsx("span", {}), _jsx("div", { className: "player-head-mid", children: _jsx("span", { className: "t", children: workout.name }) }), _jsx("button", { className: "iconbtn", "aria-label": "Close", onClick: () => navigate('/workouts', { replace: true }), children: _jsx(IconClose, { size: 18 }) })] }), _jsxs("div", { className: "player-done", children: [_jsxs("div", { children: [_jsx("div", { className: "player-phase", children: pct >= 100 ? 'COMPLETE' : `${pct}% DONE` }), _jsx("div", { className: "big", children: pct >= 100 ? 'Nice work.' : 'Good effort.' })] }), _jsxs("div", { className: "stats stats-3", children: [_jsx(Stat, { value: fmtClock(Math.round((session.endedAt - session.startedAt) / 1000)), label: "total time" }), _jsx(Stat, { value: `${Math.round(session.kcal)}`, label: "kcal burned" }), _jsx(Stat, { value: `${session.completedSteps}/${session.totalSteps}`, label: "steps" })] }), _jsxs("div", { className: "small", style: { color: '#9A978F' }, children: [fmtDuration(session.activeSeconds), " of active work \u00B7 estimated at ", weight, " kg body weight"] }), _jsx(Button, { size: "lg", full: true, onClick: () => navigate('/', { replace: true }), children: "Done" }), _jsx(Button, { variant: "ghost", full: true, onClick: () => navigate(`/workouts/${id}`, { replace: true }), children: "Back to workout" })] })] }));
+        return (_jsxs("div", { className: "player", children: [_jsxs("div", { className: "player-head", children: [_jsx("span", {}), _jsx("div", { className: "player-head-mid", children: _jsx("span", { className: "t", children: workout.name }) }), _jsx("button", { className: "iconbtn", "aria-label": t('player.close'), onClick: () => navigate('/workouts', { replace: true }), children: _jsx(IconClose, { size: 18 }) })] }), _jsxs("div", { className: "player-done", children: [_jsxs("div", { children: [_jsx("div", { className: "player-phase", children: pct >= 100 ? t('player.complete') : t('player.pctDone', { pct }) }), _jsx("div", { className: "big", children: pct >= 100 ? t('player.niceWork') : t('player.goodEffort') })] }), _jsxs("div", { className: "stats stats-3", children: [_jsx(Stat, { value: fmtClock(Math.round((session.endedAt - session.startedAt) / 1000)), label: t('player.totalTime') }), _jsx(Stat, { value: `${Math.round(session.kcal)}`, label: t('player.kcalBurned') }), _jsx(Stat, { value: `${session.completedSteps}/${session.totalSteps}`, label: t('player.stepsLabel') })] }), _jsx("div", { className: "small", style: { color: '#9A978F' }, children: t('player.activeOfWork', { d: fmtDuration(session.activeSeconds), kg: weight }) }), _jsx(Button, { size: "lg", full: true, onClick: () => navigate('/', { replace: true }), children: t('common.done') }), _jsx(Button, { variant: "ghost", full: true, onClick: () => navigate(`/workouts/${id}`, { replace: true }), children: t('player.backToWorkout') })] })] }));
     }
     if (phase === 'ready') {
-        return (_jsxs("div", { className: "player", children: [_jsxs("div", { className: "player-head", children: [_jsx("button", { className: "iconbtn", "aria-label": "Close", onClick: quit, children: _jsx(IconClose, { size: 18 }) }), _jsxs("div", { className: "player-head-mid", children: [_jsx("span", { className: "t", children: workout.name }), _jsxs("span", { className: "s", children: [fmtDuration(totalSeconds), " \u00B7 ", steps.filter((s) => s.type === 'exercise').length, " exercises \u00B7 ~", Math.round(totalKcal), " kcal"] })] }), _jsx("button", { className: "iconbtn", "aria-label": soundOn ? 'Mute' : 'Unmute', onClick: () => setPrefs({ sound: !soundOn, voice: !soundOn }), children: _jsx(IconVolume, { size: 18, off: !soundOn }) })] }), _jsxs("div", { className: "player-ready", children: [_jsx("div", { className: "player-demo", children: _jsx(ExerciseVisual, { exercise: steps[0].exerciseId ? exMap.get(steps[0].exerciseId) : undefined, size: "player" }) }), _jsxs("div", { className: "list", style: { maxHeight: '32dvh', overflowY: 'auto' }, children: [steps.slice(0, 12).map((s) => (_jsxs(Row, { children: [_jsx("div", { className: "row-main", children: _jsxs("div", { className: "row-title", style: s.type === 'rest' ? { color: '#9A978F', fontWeight: 500 } : undefined, children: [s.label, s.round && s.type === 'exercise' ? _jsxs("span", { style: { color: '#9A978F' }, children: [" \u00B7 R", s.round.n] }) : ''] }) }), _jsx("div", { className: "row-right", style: { color: '#9A978F' }, children: s.reps ? `${s.reps} reps` : `${s.seconds} s` })] }, s.index))), steps.length > 12 && _jsx(Row, { children: _jsxs("div", { className: "row-sub", children: ["\u2026and ", steps.length - 12, " more steps"] }) })] }), _jsx(Button, { size: "lg", full: true, icon: _jsx(IconPlay, { size: 22 }), onClick: start, children: "Start" }), _jsx("div", { className: "small", style: { color: '#9A978F', textAlign: 'center' }, children: "Keep the screen on and the volume up for voice cues." })] })] }));
+        return (_jsxs("div", { className: "player", children: [_jsxs("div", { className: "player-head", children: [_jsx("button", { className: "iconbtn", "aria-label": t('player.close'), onClick: quit, children: _jsx(IconClose, { size: 18 }) }), _jsxs("div", { className: "player-head-mid", children: [_jsx("span", { className: "t", children: workout.name }), _jsxs("span", { className: "s", children: [fmtDuration(totalSeconds), " \u00B7 ", steps.filter((s) => s.type === 'exercise').length, " ", t('unit.exercises'), " \u00B7 ~", Math.round(totalKcal), " ", t('unit.kcal')] })] }), _jsx("button", { className: "iconbtn", "aria-label": soundOn ? t('common.mute') : t('common.unmute'), onClick: () => setPrefs({ sound: !soundOn, voice: !soundOn }), children: _jsx(IconVolume, { size: 18, off: !soundOn }) })] }), _jsxs("div", { className: "player-ready", children: [_jsx("div", { className: "player-demo", children: _jsx(ExerciseVisual, { exercise: steps[0].exerciseId ? exMap.get(steps[0].exerciseId) : undefined, size: "player" }) }), _jsxs("div", { className: "list", style: { maxHeight: '32dvh', overflowY: 'auto' }, children: [steps.slice(0, 12).map((s) => (_jsxs(Row, { children: [_jsx("div", { className: "row-main", children: _jsxs("div", { className: "row-title", style: s.type === 'rest' ? { color: '#9A978F', fontWeight: 500 } : undefined, children: [s.label, s.round && s.type === 'exercise' ? _jsxs("span", { style: { color: '#9A978F' }, children: [" \u00B7 R", s.round.n] }) : ''] }) }), _jsx("div", { className: "row-right", style: { color: '#9A978F' }, children: s.reps ? `${s.reps} ${t('unit.reps')}` : `${s.seconds} ${t('unit.s')}` })] }, s.index))), steps.length > 12 && _jsx(Row, { children: _jsx("div", { className: "row-sub", children: t('player.andMoreSteps', { n: steps.length - 12 }) }) })] }), _jsx(Button, { size: "lg", full: true, icon: _jsx(IconPlay, { size: 22 }), onClick: start, children: t('today.start') }), _jsx("div", { className: "small", style: { color: '#9A978F', textAlign: 'center' }, children: t('player.keepScreenOnHint') })] })] }));
     }
     const isRest = idx < 0 || step?.type === 'rest';
-    return (_jsxs("div", { className: "player", children: [_jsxs("div", { className: "player-head", children: [_jsx("button", { className: "iconbtn", "aria-label": "End workout", onClick: quit, children: _jsx(IconClose, { size: 18 }) }), _jsxs("div", { className: "player-head-mid", children: [_jsx("span", { className: "t", children: workout.name }), _jsxs("span", { className: "s", children: [step?.round ? `Round ${step.round.n} of ${step.round.of} · ` : '', fmtClock(sessionElapsed), " elapsed"] })] }), _jsx("button", { className: "iconbtn", "aria-label": soundOn ? 'Mute' : 'Unmute', onClick: () => setPrefs({ sound: !soundOn, voice: !soundOn }), children: _jsx(IconVolume, { size: 18, off: !soundOn }) })] }), _jsx("div", { className: "player-progress", "aria-hidden": "true", children: steps.map((s, i) => (_jsx("div", { className: s.type === 'rest' ? 'rest' : '', children: _jsx("div", { style: { width: i < idx ? '100%' : i === idx ? `${stepPct}%` : '0%' } }) }, s.index))) }), _jsxs("div", { className: `player-demo ${isRest ? 'rest' : ''}`, children: [idx < 0 ? _jsx(ExerciseVisual, { exercise: steps[0].exerciseId ? exMap.get(steps[0].exerciseId) : undefined, size: "player" })
+    return (_jsxs("div", { className: "player", children: [_jsxs("div", { className: "player-head", children: [_jsx("button", { className: "iconbtn", "aria-label": t('player.endWorkout'), onClick: quit, children: _jsx(IconClose, { size: 18 }) }), _jsxs("div", { className: "player-head-mid", children: [_jsx("span", { className: "t", children: workout.name }), _jsxs("span", { className: "s", children: [step?.round ? t('player.roundOf', { n: step.round.n, of: step.round.of }) : '', t('player.elapsed', { clock: fmtClock(sessionElapsed) })] })] }), _jsx("button", { className: "iconbtn", "aria-label": soundOn ? t('common.mute') : t('common.unmute'), onClick: () => setPrefs({ sound: !soundOn, voice: !soundOn }), children: _jsx(IconVolume, { size: 18, off: !soundOn }) })] }), _jsx("div", { className: "player-progress", "aria-hidden": "true", children: steps.map((s, i) => (_jsx("div", { className: s.type === 'rest' ? 'rest' : '', children: _jsx("div", { style: { width: i < idx ? '100%' : i === idx ? `${stepPct}%` : '0%' } }) }, s.index))) }), _jsxs("div", { className: `player-demo ${isRest ? 'rest' : ''}`, children: [idx < 0 ? _jsx(ExerciseVisual, { exercise: steps[0].exerciseId ? exMap.get(steps[0].exerciseId) : undefined, size: "player" })
                         : step?.type === 'rest' ? _jsx(IconHourglass, { size: 64 })
-                            : _jsx(ExerciseVisual, { exercise: exercise, size: "player", animated: phase === 'running' }), step?.type === 'exercise' && exercise?.demo.type === 'builtin' && _jsx("span", { className: "player-badge", children: "DEMO" }), phase === 'paused' && _jsx("span", { className: "player-badge", style: { left: 14, right: 'auto', color: '#F3F1EC' }, children: "PAUSED" })] }), _jsxs("div", { className: "player-label", children: [_jsx("div", { className: `player-phase ${isRest ? 'rest' : ''}`, children: idx < 0 ? 'GET READY' : step?.type === 'rest' ? (step.label === 'Round rest' ? 'ROUND REST' : 'REST') : 'WORK' }), _jsx("div", { className: "player-name", children: idx < 0 ? steps[0].label : step?.type === 'rest' ? (nextStep ? `Next: ${nextStep.label}` : 'Almost done') : step?.label }), _jsx("div", { className: "player-cue", children: idx >= 0 && step?.type === 'exercise' ? (step.reps ? `${step.reps} reps · ${exercise?.cues[0] ?? ''}` : exercise?.cues[0] ?? '') : idx < 0 ? 'Starting in a moment' : nextStep?.reps ? `${nextStep.reps} reps` : nextStep ? `${nextStep.seconds} s` : '' })] }), _jsxs("div", { className: "player-time", children: [_jsx("div", { className: `player-clock ${remaining <= prefs.countdownSeconds && !isRest ? 'warn' : ''}`, children: fmtClock(Math.ceil(remaining)) }), _jsxs("div", { className: "player-kcal", children: ["~", Math.round(liveKcal), " kcal so far", step?.reps ? ' · tap ▸▸ when your reps are done' : ''] })] }), _jsxs("div", { className: "player-controls", children: [_jsx("button", { className: "iconbtn", "aria-label": "Previous", onClick: previous, children: _jsx(IconPrev, {}) }), _jsx("button", { className: "player-main", "aria-label": phase === 'running' ? 'Pause' : 'Resume', onClick: phase === 'running' ? pause : resume, children: phase === 'running' ? _jsx(IconPause, { size: 32 }) : _jsx(IconPlay, { size: 32 }) }), _jsx("button", { className: "iconbtn", "aria-label": "Next", onClick: skip, children: _jsx(IconNext, {}) })] }), _jsxs("div", { className: "player-next", children: [_jsx("span", { className: "k", children: "NEXT" }), _jsx("span", { className: "sep" }), _jsx("div", { className: "m", children: nextStep ? _jsxs(_Fragment, { children: [_jsx("span", { className: "t", children: nextStep.label }), _jsxs("span", { className: "s", children: [nextStep.reps ? `${nextStep.reps} reps` : `${nextStep.seconds} s`, steps[idx + 2] ? `, then ${steps[idx + 2].label}` : ''] })] }) : _jsxs(_Fragment, { children: [_jsx("span", { className: "t", children: "Finish" }), _jsx("span", { className: "s", children: "Last step" })] }) })] })] }));
+                            : _jsx(ExerciseVisual, { exercise: exercise, size: "player", animated: phase === 'running' }), step?.type === 'exercise' && exercise?.demo.type === 'builtin' && _jsx("span", { className: "player-badge", children: t('player.demo') }), phase === 'paused' && _jsx("span", { className: "player-badge", style: { left: 14, right: 'auto', color: '#F3F1EC' }, children: t('player.paused') })] }), _jsxs("div", { className: "player-label", children: [_jsx("div", { className: `player-phase ${isRest ? 'rest' : ''}`, children: idx < 0 ? t('player.getReady') : step?.type === 'rest' ? (step.label === 'Round rest' || step.label === t('step.roundRest') ? t('player.roundRestCaps') : t('player.restCaps')) : t('player.workCaps') }), _jsx("div", { className: "player-name", children: idx < 0 ? steps[0].label : step?.type === 'rest' ? (nextStep ? t('player.nextLabel', { name: nextStep.label }) : t('player.almostDone')) : step?.label }), _jsx("div", { className: "player-cue", children: idx >= 0 && step?.type === 'exercise' ? (step.reps ? t('player.repsWithCue', { reps: step.reps, cue: exercise?.cues[0] ?? '' }) : exercise?.cues[0] ?? '') : idx < 0 ? t('player.startingSoon') : nextStep?.reps ? `${nextStep.reps} ${t('unit.reps')}` : nextStep ? `${nextStep.seconds} ${t('unit.s')}` : '' })] }), _jsxs("div", { className: "player-time", children: [_jsx("div", { className: `player-clock ${remaining <= prefs.countdownSeconds && !isRest ? 'warn' : ''}`, children: fmtClock(Math.ceil(remaining)) }), _jsx("div", { className: "player-kcal", children: t('player.kcalSoFar', { n: Math.round(liveKcal), extra: step?.reps ? t('player.tapWhenDone') : '' }) })] }), _jsxs("div", { className: "player-controls", children: [_jsx("button", { className: "iconbtn", "aria-label": t('player.previous'), onClick: previous, children: _jsx(IconPrev, {}) }), _jsx("button", { className: "player-main", "aria-label": phase === 'running' ? t('player.pause') : t('player.resume'), onClick: phase === 'running' ? pause : resume, children: phase === 'running' ? _jsx(IconPause, { size: 32 }) : _jsx(IconPlay, { size: 32 }) }), _jsx("button", { className: "iconbtn", "aria-label": t('player.next'), onClick: skip, children: _jsx(IconNext, {}) })] }), _jsxs("div", { className: "player-next", children: [_jsx("span", { className: "k", children: t('player.nextHeader') }), _jsx("span", { className: "sep" }), _jsx("div", { className: "m", children: nextStep ? _jsxs(_Fragment, { children: [_jsx("span", { className: "t", children: nextStep.label }), _jsxs("span", { className: "s", children: [nextStep.reps ? `${nextStep.reps} ${t('unit.reps')}` : `${nextStep.seconds} ${t('unit.s')}`, steps[idx + 2] ? t('player.thenNext', { name: steps[idx + 2].label }) : ''] })] }) : _jsxs(_Fragment, { children: [_jsx("span", { className: "t", children: t('player.finish') }), _jsx("span", { className: "s", children: t('player.lastStep') })] }) })] })] }));
 }

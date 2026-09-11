@@ -1,4 +1,5 @@
 // Small date helpers (local time, ISO "YYYY-MM-DD" keys).
+import { getLang, tGlobal } from './i18n.js';
 export function toKey(d) {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -27,41 +28,51 @@ export function startOfWeek(key, weekStartsOn = 1) {
 export function weekDays(startKey) {
     return Array.from({ length: 7 }, (_, i) => addDays(startKey, i));
 }
-const WEEKDAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const WEEKDAY_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-export function weekdayShort(key) { return WEEKDAY_SHORT[fromKey(key).getDay()]; }
-export function weekdayLong(key) { return WEEKDAY_LONG[fromKey(key).getDay()]; }
-export function weekdayName(weekday, long = false) { return (long ? WEEKDAY_LONG : WEEKDAY_SHORT)[weekday]; }
+const WEEKDAY_SHORT = {
+    en: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    ka: ['კვ', 'ორშ', 'სამ', 'ოთხ', 'ხუთ', 'პარ', 'შაბ'],
+};
+const WEEKDAY_LONG = {
+    en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    ka: ['კვირა', 'ორშაბათი', 'სამშაბათი', 'ოთხშაბათი', 'ხუთშაბათი', 'პარასკევი', 'შაბათი'],
+};
+const MONTH_SHORT = {
+    en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    ka: ['იან', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ', 'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ'],
+};
+export function weekdayShort(key) { return WEEKDAY_SHORT[getLang()][fromKey(key).getDay()]; }
+export function weekdayLong(key) { return WEEKDAY_LONG[getLang()][fromKey(key).getDay()]; }
+export function weekdayName(weekday, long = false) { return (long ? WEEKDAY_LONG : WEEKDAY_SHORT)[getLang()][weekday]; }
 export function dayOfMonth(key) { return fromKey(key).getDate(); }
 export function formatLong(key) {
     const d = fromKey(key);
-    return `${WEEKDAY_LONG[d.getDay()]}, ${d.getDate()} ${MONTH_SHORT[d.getMonth()]}`;
+    return `${WEEKDAY_LONG[getLang()][d.getDay()]}, ${d.getDate()} ${MONTH_SHORT[getLang()][d.getMonth()]}`;
 }
 export function formatShort(key) {
     const d = fromKey(key);
-    return `${d.getDate()} ${MONTH_SHORT[d.getMonth()]}`;
+    return `${d.getDate()} ${MONTH_SHORT[getLang()][d.getMonth()]}`;
 }
 export function formatRange(startKey, endKey) {
     const a = fromKey(startKey), b = fromKey(endKey);
+    const months = MONTH_SHORT[getLang()];
     if (a.getMonth() === b.getMonth())
-        return `${a.getDate()}–${b.getDate()} ${MONTH_SHORT[a.getMonth()]}`;
-    return `${a.getDate()} ${MONTH_SHORT[a.getMonth()]} – ${b.getDate()} ${MONTH_SHORT[b.getMonth()]}`;
+        return `${a.getDate()}–${b.getDate()} ${months[a.getMonth()]}`;
+    return `${a.getDate()} ${months[a.getMonth()]} – ${b.getDate()} ${months[b.getMonth()]}`;
 }
 export function formatDateTime(ts) {
     const d = new Date(ts);
     const hh = String(d.getHours()).padStart(2, '0');
     const mm = String(d.getMinutes()).padStart(2, '0');
-    return `${d.getDate()} ${MONTH_SHORT[d.getMonth()]} · ${hh}:${mm}`;
+    return `${d.getDate()} ${MONTH_SHORT[getLang()][d.getMonth()]} · ${hh}:${mm}`;
 }
 export function relativeDay(key) {
     const t = todayKey();
     if (key === t)
-        return 'Today';
+        return tGlobal('today.title'); // "Today"
     if (key === addDays(t, 1))
-        return 'Tomorrow';
+        return tGlobal('date.tomorrow');
     if (key === addDays(t, -1))
-        return 'Yesterday';
+        return tGlobal('date.yesterday');
     return formatLong(key);
 }
 /** "m:ss" or "h:mm:ss" */
@@ -75,10 +86,11 @@ export function fmtClock(totalSeconds) {
 /** "24 min" / "1 h 05 min" / "45 s" */
 export function fmtDuration(totalSeconds) {
     const s = Math.round(totalSeconds);
+    const secUnit = tGlobal('unit.s'), hUnit = tGlobal('unit.h'), minUnit = tGlobal('unit.min');
     if (s < 60)
-        return `${s} s`;
+        return `${s} ${secUnit}`;
     const h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60);
     if (h > 0)
-        return `${h} h ${String(m).padStart(2, '0')} min`;
-    return `${m} min`;
+        return `${h} ${hUnit} ${String(m).padStart(2, '0')} ${minUnit}`;
+    return `${m} ${minUnit}`;
 }

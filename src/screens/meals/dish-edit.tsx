@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { PER100, PIECE_G, UNIT_G } from '../../data/seed-dishes.js';
 import { get, put, saveBlob } from '../../lib/db.js';
 import { useBlobUrl } from '../../lib/hooks.js';
+import { useT } from '../../lib/i18n.js';
 import { uid } from '../../lib/ids.js';
 import { MEAL_CATEGORIES, type Dish, type Ingredient, type MealCategory, type Nutrition } from '../../lib/models.js';
 import { perServing, rescaleIngredient, round } from '../../lib/nutrition.js';
@@ -10,7 +11,6 @@ import { Button, Field, IconButton, NumberInput, Screen, Select, Stat, TextArea,
 import { confirmDialog, toast } from '../../ui/dialogs.js';
 import { IconCamera, IconPlus, IconTrash } from '../../ui/icons.js';
 
-const LABEL: Record<MealCategory, string> = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack' };
 const UNITS = ['g', 'ml', 'pcs', 'tbsp', 'tsp', 'slice', 'cup', 'scoop', 'clove', 'half'];
 
 function blank(): Dish {
@@ -45,6 +45,8 @@ async function resizeImage(file: File, max = 1200): Promise<Blob> {
 }
 
 export function DishEditScreen({ id }: { id?: string }) {
+  const t = useT();
+  const LABEL: Record<MealCategory, string> = { breakfast: t('meal.breakfast'), lunch: t('meal.lunch'), dinner: t('meal.dinner'), snack: t('meal.snack') };
   const route = useRoute();
   const [dish, setDish] = useState<Dish | null>(id ? null : blank());
   const [tagsText, setTagsText] = useState('');
@@ -96,12 +98,12 @@ export function DishEditScreen({ id }: { id?: string }) {
   };
 
   const save = async () => {
-    if (!dish.name.trim()) { toast('Give the dish a name'); return; }
+    if (!dish.name.trim()) { toast(t('dish.giveItAName')); return; }
     setSaving(true);
     try {
       let imageBlobId = dish.imageBlobId;
       if (pendingImage) imageBlobId = await saveBlob(pendingImage, dish.name);
-      const tags = tagsText.split(',').map((t) => t.trim()).filter(Boolean);
+      const tags = tagsText.split(',').map((tg) => tg.trim()).filter(Boolean);
       const steps = dish.steps.map((s) => s.trim()).filter(Boolean);
       const ingredients = dish.ingredients.filter((i) => i.name.trim());
       const nutritionOverride = useOverride ? dish.nutritionOverride ?? computed ?? undefined : undefined;
@@ -111,10 +113,10 @@ export function DishEditScreen({ id }: { id?: string }) {
       const slot = route.query.get('slot') as MealCategory | null;
       if (!id && date && slot) {
         await put('mealSlots', { id: uid('slot'), date, slot, dishId: final.id, servings: 1, eaten: false, order: Date.now() });
-        toast(`Saved and added to ${slot}`);
+        toast(t('common.savedAndAddedTo', { meal: LABEL[slot].toLowerCase() }));
         navigate('/meals', { replace: true });
       } else {
-        toast('Saved');
+        toast(t('common.saved'));
         navigate(`/meals/dish/${final.id}`, { replace: true });
       }
     } finally {
@@ -124,7 +126,7 @@ export function DishEditScreen({ id }: { id?: string }) {
 
   const cancel = async () => {
     if (id) navigate(`/meals/dish/${id}`, { replace: true });
-    else if (dish.name || dish.ingredients.length) { if (await confirmDialog({ title: 'Discard this dish?', confirmLabel: 'Discard', danger: true })) navigate('/meals/dishes', { replace: true }); }
+    else if (dish.name || dish.ingredients.length) { if (await confirmDialog({ title: t('dish.discardTitle'), confirmLabel: t('common.discard'), danger: true })) navigate('/meals/dishes', { replace: true }); }
     else navigate('/meals/dishes', { replace: true });
   };
 
@@ -134,27 +136,27 @@ export function DishEditScreen({ id }: { id?: string }) {
 
   return (
     <Screen className="screen-no-tabs">
-      <TopBar title={id ? 'Edit dish' : 'New dish'} onBack={cancel} right={<Button size="sm" variant="meals" onClick={save} disabled={saving}>Save</Button>} />
+      <TopBar title={id ? t('dish.editDishTitle') : t('dish.newDishTitle')} onBack={cancel} right={<Button size="sm" variant="meals" onClick={save} disabled={saving}>{t('common.save')}</Button>} />
 
       <button className="demo-box mb" style={{ width: '100%', height: 150, borderRadius: 20 }} onClick={() => fileRef.current?.click()}>
-        {imgUrl ? <img src={imgUrl} alt="" style={{ objectFit: 'cover' }} /> : <span className="hstack muted"><IconCamera />Add a photo</span>}
+        {imgUrl ? <img src={imgUrl} alt="" style={{ objectFit: 'cover' }} /> : <span className="hstack muted"><IconCamera />{t('dish.addPhoto')}</span>}
       </button>
       <input ref={fileRef} type="file" accept="image/*" hidden onChange={async (e: { target: HTMLInputElement }) => { const f = e.target.files?.[0]; if (f) setPendingImage(await resizeImage(f)); }} />
 
-      <Field label="Name"><TextInput value={dish.name} onChange={(v) => patch({ name: v })} placeholder="e.g. Chicken rice bowl" autoFocus={!id} /></Field>
-      <Field label="Meal" inline><Select value={dish.category} onChange={(v) => patch({ category: v })} options={MEAL_CATEGORIES.map((c) => ({ value: c, label: LABEL[c] }))} /></Field>
-      <Field label="Servings" inline><NumberInput value={dish.servings} min={1} max={50} onChange={(v) => patch({ servings: v })} /></Field>
-      <Field label="Prep time" inline><NumberInput value={dish.prepMin} min={0} max={600} suffix="min" onChange={(v) => patch({ prepMin: v })} /></Field>
-      <Field label="Cook time" inline><NumberInput value={dish.cookMin} min={0} max={600} suffix="min" onChange={(v) => patch({ cookMin: v })} /></Field>
-      <Field label="Tags" hint="Comma separated, e.g. high protein, quick"><TextInput value={tagsText} onChange={setTagsText} placeholder="high protein, meal prep" /></Field>
+      <Field label={t('dish.name')}><TextInput value={dish.name} onChange={(v) => patch({ name: v })} placeholder={t('dish.namePlaceholder')} autoFocus={!id} /></Field>
+      <Field label={t('dish.mealField')} inline><Select value={dish.category} onChange={(v) => patch({ category: v })} options={MEAL_CATEGORIES.map((c) => ({ value: c, label: LABEL[c] }))} /></Field>
+      <Field label={t('dish.servingsField')} inline><NumberInput value={dish.servings} min={1} max={50} onChange={(v) => patch({ servings: v })} /></Field>
+      <Field label={t('dish.prepTime')} inline><NumberInput value={dish.prepMin} min={0} max={600} suffix="min" onChange={(v) => patch({ prepMin: v })} /></Field>
+      <Field label={t('dish.cookTime')} inline><NumberInput value={dish.cookMin} min={0} max={600} suffix="min" onChange={(v) => patch({ cookMin: v })} /></Field>
+      <Field label={t('dish.tags')} hint={t('dish.tagsHint')}><TextInput value={tagsText} onChange={setTagsText} placeholder={t('dish.tagsPlaceholder')} /></Field>
 
-      <div className="section-label mt-lg">Ingredients</div>
-      <div className="small muted mb">Nutrition is for the amount you enter. Known ingredients (chicken breast, oats, olive oil…) auto-fill.</div>
+      <div className="section-label mt-lg">{t('dish.ingredients')}</div>
+      <div className="small muted mb">{t('dish.ingredientsHint')}</div>
       {dish.ingredients.map((ing, i) => (
         <div key={ing.id} className="ingredient-block">
           <div className="ingredient-editor">
-            <input className="input" list="ingredient-names" placeholder="Ingredient" value={ing.name} onChange={(e: { target: HTMLInputElement }) => setIng(i, { name: e.target.value })} onBlur={() => onNameBlur(i)} />
-            <input className="input" inputMode="decimal" placeholder="Amount" value={ing.amount || ''} onChange={(e: { target: HTMLInputElement }) => { const n = Number(e.target.value.replace(',', '.')); if (!Number.isNaN(n)) onAmountChange(i, n); }} />
+            <input className="input" list="ingredient-names" placeholder={t('dish.ingredientPlaceholder')} value={ing.name} onChange={(e: { target: HTMLInputElement }) => setIng(i, { name: e.target.value })} onBlur={() => onNameBlur(i)} />
+            <input className="input" inputMode="decimal" placeholder={t('dish.amountPlaceholder')} value={ing.amount || ''} onChange={(e: { target: HTMLInputElement }) => { const n = Number(e.target.value.replace(',', '.')); if (!Number.isNaN(n)) onAmountChange(i, n); }} />
             <select className="input select" style={{ paddingRight: 8 }} value={ing.unit} onChange={(e: { target: HTMLSelectElement }) => onUnitChange(i, e.target.value)}>
               {UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
             </select>
@@ -168,22 +170,22 @@ export function DishEditScreen({ id }: { id?: string }) {
             ))}
           </div>
           <div className="spread" style={{ marginTop: 6 }}>
-            <span className="small muted">{Math.round(ing.kcal)} kcal</span>
-            <IconButton label="Remove ingredient" className="iconbtn-plain" onClick={() => patch({ ingredients: dish.ingredients.filter((_, k) => k !== i) })}><IconTrash size={18} /></IconButton>
+            <span className="small muted">{Math.round(ing.kcal)} {t('unit.kcal')}</span>
+            <IconButton label={t('dish.removeIngredient')} className="iconbtn-plain" onClick={() => patch({ ingredients: dish.ingredients.filter((_, k) => k !== i) })}><IconTrash size={18} /></IconButton>
           </div>
         </div>
       ))}
       <datalist id="ingredient-names">{Object.keys(PER100).map((k) => <option key={k} value={k} />)}</datalist>
-      <Button variant="secondary" full icon={<IconPlus size={18} />} onClick={() => patch({ ingredients: [...dish.ingredients, newIngredient()] })}>Add ingredient</Button>
+      <Button variant="secondary" full icon={<IconPlus size={18} />} onClick={() => patch({ ingredients: [...dish.ingredients, newIngredient()] })}>{t('dish.addIngredient')}</Button>
 
-      <div className="section-label mt-lg">Nutrition per serving</div>
+      <div className="section-label mt-lg">{t('dish.nutritionPerServing')}</div>
       <div className="stats mb">
-        <Stat tone="dark" value={Math.round(shown.kcal)} label="kcal" />
-        <Stat tone="protein" value={`${Math.round(shown.protein)}g`} label="protein" />
-        <Stat tone="carbs" value={`${Math.round(shown.carbs)}g`} label="carbs" />
-        <Stat tone="fat" value={`${Math.round(shown.fat)}g`} label="fat" />
+        <Stat tone="dark" value={Math.round(shown.kcal)} label={t('dish.kcal')} />
+        <Stat tone="protein" value={`${Math.round(shown.protein)}g`} label={t('dish.protein')} />
+        <Stat tone="carbs" value={`${Math.round(shown.carbs)}g`} label={t('dish.carbs')} />
+        <Stat tone="fat" value={`${Math.round(shown.fat)}g`} label={t('dish.fat')} />
       </div>
-      <Field label="Enter nutrition manually" inline hint={useOverride ? 'Overrides the ingredient totals.' : undefined}><Toggle checked={useOverride} onChange={(v) => { setUseOverride(v); if (v && !dish.nutritionOverride) patch({ nutritionOverride: computed ?? undefined }); }} /></Field>
+      <Field label={t('dish.enterNutritionManually')} inline hint={useOverride ? t('dish.overridesTotals') : undefined}><Toggle checked={useOverride} onChange={(v) => { setUseOverride(v); if (v && !dish.nutritionOverride) patch({ nutritionOverride: computed ?? undefined }); }} /></Field>
       {useOverride && (
         <div className="ingredient-nutri mb">
           {(['kcal', 'protein', 'carbs', 'fat'] as const).map((k) => (
@@ -195,21 +197,21 @@ export function DishEditScreen({ id }: { id?: string }) {
         </div>
       )}
 
-      <div className="section-label mt-lg">Cooking steps</div>
+      <div className="section-label mt-lg">{t('dish.cookingSteps')}</div>
       {dish.steps.map((s, i) => (
         <div key={i} className="hstack mb" style={{ alignItems: 'flex-start' }}>
           <div className="step-n" style={{ marginTop: 10 }}>{i + 1}</div>
-          <TextArea rows={2} value={s} placeholder="What to do…" onChange={(v) => patch({ steps: dish.steps.map((x, k) => (k === i ? v : x)) })} />
-          <IconButton label="Remove step" className="iconbtn-plain" onClick={() => patch({ steps: dish.steps.filter((_, k) => k !== i) })}><IconTrash size={18} /></IconButton>
+          <TextArea rows={2} value={s} placeholder={t('dish.stepPlaceholder')} onChange={(v) => patch({ steps: dish.steps.map((x, k) => (k === i ? v : x)) })} />
+          <IconButton label={t('dish.removeStep')} className="iconbtn-plain" onClick={() => patch({ steps: dish.steps.filter((_, k) => k !== i) })}><IconTrash size={18} /></IconButton>
         </div>
       ))}
-      <Button variant="secondary" full icon={<IconPlus size={18} />} onClick={() => patch({ steps: [...dish.steps, ''] })}>Add step</Button>
+      <Button variant="secondary" full icon={<IconPlus size={18} />} onClick={() => patch({ steps: [...dish.steps, ''] })}>{t('dish.addStep')}</Button>
 
-      <Field label="Notes" ><TextArea value={dish.notes} onChange={(v) => patch({ notes: v })} placeholder="Tips, substitutions, where you found it…" /></Field>
+      <Field label={t('dish.notes')} ><TextArea value={dish.notes} onChange={(v) => patch({ notes: v })} placeholder={t('dish.notesPlaceholder')} /></Field>
 
       <div className="stack mt-lg">
-        <Button variant="meals" size="lg" full onClick={save} disabled={saving}>{id ? 'Save changes' : 'Create dish'}</Button>
-        <Button variant="ghost" full onClick={cancel}>Cancel</Button>
+        <Button variant="meals" size="lg" full onClick={save} disabled={saving}>{id ? t('common.saveChanges') : t('dish.createDish')}</Button>
+        <Button variant="ghost" full onClick={cancel}>{t('common.cancel')}</Button>
       </div>
     </Screen>
   );

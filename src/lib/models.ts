@@ -114,6 +114,7 @@ export interface ScheduleEntry {
 export interface StoredBlob { id: string; blob: Blob; type: string; name: string }
 
 export type Theme = 'system' | 'light' | 'dark';
+export type Lang = 'en' | 'ka';
 
 export interface Profile {
   weightKg: number;
@@ -133,6 +134,16 @@ export interface Prefs {
   voice: boolean;
   countdownSeconds: number; // "3-2-1" cue length
   keepAwake: boolean;
+  language: Lang;
+}
+
+/** Georgian for Georgian-locale devices, English otherwise. */
+function detectLanguage(): Lang {
+  try {
+    const langs = (typeof navigator !== 'undefined' && (navigator.languages?.length ? navigator.languages : [navigator.language])) || [];
+    if (langs.some((l) => l?.toLowerCase().startsWith('ka'))) return 'ka';
+  } catch { /* ignore */ }
+  return 'en';
 }
 
 export const DEFAULT_PROFILE: Profile = {
@@ -153,4 +164,5 @@ export const DEFAULT_PREFS: Prefs = {
   voice: true,
   countdownSeconds: 3,
   keepAwake: true,
+  language: detectLanguage(),
 };

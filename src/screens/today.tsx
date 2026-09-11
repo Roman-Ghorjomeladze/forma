@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { put } from '../lib/db.js';
 import { addDays, fmtDuration, formatLong, todayKey } from '../lib/dates.js';
 import { useProfile } from '../lib/hooks.js';
+import { useT } from '../lib/i18n.js';
 import { navigate } from '../lib/router.js';
 import { useDishMap, useExerciseMap, useMealSlots, useSchedule, useSessions, useWorkouts } from '../lib/queries.js';
 import { dayNutrition, perServing } from '../lib/nutrition.js';
@@ -12,9 +13,9 @@ import { IconCheck, IconChevron, IconDumbbell, IconFlame, IconPlus } from '../ui
 import { DishThumb } from './meals/dish-thumb.js';
 import { AddDishSheet } from './meals/add-dish-sheet.js';
 
-const SLOT_LABEL: Record<string, string> = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack' };
-
 export function TodayScreen() {
+  const t = useT();
+  const SLOT_LABEL: Record<string, string> = { breakfast: t('meal.breakfast'), lunch: t('meal.lunch'), dinner: t('meal.dinner'), snack: t('meal.snack') };
   const today = todayKey();
   const [profile] = useProfile();
   const slots = useMealSlots([today]);
@@ -63,42 +64,42 @@ export function TodayScreen() {
 
   return (
     <Screen>
-      <TopBar large eyebrow={formatLong(today)} title="Today" right={streak > 0 ? <span className="streak"><IconFlame size={16} strokeWidth={2.2} />{streak}-day streak</span> : undefined} />
+      <TopBar large eyebrow={formatLong(today)} title={t('today.title')} right={streak > 0 ? <span className="streak"><IconFlame size={16} strokeWidth={2.2} />{t('today.streak', { n: streak })}</span> : undefined} />
 
       <Card dark className="energy mb">
         <div className="energy-top">
           <div className="energy-left">
             <span className="energy-big">{Math.round(remaining).toLocaleString()}</span>
-            <span className="muted" style={{ fontWeight: 600, fontSize: 14 }}>kcal left</span>
+            <span className="muted" style={{ fontWeight: 600, fontSize: 14 }}>{t('today.kcalLeft')}</span>
           </div>
-          <span className="muted small">target {profile.targetKcal.toLocaleString()}</span>
+          <span className="muted small">{t('today.target', { n: profile.targetKcal.toLocaleString() })}</span>
         </div>
         <div className="energy-bar">
           <div style={{ width: `${eatenPct}%`, background: 'var(--meals)' }} />
           <div style={{ width: `${burnedPct}%`, background: 'var(--workout)' }} />
         </div>
         <div className="energy-legend">
-          <span><i className="dot" style={{ background: 'var(--meals)' }} />Eaten {Math.round(eaten?.kcal ?? 0).toLocaleString()}</span>
-          <span><i className="dot" style={{ background: 'var(--workout)' }} />Burned {Math.round(burned).toLocaleString()}</span>
-          {planned && planned.kcal !== (eaten?.kcal ?? 0) && <span>Planned {Math.round(planned.kcal).toLocaleString()}</span>}
+          <span><i className="dot" style={{ background: 'var(--meals)' }} />{t('today.eaten', { n: Math.round(eaten?.kcal ?? 0).toLocaleString() })}</span>
+          <span><i className="dot" style={{ background: 'var(--workout)' }} />{t('today.burned', { n: Math.round(burned).toLocaleString() })}</span>
+          {planned && planned.kcal !== (eaten?.kcal ?? 0) && <span>{t('today.planned', { n: Math.round(planned.kcal).toLocaleString() })}</span>}
         </div>
         <div className="macros">
-          <MacroBar label="Protein" value={eaten?.protein ?? 0} target={profile.targetProtein} color="var(--protein)" />
-          <MacroBar label="Carbs" value={eaten?.carbs ?? 0} target={profile.targetCarbs} color="var(--carbs)" />
-          <MacroBar label="Fat" value={eaten?.fat ?? 0} target={profile.targetFat} color="var(--fat)" />
+          <MacroBar label={t('today.macro.protein')} value={eaten?.protein ?? 0} target={profile.targetProtein} color="var(--protein)" />
+          <MacroBar label={t('today.macro.carbs')} value={eaten?.carbs ?? 0} target={profile.targetCarbs} color="var(--carbs)" />
+          <MacroBar label={t('today.macro.fat')} value={eaten?.fat ?? 0} target={profile.targetFat} color="var(--fat)" />
         </div>
       </Card>
 
-      <Section title="Workout" right={<span>{doneToday ? `${todaySessions.length} done today` : scheduled ? 'Scheduled today' : weekMinutes > 0 ? `${weekMinutes} min this week` : undefined}</span>}>
+      <Section title={t('today.workout')} right={<span>{doneToday ? t('today.doneToday', { n: todaySessions.length }) : scheduled ? t('today.scheduledToday') : weekMinutes > 0 ? t('today.minThisWeek', { n: weekMinutes }) : undefined}</span>}>
         {scheduled ? (
           <Card>
             <div className="workout-card">
               <div className="thumb thumb-workout"><IconDumbbell strokeWidth={2.2} /></div>
               <div className="row-main">
                 <div className="row-title">{scheduled.name}</div>
-                <div className="row-sub">{est ? `${fmtDuration(est.seconds)} · ${est.exercises} exercises · ~${Math.round(est.kcal)} kcal` : ''}</div>
+                <div className="row-sub">{est ? `${fmtDuration(est.seconds)} · ${est.exercises} ${t('unit.exercises')} · ~${Math.round(est.kcal)} ${t('unit.kcal')}` : ''}</div>
               </div>
-              <Button size="sm" onClick={() => navigate(`/workouts/${scheduled.id}/play`)}>{doneToday ? 'Again' : 'Start'}</Button>
+              <Button size="sm" onClick={() => navigate(`/workouts/${scheduled.id}/play`)}>{doneToday ? t('today.again') : t('today.start')}</Button>
             </div>
           </Card>
         ) : (
@@ -106,8 +107,8 @@ export function TodayScreen() {
             <div className="workout-card">
               <div className="thumb thumb-workout"><IconDumbbell strokeWidth={2.2} /></div>
               <div className="row-main">
-                <div className="row-title">{doneToday ? 'Nice work today' : 'Rest day'}</div>
-                <div className="row-sub">{doneToday ? `${Math.round(burned)} kcal burned` : 'Nothing scheduled — pick a workout anyway'}</div>
+                <div className="row-title">{doneToday ? t('today.niceWorkToday') : t('today.restDay')}</div>
+                <div className="row-sub">{doneToday ? t('today.kcalBurned', { n: Math.round(burned) }) : t('today.nothingScheduled')}</div>
               </div>
               <IconChevron className="muted" />
             </div>
@@ -115,7 +116,7 @@ export function TodayScreen() {
         )}
       </Section>
 
-      <Section title="Meals" right={<button className="c-meals" onClick={() => navigate('/meals')}>Plan week</button>}>
+      <Section title={t('today.meals')} right={<button className="c-meals" onClick={() => navigate('/meals')}>{t('today.planWeek')}</button>}>
         {slots && dishes && slots.length > 0 ? (
           <div className="list">
             {MEAL_CATEGORIES.flatMap((cat) => slots.filter((s) => s.slot === cat)).map((slot) => {
@@ -124,23 +125,23 @@ export function TodayScreen() {
               const n = perServing(dish);
               return (
                 <Row key={slot.id} className={slot.eaten ? 'row-done' : ''} onClick={() => navigate(`/meals/dish/${dish.id}`)} right={<span className="num">{Math.round(n.kcal * slot.servings)}</span>}>
-                  <button className={`check ${slot.eaten ? 'on' : ''}`} aria-label={slot.eaten ? 'Mark not eaten' : 'Mark eaten'} onClick={(e: { stopPropagation: () => void }) => { e.stopPropagation(); toggleEaten(slot); }}>
+                  <button className={`check ${slot.eaten ? 'on' : ''}`} aria-label={slot.eaten ? t('today.markNotEaten') : t('today.markEaten')} onClick={(e: { stopPropagation: () => void }) => { e.stopPropagation(); toggleEaten(slot); }}>
                     {slot.eaten && <IconCheck size={14} strokeWidth={3} />}
                   </button>
                   <DishThumb dish={dish} small />
                   <div className="row-main">
                     <div className="row-title">{dish.name}</div>
-                    <div className="row-sub">{SLOT_LABEL[slot.slot]}{slot.servings !== 1 ? ` · ${slot.servings} servings` : ''}{dish.prepMin + dish.cookMin > 0 ? ` · ${dish.prepMin + dish.cookMin} min` : ''}</div>
+                    <div className="row-sub">{SLOT_LABEL[slot.slot]}{slot.servings !== 1 ? ` · ${slot.servings} ${t('unit.servings')}` : ''}{dish.prepMin + dish.cookMin > 0 ? ` · ${dish.prepMin + dish.cookMin} ${t('unit.min')}` : ''}</div>
                   </div>
                 </Row>
               );
             })}
           </div>
         ) : (
-          <Empty title="Nothing planned for today" text="Add a dish for today or plan the whole week." action={<Button variant="meals" size="sm" icon={<IconPlus size={18} />} onClick={() => setAdding(true)}>Add a dish</Button>} />
+          <Empty title={t('today.nothingPlanned')} text={t('today.addDishOrPlanWeek')} action={<Button variant="meals" size="sm" icon={<IconPlus size={18} />} onClick={() => setAdding(true)}>{t('today.addDish')}</Button>} />
         )}
         {slots && slots.length > 0 && (
-          <button className="addslot" onClick={() => setAdding(true)}><IconPlus size={18} />Add a dish to today</button>
+          <button className="addslot" onClick={() => setAdding(true)}><IconPlus size={18} />{t('today.addDishToToday')}</button>
         )}
       </Section>
 

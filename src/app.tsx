@@ -3,6 +3,7 @@ import { navigate, useRoute } from './lib/router.js';
 import { prefsStore, profileStore, usePrefs } from './lib/hooks.js';
 import { seedIfEmpty } from './data/seed.js';
 import { setVoiceEnabled } from './lib/audio.js';
+import { useT } from './lib/i18n.js';
 import { DialogHost } from './ui/dialogs.js';
 import { IconDumbbell, IconHome, IconMeals, IconSettings } from './ui/icons.js';
 import { TodayScreen } from './screens/today.js';
@@ -43,6 +44,7 @@ function useTheme() {
     return () => mq.removeEventListener('change', apply);
   }, [prefs.theme]);
   useEffect(() => { setVoiceEnabled(prefs.voice); }, [prefs.voice]);
+  useEffect(() => { document.documentElement.lang = prefs.language; }, [prefs.language]);
 }
 
 function useServiceWorker() {
@@ -115,14 +117,15 @@ export function App() {
   } else if (top === 'settings') screen = <SettingsScreen />;
   else screen = <TodayScreen />;
 
+  const t = useT();
   return (
     <div className="app">
       {screen as any}
       {showTabs && <TabBar active={top} />}
       {sw.waiting && (
         <div className="update-banner">
-          <span>A new version of Forma is ready.</span>
-          <button className="btn" onClick={sw.update}>Update</button>
+          <span>{t('app.updateReady')}</span>
+          <button className="btn" onClick={sw.update}>{t('app.update')}</button>
         </div>
       )}
       <DialogHost />
@@ -131,11 +134,12 @@ export function App() {
 }
 
 function TabBar({ active }: { active: string }) {
+  const t = useT();
   const tabs = [
-    { key: '', label: 'Today', icon: <IconHome />, cls: '' },
-    { key: 'meals', label: 'Meals', icon: <IconMeals />, cls: 'tab-meals' },
-    { key: 'workouts', label: 'Workouts', icon: <IconDumbbell />, cls: 'tab-workouts' },
-    { key: 'settings', label: 'Settings', icon: <IconSettings />, cls: '' },
+    { key: '', label: t('tab.today'), icon: <IconHome />, cls: '' },
+    { key: 'meals', label: t('tab.meals'), icon: <IconMeals />, cls: 'tab-meals' },
+    { key: 'workouts', label: t('tab.workouts'), icon: <IconDumbbell />, cls: 'tab-workouts' },
+    { key: 'settings', label: t('tab.settings'), icon: <IconSettings />, cls: '' },
   ];
   return (
     <nav className="tabbar-wrap">

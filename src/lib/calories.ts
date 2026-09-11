@@ -1,4 +1,5 @@
 import type { Block, Exercise, Step, Workout } from './models.js';
+import { tGlobal } from './i18n.js';
 
 export const REST_MET = 1.3;
 
@@ -27,17 +28,17 @@ export function expandWorkout(workout: Workout, ex: Map<string, Exercise>): Step
   const walk = (blocks: Block[], round?: Step['round']) => {
     for (const b of blocks) {
       if (b.type === 'rest') {
-        push({ type: 'rest', label: 'Rest', seconds: b.seconds, met: REST_MET, round });
+        push({ type: 'rest', label: tGlobal('step.rest'), seconds: b.seconds, met: REST_MET, round });
       } else if (b.type === 'exercise') {
         const e = ex.get(b.exerciseId);
         const seconds = blockSeconds(b, ex);
         const reps = b.reps ?? (b.seconds == null && e?.kind === 'reps' ? e.defaultAmount : undefined);
-        push({ type: 'exercise', label: e?.name ?? 'Exercise', seconds, reps, exerciseId: b.exerciseId, met: e?.met ?? 4, round });
+        push({ type: 'exercise', label: e?.name ?? tGlobal('step.exercise'), seconds, reps, exerciseId: b.exerciseId, met: e?.met ?? 4, round });
       } else {
         for (let r = 1; r <= b.rounds; r++) {
           walk(b.blocks, { n: r, of: b.rounds, name: b.name });
           if (r < b.rounds && b.restBetweenRounds > 0) {
-            push({ type: 'rest', label: 'Round rest', seconds: b.restBetweenRounds, met: REST_MET, round: { n: r, of: b.rounds, name: b.name } });
+            push({ type: 'rest', label: tGlobal('step.roundRest'), seconds: b.restBetweenRounds, met: REST_MET, round: { n: r, of: b.rounds, name: b.name } });
           }
         }
       }

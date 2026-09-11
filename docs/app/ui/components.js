@@ -3,12 +3,14 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IconBack, IconChevronDown, IconClose, IconMinus, IconPlus } from './icons.js';
 import { back } from '../lib/router.js';
+import { useT } from '../lib/i18n.js';
 // ---- layout ---------------------------------------------------------------------------------
 export function Screen({ children, className = '', padded = true }) {
     return _jsx("div", { className: `screen ${padded ? 'screen-padded' : ''} ${className}`, children: children });
 }
 export function TopBar({ title, eyebrow, backTo, right, large = false, onBack }) {
-    return (_jsxs("header", { className: `topbar ${large ? 'topbar-large' : ''}`, children: [(backTo || onBack) && (_jsx("button", { className: "iconbtn", "aria-label": "Back", onClick: () => (onBack ? onBack() : back(backTo)), children: _jsx(IconBack, {}) })), _jsxs("div", { className: "topbar-titles", children: [eyebrow && _jsx("div", { className: "eyebrow", children: eyebrow }), _jsx("h1", { className: large ? 'title-large' : 'title', children: title })] }), right && _jsx("div", { className: "topbar-right", children: right })] }));
+    const t = useT();
+    return (_jsxs("header", { className: `topbar ${large ? 'topbar-large' : ''}`, children: [(backTo || onBack) && (_jsx("button", { className: "iconbtn", "aria-label": t('common.back'), onClick: () => (onBack ? onBack() : back(backTo)), children: _jsx(IconBack, {}) })), _jsxs("div", { className: "topbar-titles", children: [eyebrow && _jsx("div", { className: "eyebrow", children: eyebrow }), _jsx("h1", { className: large ? 'title-large' : 'title', children: title })] }), right && _jsx("div", { className: "topbar-right", children: right })] }));
 }
 export function Section({ title, right, children, className = '' }) {
     return (_jsxs("section", { className: `section ${className}`, children: [(title || right) && (_jsxs("div", { className: "section-head", children: [title && _jsx("h2", { className: "section-title", children: title }), right && _jsx("div", { className: "section-right", children: right })] })), children] }));
@@ -72,7 +74,8 @@ export function Stepper({ value, onChange, min = 0, max = 999, step = 1, format 
         holdRef.current = window.setInterval(() => { n++; bump(d * (n > 10 ? 5 : 1)); }, n > 10 ? 80 : 140);
     };
     const stop = () => { window.clearInterval(holdRef.current); };
-    return (_jsxs("div", { className: "stepper", children: [_jsx("button", { type: "button", className: "stepper-btn", "aria-label": "Decrease", onPointerDown: () => start(-step), onPointerUp: stop, onPointerLeave: stop, onPointerCancel: stop, children: _jsx(IconMinus, { size: 18 }) }), _jsx("span", { className: "stepper-value", children: format ? format(value) : value }), _jsx("button", { type: "button", className: "stepper-btn", "aria-label": "Increase", onPointerDown: () => start(step), onPointerUp: stop, onPointerLeave: stop, onPointerCancel: stop, children: _jsx(IconPlus, { size: 18 }) })] }));
+    const t = useT();
+    return (_jsxs("div", { className: "stepper", children: [_jsx("button", { type: "button", className: "stepper-btn", "aria-label": t('common.decrease'), onPointerDown: () => start(-step), onPointerUp: stop, onPointerLeave: stop, onPointerCancel: stop, children: _jsx(IconMinus, { size: 18 }) }), _jsx("span", { className: "stepper-value", children: format ? format(value) : value }), _jsx("button", { type: "button", className: "stepper-btn", "aria-label": t('common.increase'), onPointerDown: () => start(step), onPointerUp: stop, onPointerLeave: stop, onPointerCancel: stop, children: _jsx(IconPlus, { size: 18 }) })] }));
 }
 export function Select({ value, options, onChange }) {
     return (_jsxs("span", { className: "selectwrap", children: [_jsx("select", { className: "input select", value: value, onChange: (e) => onChange(e.target.value), children: options.map((o) => _jsx("option", { value: o.value, children: o.label }, o.value)) }), _jsx(IconChevronDown, { size: 16, className: "select-caret" })] }));
@@ -86,6 +89,7 @@ export function MacroBar({ label, value, target, color }) {
 }
 // ---- bottom sheet ---------------------------------------------------------------------------
 export function Sheet({ open, onClose, title, children, footer, full = false }) {
+    const t = useT();
     useEffect(() => {
         if (!open)
             return;
@@ -98,7 +102,7 @@ export function Sheet({ open, onClose, title, children, footer, full = false }) 
     }, [open, onClose]);
     if (!open)
         return null;
-    return createPortal(_jsx("div", { className: "sheet-backdrop", onClick: onClose, children: _jsxs("div", { className: `sheet ${full ? 'sheet-full' : ''}`, role: "dialog", "aria-modal": "true", onClick: (e) => e.stopPropagation(), children: [_jsx("div", { className: "sheet-handle" }), title && (_jsxs("div", { className: "sheet-head", children: [_jsx("div", { className: "sheet-title", children: title }), _jsx("button", { className: "iconbtn", "aria-label": "Close", onClick: onClose, children: _jsx(IconClose, {}) })] })), _jsx("div", { className: "sheet-body", children: children }), footer && _jsx("div", { className: "sheet-footer", children: footer })] }) }), document.body);
+    return createPortal(_jsx("div", { className: "sheet-backdrop", onClick: onClose, children: _jsxs("div", { className: `sheet ${full ? 'sheet-full' : ''}`, role: "dialog", "aria-modal": "true", onClick: (e) => e.stopPropagation(), children: [_jsx("div", { className: "sheet-handle" }), title && (_jsxs("div", { className: "sheet-head", children: [_jsx("div", { className: "sheet-title", children: title }), _jsx("button", { className: "iconbtn", "aria-label": t('common.close'), onClick: onClose, children: _jsx(IconClose, {}) })] })), _jsx("div", { className: "sheet-body", children: children }), footer && _jsx("div", { className: "sheet-footer", children: footer })] }) }), document.body);
 }
 export function Stat({ value, label, tone }) {
     return (_jsxs("div", { className: `stat ${tone ? `stat-${tone}` : ''}`, children: [_jsx("div", { className: "stat-value", children: value }), _jsx("div", { className: "stat-label", children: label })] }));

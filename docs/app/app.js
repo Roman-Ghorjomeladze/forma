@@ -4,6 +4,7 @@ import { navigate, useRoute } from './lib/router.js';
 import { prefsStore, profileStore, usePrefs } from './lib/hooks.js';
 import { seedIfEmpty } from './data/seed.js';
 import { setVoiceEnabled } from './lib/audio.js';
+import { useT } from './lib/i18n.js';
 import { DialogHost } from './ui/dialogs.js';
 import { IconDumbbell, IconHome, IconMeals, IconSettings } from './ui/icons.js';
 import { TodayScreen } from './screens/today.js';
@@ -47,6 +48,7 @@ function useTheme() {
         return () => mq.removeEventListener('change', apply);
     }, [prefs.theme]);
     useEffect(() => { setVoiceEnabled(prefs.voice); }, [prefs.voice]);
+    useEffect(() => { document.documentElement.lang = prefs.language; }, [prefs.language]);
 }
 function useServiceWorker() {
     const [waiting, setWaiting] = useState(null);
@@ -164,14 +166,16 @@ export function App() {
         screen = _jsx(SettingsScreen, {});
     else
         screen = _jsx(TodayScreen, {});
-    return (_jsxs("div", { className: "app", children: [screen, showTabs && _jsx(TabBar, { active: top }), sw.waiting && (_jsxs("div", { className: "update-banner", children: [_jsx("span", { children: "A new version of Forma is ready." }), _jsx("button", { className: "btn", onClick: sw.update, children: "Update" })] })), _jsx(DialogHost, {})] }));
+    const t = useT();
+    return (_jsxs("div", { className: "app", children: [screen, showTabs && _jsx(TabBar, { active: top }), sw.waiting && (_jsxs("div", { className: "update-banner", children: [_jsx("span", { children: t('app.updateReady') }), _jsx("button", { className: "btn", onClick: sw.update, children: t('app.update') })] })), _jsx(DialogHost, {})] }));
 }
 function TabBar({ active }) {
+    const t = useT();
     const tabs = [
-        { key: '', label: 'Today', icon: _jsx(IconHome, {}), cls: '' },
-        { key: 'meals', label: 'Meals', icon: _jsx(IconMeals, {}), cls: 'tab-meals' },
-        { key: 'workouts', label: 'Workouts', icon: _jsx(IconDumbbell, {}), cls: 'tab-workouts' },
-        { key: 'settings', label: 'Settings', icon: _jsx(IconSettings, {}), cls: '' },
+        { key: '', label: t('tab.today'), icon: _jsx(IconHome, {}), cls: '' },
+        { key: 'meals', label: t('tab.meals'), icon: _jsx(IconMeals, {}), cls: 'tab-meals' },
+        { key: 'workouts', label: t('tab.workouts'), icon: _jsx(IconDumbbell, {}), cls: 'tab-workouts' },
+        { key: 'settings', label: t('tab.settings'), icon: _jsx(IconSettings, {}), cls: '' },
     ];
     return (_jsx("nav", { className: "tabbar-wrap", children: _jsx("div", { className: "tabbar", children: tabs.map((t) => (_jsxs("button", { className: `tab ${t.cls} ${active === t.key ? 'active' : ''}`, onClick: () => navigate('/' + t.key), "aria-current": active === t.key ? 'page' : undefined, children: [t.icon, _jsx("span", { children: t.label })] }, t.key))) }) }));
 }

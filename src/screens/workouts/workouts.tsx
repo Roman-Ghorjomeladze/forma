@@ -3,12 +3,14 @@ import { bulkPut, remove } from '../../lib/db.js';
 import { fmtDuration, weekdayName } from '../../lib/dates.js';
 import { estimateWorkout } from '../../lib/calories.js';
 import { useProfile } from '../../lib/hooks.js';
+import { useT } from '../../lib/i18n.js';
 import { useExerciseMap, useSchedule, useSessions, useWorkouts } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
 import { Button, Card, Empty, IconButton, Row, Screen, Section, Sheet, TopBar } from '../../ui/components.js';
 import { IconChevron, IconDumbbell, IconHistory, IconPlus, IconStar } from '../../ui/icons.js';
 
 export function WorkoutsScreen() {
+  const t = useT();
   const [profile] = useProfile();
   const workouts = useWorkouts();
   const exercises = useExerciseMap();
@@ -32,14 +34,14 @@ export function WorkoutsScreen() {
 
   return (
     <Screen>
-      <TopBar large title="Workouts" eyebrow={weekKcal > 0 ? `${weekKcal} kcal burned this week` : `${workouts?.length ?? 0} workouts`}
+      <TopBar large title={t('workouts.title')} eyebrow={weekKcal > 0 ? t('workouts.kcalBurnedThisWeek', { n: weekKcal }) : t('workouts.countWorkouts', { n: workouts?.length ?? 0 })}
         right={<>
-          <IconButton label="History" onClick={() => navigate('/workouts/history')}><IconHistory size={20} /></IconButton>
-          <IconButton label="Exercise library" onClick={() => navigate('/workouts/exercises')}><IconStar size={20} /></IconButton>
-          <IconButton label="New workout" tone="accent" onClick={() => navigate('/workouts/new')}><IconPlus /></IconButton>
+          <IconButton label={t('workouts.history')} onClick={() => navigate('/workouts/history')}><IconHistory size={20} /></IconButton>
+          <IconButton label={t('workouts.exerciseLibrary')} onClick={() => navigate('/workouts/exercises')}><IconStar size={20} /></IconButton>
+          <IconButton label={t('workouts.newWorkout')} tone="accent" onClick={() => navigate('/workouts/new')}><IconPlus /></IconButton>
         </>} />
 
-      <Section title="Weekly schedule" right={<span>tap a day to assign</span>}>
+      <Section title={t('workouts.weeklySchedule')} right={<span>{t('workouts.tapDayToAssign')}</span>}>
         <div className="calendar-week">
           {order.map((wd) => {
             const w = workouts?.find((x) => x.id === byDay.get(wd));
@@ -53,9 +55,9 @@ export function WorkoutsScreen() {
         </div>
       </Section>
 
-      <Section title="My workouts">
+      <Section title={t('workouts.myWorkouts')}>
         {workouts && workouts.length === 0 ? (
-          <Empty icon={<IconDumbbell size={40} />} title="No workouts yet" text="Build a chain of exercises and rests, then start the guided timer." action={<Button icon={<IconPlus size={18} />} onClick={() => navigate('/workouts/new')}>New workout</Button>} />
+          <Empty icon={<IconDumbbell size={40} />} title={t('workouts.noWorkoutsYet')} text={t('workouts.noWorkoutsHint')} action={<Button icon={<IconPlus size={18} />} onClick={() => navigate('/workouts/new')}>{t('workouts.newWorkout')}</Button>} />
         ) : (
           <div className="stack">
             {(workouts ?? []).map((w) => {
@@ -66,9 +68,9 @@ export function WorkoutsScreen() {
                     <span className="workout-color" style={{ background: w.color }} />
                     <div className="row-main">
                       <div className="row-title">{w.name}</div>
-                      <div className="row-sub">{est ? `${fmtDuration(est.seconds)} · ${est.exercises} exercises · ~${Math.round(est.kcal)} kcal` : ''}</div>
+                      <div className="row-sub">{est ? `${fmtDuration(est.seconds)} · ${est.exercises} ${t('unit.exercises')} · ~${Math.round(est.kcal)} ${t('unit.kcal')}` : ''}</div>
                     </div>
-                    <Button size="sm" onClick={() => navigate(`/workouts/${w.id}/play`)}>Start</Button>
+                    <Button size="sm" onClick={() => navigate(`/workouts/${w.id}/play`)}>{t('today.start')}</Button>
                     <IconChevron className="muted" />
                   </div>
                 </Card>
@@ -81,12 +83,12 @@ export function WorkoutsScreen() {
       <Sheet open={pickDay !== null} onClose={() => setPickDay(null)} title={pickDay !== null ? `${weekdayName(pickDay, true)}` : ''}>
         <div className="list">
           {(workouts ?? []).map((w) => (
-            <Row key={w.id} onClick={() => pickDay !== null && setDay(pickDay, w.id)} right={pickDay !== null && byDay.get(pickDay) === w.id ? <span className="c-workout">Assigned</span> : undefined}>
+            <Row key={w.id} onClick={() => pickDay !== null && setDay(pickDay, w.id)} right={pickDay !== null && byDay.get(pickDay) === w.id ? <span className="c-workout">{t('workouts.assigned')}</span> : undefined}>
               <span className="sched-swatch" style={{ background: w.color, width: 12, height: 12 }} />
               <div className="row-main"><div className="row-title">{w.name}</div></div>
             </Row>
           ))}
-          <Row onClick={() => pickDay !== null && setDay(pickDay, null)}><div className="row-main"><div className="row-title muted">Rest day (nothing scheduled)</div></div></Row>
+          <Row onClick={() => pickDay !== null && setDay(pickDay, null)}><div className="row-main"><div className="row-title muted">{t('workouts.restDayNothing')}</div></div></Row>
         </div>
       </Sheet>
     </Screen>

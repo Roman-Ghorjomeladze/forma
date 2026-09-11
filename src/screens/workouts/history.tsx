@@ -1,12 +1,14 @@
 import { useMemo } from 'react';
 import { remove } from '../../lib/db.js';
 import { fmtClock, formatDateTime } from '../../lib/dates.js';
+import { useT } from '../../lib/i18n.js';
 import { useSessions } from '../../lib/queries.js';
 import { Empty, IconButton, Screen, Stat, TopBar } from '../../ui/components.js';
 import { confirmDialog } from '../../ui/dialogs.js';
 import { IconHistory, IconTrash } from '../../ui/icons.js';
 
 export function HistoryScreen() {
+  const t = useT();
   const sessions = useSessions(500);
   const totals = useMemo(() => {
     const list = sessions ?? [];
@@ -17,24 +19,24 @@ export function HistoryScreen() {
 
   return (
     <Screen>
-      <TopBar large backTo="/workouts" title="History" eyebrow={`${totals.count} sessions`} />
+      <TopBar large backTo="/workouts" title={t('history.title')} eyebrow={t('history.sessionsCount', { n: totals.count })} />
       <div className="stats stats-3 mb">
-        <Stat value={totals.weekCount} label="this week" />
-        <Stat value={totals.weekMin} label="active min" />
-        <Stat tone="workout" value={totals.weekKcal} label="kcal" />
+        <Stat value={totals.weekCount} label={t('history.thisWeek')} />
+        <Stat value={totals.weekMin} label={t('history.activeMin')} />
+        <Stat tone="workout" value={totals.weekKcal} label={t('unit.kcal')} />
       </div>
       {sessions && sessions.length === 0 ? (
-        <Empty icon={<IconHistory size={40} />} title="No sessions yet" text="Finish a workout and it will show up here." />
+        <Empty icon={<IconHistory size={40} />} title={t('history.noSessionsYet')} text={t('history.noSessionsHint')} />
       ) : (
         <div className="list">
           {(sessions ?? []).map((s) => (
             <div key={s.id} className="row">
               <div className="row-main">
                 <div className="row-title">{s.workoutName}</div>
-                <div className="row-sub">{formatDateTime(s.startedAt)} · {fmtClock(Math.round((s.endedAt - s.startedAt) / 1000))} · {s.completedSteps}/{s.totalSteps} steps</div>
+                <div className="row-sub">{formatDateTime(s.startedAt)} · {fmtClock(Math.round((s.endedAt - s.startedAt) / 1000))} · {s.completedSteps}/{s.totalSteps} {t('player.stepsLabel')}</div>
               </div>
-              <div className="row-right c-workout num">{Math.round(s.kcal)} kcal</div>
-              <IconButton label="Delete" className="iconbtn-plain" onClick={async () => { if (await confirmDialog({ title: 'Delete this session?', confirmLabel: 'Delete', danger: true })) remove('sessions', s.id); }}><IconTrash size={18} /></IconButton>
+              <div className="row-right c-workout num">{Math.round(s.kcal)} {t('unit.kcal')}</div>
+              <IconButton label={t('common.delete')} className="iconbtn-plain" onClick={async () => { if (await confirmDialog({ title: t('history.deleteSessionTitle'), confirmLabel: t('common.delete'), danger: true })) remove('sessions', s.id); }}><IconTrash size={18} /></IconButton>
             </div>
           ))}
         </div>

@@ -1,4 +1,5 @@
 // Sound + voice cues. iOS needs the AudioContext to be created/resumed inside a user gesture (see unlock()).
+import { getLang } from './i18n.js';
 let ctx = null;
 export function unlockAudio() {
     try {
@@ -56,7 +57,9 @@ export function speak(text, { interrupt = true, rate = 1.05 } = {}) {
             speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(text);
         u.rate = rate;
-        u.lang = 'en-US';
+        // iOS/Safari falls back to a default system voice if no Georgian voice is installed —
+        // the cue still plays (just pronounced with an English voice), it never throws.
+        u.lang = getLang() === 'ka' ? 'ka-GE' : 'en-US';
         speechSynthesis.speak(u);
     }
     catch { /* ignore */ }

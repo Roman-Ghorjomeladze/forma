@@ -3,6 +3,7 @@ import { bulkPut, bulkRemove, put, remove } from '../../lib/db.js';
 import { uid } from '../../lib/ids.js';
 import { addDays, dayOfMonth, formatRange, relativeDay, startOfWeek, todayKey, weekDays, weekdayShort } from '../../lib/dates.js';
 import { useProfile } from '../../lib/hooks.js';
+import { useT } from '../../lib/i18n.js';
 import { MEAL_CATEGORIES, type MealCategory, type MealSlot } from '../../lib/models.js';
 import { dayNutrition, perServing } from '../../lib/nutrition.js';
 import { useDishMap, useMealSlots } from '../../lib/queries.js';
@@ -13,9 +14,9 @@ import { IconBack, IconBowl, IconCart, IconCheck, IconChevron, IconCopy, IconMor
 import { AddDishSheet } from './add-dish-sheet.js';
 import { DishThumb } from './dish-thumb.js';
 
-const LABEL: Record<MealCategory, string> = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snack: 'Snack' };
-
 export function MealsScreen() {
+  const t = useT();
+  const LABEL: Record<MealCategory, string> = { breakfast: t('meal.breakfast'), lunch: t('meal.lunch'), dinner: t('meal.dinner'), snack: t('meal.snack') };
   const [profile] = useProfile();
   const today = todayKey();
   const [weekStart, setWeekStart] = useState(() => startOfWeek(today, profile.weekStartsOn));
@@ -41,42 +42,42 @@ export function MealsScreen() {
   const copyDayTo = async (target: string) => {
     const rows = daySlots.map((s) => ({ ...s, id: uid('slot'), date: target, eaten: false, order: Date.now() + s.order % 1000 }));
     await bulkPut('mealSlots', rows);
-    toast(`Copied to ${relativeDay(target)}`);
+    toast(t('meals.copiedToDay', { day: relativeDay(target) }));
   };
 
   const copyLastWeek = async () => {
     const { getByIndex } = await import('../../lib/db.js');
     const prev = weekDays(addDays(weekStart, -7));
     const prevSlots = await getByIndex('mealSlots', 'date', IDBKeyRange.bound(prev[0], prev[6]));
-    if (prevSlots.length === 0) { toast('Last week is empty'); return; }
+    if (prevSlots.length === 0) { toast(t('meals.lastWeekEmpty')); return; }
     if (slots && slots.length > 0) {
-      const ok = await confirmDialog({ title: 'Replace this week?', message: 'The current plan for this week will be replaced with last week’s.', confirmLabel: 'Replace', danger: true });
+      const ok = await confirmDialog({ title: t('meals.replaceWeekTitle'), message: t('meals.replaceWeekMsg'), confirmLabel: t('common.replace'), danger: true });
       if (!ok) return;
       await bulkRemove('mealSlots', slots.map((s) => s.id));
     }
     await bulkPut('mealSlots', prevSlots.map((s) => ({ ...s, id: uid('slot'), date: addDays(s.date, 7), eaten: false })));
-    toast('Copied last week');
+    toast(t('meals.copiedLastWeek'));
   };
 
   const clearDay = async () => {
     if (daySlots.length === 0) return;
-    const ok = await confirmDialog({ title: `Clear ${relativeDay(selected)}?`, confirmLabel: 'Clear', danger: true });
+    const ok = await confirmDialog({ title: t('meals.clearDayTitle', { day: relativeDay(selected) }), confirmLabel: t('common.clear'), danger: true });
     if (ok) await bulkRemove('mealSlots', daySlots.map((s) => s.id));
   };
 
   return (
     <Screen>
-      <TopBar large eyebrow={<button onClick={goToday}>{formatRange(days[0], days[6])}{weekStart !== startOfWeek(today, profile.weekStartsOn) ? ' · back to today' : ''}</button>} title="Meal plan"
+      <TopBar large eyebrow={<button onClick={goToday}>{formatRange(days[0], days[6])}{weekStart !== startOfWeek(today, profile.weekStartsOn) ? t('meals.backToToday') : ''}</button>} title={t('meals.title')}
         right={<>
-          <IconButton label="Shopping list" onClick={() => navigate('/meals/shopping?week=' + weekStart)}><IconCart size={20} /></IconButton>
-          <IconButton label="Dishes" onClick={() => navigate('/meals/dishes')}><IconBowl size={20} /></IconButton>
-          <IconButton label="More" onClick={() => setMenu(true)}><IconMore size={20} /></IconButton>
+          <IconButton label={t('meals.shoppingList')} onClick={() => navigate('/meals/shopping?week=' + weekStart)}><IconCart size={20} /></IconButton>
+          <IconButton label={t('meals.dishes')} onClick={() => navigate('/meals/dishes')}><IconBowl size={20} /></IconButton>
+          <IconButton label={t('meals.more')} onClick={() => setMenu(true)}><IconMore size={20} /></IconButton>
         </>} />
 
       <div className="weeknav">
-        <button className="iconbtn iconbtn-plain" aria-label="Previous week" onClick={() => shiftWeek(-1)}><IconBack /></button>
+        <button className="iconbtn iconbtn-plain" aria-label={t('meals.previousWeek')} onClick={() => shiftWeek(-1)}><IconBack /></button>
         <span className="small muted bold">{formatRange(days[0], days[6])}</span>
-        <button className="iconbtn iconbtn-plain" aria-label="Next week" onClick={() => shiftWeek(1)}><IconChevron /></button>
+        <button className="iconbtn iconbtn-plain" aria-label={t('meals.nextWeek')} onClick={() => shiftWeek(1)}><IconChevron /></button>
       </div>
 
       <div className="weekstrip">
@@ -92,7 +93,7 @@ export function MealsScreen() {
       <div className="daytotals">
         <div className="daytotals-kcal">
           <span className="big">{Math.round(totals?.kcal ?? 0).toLocaleString()}</span>
-          <span className="small muted">/ {profile.targetKcal.toLocaleString()} kcal</span>
+          <span className="small muted">/ {profile.targetKcal.toLocaleString()} {t('unit.kcal')}</span>
         </div>
         <div className="daytotals-macros">
           <span className="c-protein">P {Math.round(totals?.protein ?? 0)}</span>
@@ -104,7 +105,7 @@ export function MealsScreen() {
       <div className="spread mb">
         <span className="bold">{relativeDay(selected)}</span>
         <div className="hstack" style={{ gap: 6 }}>
-          {daySlots.length > 0 && <Button size="sm" variant="ghost" icon={<IconTrash size={16} />} onClick={clearDay}>Clear</Button>}
+          {daySlots.length > 0 && <Button size="sm" variant="ghost" icon={<IconTrash size={16} />} onClick={clearDay}>{t('common.clear')}</Button>}
         </div>
       </div>
 
@@ -121,21 +122,21 @@ export function MealsScreen() {
                   const n = perServing(dish);
                   return (
                     <Row key={slot.id} className={slot.eaten ? 'row-done' : ''} onClick={() => setEditing(slot)} right={
-                      <button className={`check ${slot.eaten ? 'on' : ''}`} aria-label="Toggle eaten" onClick={(e: { stopPropagation: () => void }) => { e.stopPropagation(); put('mealSlots', { ...slot, eaten: !slot.eaten }); }}>
+                      <button className={`check ${slot.eaten ? 'on' : ''}`} aria-label={t('meals.toggleEaten')} onClick={(e: { stopPropagation: () => void }) => { e.stopPropagation(); put('mealSlots', { ...slot, eaten: !slot.eaten }); }}>
                         {slot.eaten && <IconCheck size={14} strokeWidth={3} />}
                       </button>
                     }>
                       <DishThumb dish={dish} />
                       <div className="row-main">
                         <div className="row-title">{dish.name}</div>
-                        <div className="row-sub">{slot.servings} {slot.servings === 1 ? 'serving' : 'servings'} · {Math.round(n.kcal * slot.servings)} kcal · {Math.round(n.protein * slot.servings)} g protein</div>
+                        <div className="row-sub">{slot.servings} {slot.servings === 1 ? t('unit.serving') : t('unit.servings')} · {Math.round(n.kcal * slot.servings)} {t('unit.kcal')} · {Math.round(n.protein * slot.servings)} g {t('dish.protein')}</div>
                       </div>
                     </Row>
                   );
                 })}
               </div>
             )}
-            <button className="addslot" onClick={() => setAdding(cat)}><IconPlus size={18} />Add {rows.length > 0 ? 'another' : 'a dish'}</button>
+            <button className="addslot" onClick={() => setAdding(cat)}><IconPlus size={18} />{rows.length > 0 ? t('meals.addAnother') : t('meals.addADish')}</button>
           </section>
         );
       })}
@@ -146,39 +147,39 @@ export function MealsScreen() {
         {editing && (
           <div className="stack">
             <div className="spread">
-              <span className="bold">Servings</span>
+              <span className="bold">{t('meals.servings')}</span>
               <Stepper value={editing.servings} min={0.5} max={10} step={0.5} onChange={(v) => { const s = { ...editing, servings: v }; setEditing(s); put('mealSlots', s); }} />
             </div>
             <div className="spread">
-              <span className="bold">Meal</span>
+              <span className="bold">{t('meals.meal')}</span>
               <div className="hstack" style={{ gap: 6 }}>
                 {MEAL_CATEGORIES.map((c) => <button key={c} className={`chip chip-meals ${editing.slot === c ? 'chip-active' : ''}`} onClick={() => { const s = { ...editing, slot: c }; setEditing(s); put('mealSlots', s); }}>{LABEL[c]}</button>)}
               </div>
             </div>
             <div className="divider" />
-            <Button variant="secondary" full onClick={() => { navigate(`/meals/dish/${editing.dishId}`); setEditing(null); }}>View recipe</Button>
-            <Button variant="secondary" full icon={<IconCopy size={18} />} onClick={async () => { await put('mealSlots', { ...editing, id: uid('slot'), date: addDays(editing.date, 1), eaten: false }); toast('Copied to the next day'); setEditing(null); }}>Copy to next day</Button>
-            <Button variant="danger" full icon={<IconTrash size={18} />} onClick={async () => { await remove('mealSlots', editing.id); setEditing(null); }}>Remove from plan</Button>
+            <Button variant="secondary" full onClick={() => { navigate(`/meals/dish/${editing.dishId}`); setEditing(null); }}>{t('meals.viewRecipe')}</Button>
+            <Button variant="secondary" full icon={<IconCopy size={18} />} onClick={async () => { await put('mealSlots', { ...editing, id: uid('slot'), date: addDays(editing.date, 1), eaten: false }); toast(t('meals.copiedToNextDay')); setEditing(null); }}>{t('meals.copyToNextDay')}</Button>
+            <Button variant="danger" full icon={<IconTrash size={18} />} onClick={async () => { await remove('mealSlots', editing.id); setEditing(null); }}>{t('meals.removeFromPlan')}</Button>
           </div>
         )}
       </Sheet>
 
-      <Sheet open={menu} onClose={() => setMenu(false)} title="This week">
+      <Sheet open={menu} onClose={() => setMenu(false)} title={t('meals.thisWeek')}>
         <div className="stack">
-          <Button variant="secondary" full icon={<IconCopy size={18} />} onClick={async () => { setMenu(false); await copyLastWeek(); }}>Copy last week’s plan here</Button>
-          <Button variant="secondary" full icon={<IconCopy size={18} />} disabled={daySlots.length === 0} onClick={async () => { setMenu(false); await copyDayTo(addDays(selected, 1)); }}>Copy {relativeDay(selected).toLowerCase()} to the next day</Button>
+          <Button variant="secondary" full icon={<IconCopy size={18} />} onClick={async () => { setMenu(false); await copyLastWeek(); }}>{t('meals.copyLastWeekPlan')}</Button>
+          <Button variant="secondary" full icon={<IconCopy size={18} />} disabled={daySlots.length === 0} onClick={async () => { setMenu(false); await copyDayTo(addDays(selected, 1)); }}>{t('meals.copyDayToNext', { day: relativeDay(selected).toLowerCase() })}</Button>
           <Button variant="secondary" full icon={<IconCopy size={18} />} disabled={daySlots.length === 0} onClick={async () => {
             setMenu(false);
-            const ok = await confirmDialog({ title: 'Repeat this day all week?', message: 'Copies today’s dishes to the other six days (existing dishes stay).', confirmLabel: 'Copy' });
+            const ok = await confirmDialog({ title: t('meals.repeatDayTitle'), message: t('meals.repeatDayMsg'), confirmLabel: t('common.copy') });
             if (!ok) return;
             for (const d of days) if (d !== selected) await copyDayTo(d);
-          }}>Repeat {relativeDay(selected).toLowerCase()} for the whole week</Button>
-          <Button variant="secondary" full icon={<IconCart size={18} />} onClick={() => { setMenu(false); navigate('/meals/shopping?week=' + weekStart); }}>Shopping list for this week</Button>
+          }}>{t('meals.repeatDayForWeek', { day: relativeDay(selected).toLowerCase() })}</Button>
+          <Button variant="secondary" full icon={<IconCart size={18} />} onClick={() => { setMenu(false); navigate('/meals/shopping?week=' + weekStart); }}>{t('meals.shoppingListForWeek')}</Button>
           <Button variant="danger" full icon={<IconTrash size={18} />} disabled={!slots || slots.length === 0} onClick={async () => {
             setMenu(false);
-            const ok = await confirmDialog({ title: 'Clear the whole week?', confirmLabel: 'Clear week', danger: true });
+            const ok = await confirmDialog({ title: t('meals.clearWholeWeekTitle'), confirmLabel: t('meals.clearWeek'), danger: true });
             if (ok && slots) await bulkRemove('mealSlots', slots.map((s) => s.id));
-          }}>Clear this week</Button>
+          }}>{t('meals.clearThisWeek')}</Button>
         </div>
       </Sheet>
     </Screen>
