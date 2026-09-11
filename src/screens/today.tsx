@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react';
 import { put } from '../lib/db.js';
 import { addDays, fmtDuration, formatLong, todayKey } from '../lib/dates.js';
+import { localizedDishName, localizedWorkoutName } from '../data/seed-i18n.js';
 import { useProfile } from '../lib/hooks.js';
-import { useT } from '../lib/i18n.js';
+import { useLang, useT } from '../lib/i18n.js';
 import { navigate } from '../lib/router.js';
 import { useDishMap, useExerciseMap, useMealSlots, useSchedule, useSessions, useWorkouts } from '../lib/queries.js';
 import { dayNutrition, perServing } from '../lib/nutrition.js';
@@ -15,6 +16,7 @@ import { AddDishSheet } from './meals/add-dish-sheet.js';
 
 export function TodayScreen() {
   const t = useT();
+  const lang = useLang();
   const SLOT_LABEL: Record<string, string> = { breakfast: t('meal.breakfast'), lunch: t('meal.lunch'), dinner: t('meal.dinner'), snack: t('meal.snack') };
   const today = todayKey();
   const [profile] = useProfile();
@@ -96,7 +98,7 @@ export function TodayScreen() {
             <div className="workout-card">
               <div className="thumb thumb-workout"><IconDumbbell strokeWidth={2.2} /></div>
               <div className="row-main">
-                <div className="row-title">{scheduled.name}</div>
+                <div className="row-title">{localizedWorkoutName(scheduled.id, scheduled.name, lang)}</div>
                 <div className="row-sub">{est ? `${fmtDuration(est.seconds)} · ${est.exercises} ${t('unit.exercises')} · ~${Math.round(est.kcal)} ${t('unit.kcal')}` : ''}</div>
               </div>
               <Button size="sm" onClick={() => navigate(`/workouts/${scheduled.id}/play`)}>{doneToday ? t('today.again') : t('today.start')}</Button>
@@ -130,7 +132,7 @@ export function TodayScreen() {
                   </button>
                   <DishThumb dish={dish} small />
                   <div className="row-main">
-                    <div className="row-title">{dish.name}</div>
+                    <div className="row-title">{localizedDishName(dish.id, dish.name, lang)}</div>
                     <div className="row-sub">{SLOT_LABEL[slot.slot]}{slot.servings !== 1 ? ` · ${slot.servings} ${t('unit.servings')}` : ''}{dish.prepMin + dish.cookMin > 0 ? ` · ${dish.prepMin + dish.cookMin} ${t('unit.min')}` : ''}</div>
                   </div>
                 </Row>

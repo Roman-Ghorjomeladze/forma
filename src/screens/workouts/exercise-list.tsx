@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { EQUIPMENT_CATEGORIES } from '../../data/equipment-categories.js';
-import { useT } from '../../lib/i18n.js';
+import { localizedExerciseName } from '../../data/seed-i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import { useExercises } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
 import { Chip, IconButton, Screen, TopBar } from '../../ui/components.js';
@@ -25,6 +26,7 @@ function equipmentLabel(equipment: string[], t: (key: string) => string): string
 
 export function ExerciseListScreen() {
   const t = useT();
+  const lang = useLang();
   const exercises = useExercises();
   const [q, setQ] = useState('');
   const [group, setGroup] = useState('all');
@@ -40,8 +42,8 @@ export function ExerciseListScreen() {
     return (exercises ?? [])
       .filter((e) => group === 'all' || (group === 'custom' ? e.isCustom : e.muscles.some((m) => g.match.includes(m))))
       .filter((e) => !eqCat || eqCat.match(e.equipment))
-      .filter((e) => !ql || e.name.toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)) || e.equipment.some((m) => m.includes(ql)));
-  }, [exercises, q, group, equip]);
+      .filter((e) => !ql || localizedExerciseName(e.id, e.name, lang).toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)) || e.equipment.some((m) => m.includes(ql)));
+  }, [exercises, q, group, equip, lang]);
 
   return (
     <Screen>
@@ -60,7 +62,7 @@ export function ExerciseListScreen() {
         {list.map((e) => (
           <button key={e.id} className="exercise-tile" onClick={() => navigate(`/workouts/exercise/${e.id}`)}>
             <ExerciseVisual exercise={e} size="box" />
-            <div className="exercise-name">{e.name}</div>
+            <div className="exercise-name">{localizedExerciseName(e.id, e.name, lang)}</div>
             <div className="exercise-sub">{e.kind === 'time' ? t('exercise.timed') : t('unit.reps')} · MET {e.met} · {equipmentLabel(e.equipment, t)}</div>
           </button>
         ))}

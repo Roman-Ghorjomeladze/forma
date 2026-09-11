@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { get, put } from '../../lib/db.js';
 import { fmtDuration } from '../../lib/dates.js';
 import { blockSeconds, estimateWorkout, kcalFor } from '../../lib/calories.js';
+import { localizedExerciseName } from '../../data/seed-i18n.js';
 import { useProfile } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
-import { useT } from '../../lib/i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import type { Block, Exercise, Workout } from '../../lib/models.js';
 import { useExerciseMap, useExercises } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
@@ -37,6 +38,7 @@ function updateList(blocks: Block[], parent: Path, fn: (list: Block[]) => Block[
 
 export function WorkoutEditScreen({ id }: { id?: string }) {
   const t = useT();
+  const lang = useLang();
   const [profile] = useProfile();
   const exMap = useExerciseMap();
   const allExercises = useExercises();
@@ -61,7 +63,7 @@ export function WorkoutEditScreen({ id }: { id?: string }) {
     if (addingTo === null) return;
     const block: Block = ex.kind === 'time' ? { id: uid('b'), type: 'exercise', exerciseId: ex.id, seconds: ex.defaultAmount } : { id: uid('b'), type: 'exercise', exerciseId: ex.id, reps: ex.defaultAmount };
     setBlocks(updateList(w.blocks, addingTo, (l) => [...l, block]));
-    toast(t('common.addedName', { name: ex.name }));
+    toast(t('common.addedName', { name: localizedExerciseName(ex.id, ex.name, lang) }));
   };
   const addRest = (parent: Path) => setBlocks(updateList(w.blocks, parent, (l) => [...l, { id: uid('b'), type: 'rest', seconds: 20 }]));
   const addGroup = () => setBlocks([...w.blocks, { id: uid('b'), type: 'group', name: t('workouts.circuitDefault'), rounds: 3, restBetweenRounds: 60, blocks: [] }]);
@@ -118,7 +120,7 @@ export function WorkoutEditScreen({ id }: { id?: string }) {
         <button className="hstack" style={{ flex: 1, minWidth: 0, gap: 12 }} onClick={() => setEditing(path)}>
           {b.type === 'rest' ? <div className="demo-thumb" style={{ background: 'transparent' }}><IconHourglass size={20} className="muted" /></div> : <ExerciseVisual exercise={ex} animated={false} />}
           <div className="block-main">
-            <div className="block-title" style={b.type === 'rest' ? { color: 'var(--muted)', fontSize: 14 } : undefined}>{b.type === 'rest' ? `${t('workouts.rest')} ${b.seconds} ${t('unit.s')}` : ex?.name ?? t('workouts.missingExercise')}</div>
+            <div className="block-title" style={b.type === 'rest' ? { color: 'var(--muted)', fontSize: 14 } : undefined}>{b.type === 'rest' ? `${t('workouts.rest')} ${b.seconds} ${t('unit.s')}` : ex ? localizedExerciseName(ex.id, ex.name, lang) : t('workouts.missingExercise')}</div>
             {b.type === 'exercise' && <div className="block-sub">{b.reps != null ? `${b.reps} ${t('unit.reps')} · ~${secs} ${t('unit.s')}` : `${b.seconds} ${t('unit.s')}`} · ~{Math.round(kcalFor(ex?.met ?? 4, profile.weightKg, secs))} {t('unit.kcal')}</div>}
           </div>
         </button>
@@ -168,7 +170,7 @@ export function WorkoutEditScreen({ id }: { id?: string }) {
 
       <ExercisePicker open={addingTo !== null} onClose={() => setAddingTo(null)} exercises={allExercises ?? []} onPick={addExercise} />
 
-      <Sheet open={!!editingBlock} onClose={() => setEditing(null)} title={editingBlock?.type === 'group' ? t('workouts.rounds') : editingBlock?.type === 'rest' ? t('workouts.rest') : exMap.get((editingBlock as { exerciseId?: string })?.exerciseId ?? '')?.name}
+      <Sheet open={!!editingBlock} onClose={() => setEditing(null)} title={editingBlock?.type === 'group' ? t('workouts.rounds') : editingBlock?.type === 'rest' ? t('workouts.rest') : (() => { const eb = exMap.get((editingBlock as { exerciseId?: string })?.exerciseId ?? ''); return eb ? localizedExerciseName(eb.id, eb.name, lang) : undefined; })()}
         footer={editing ? (
           <>
             <Button variant="secondary" icon={<IconCopy size={18} />} onClick={() => { duplicateAt(editing); setEditing(null); }}>{t('common.duplicate')}</Button>
@@ -223,9 +225,10 @@ function BlockEditor({ block, exercise, onChange }: { block: Block; exercise?: E
 
 export function ExercisePicker({ open, onClose, exercises, onPick }: { open: boolean; onClose: () => void; exercises: Exercise[]; onPick: (e: Exercise) => void }) {
   const t = useT();
+  const lang = useLang();
   const [q, setQ] = useState('');
   const ql = q.trim().toLowerCase();
-  const list = exercises.filter((e) => !ql || e.name.toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)));
+  const list = exercises.filter((e) => !ql || localizedExerciseName(e.id, e.name, lang).toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)));
   return (
     <Sheet open={open} onClose={onClose} title={t('workouts.addExerciseSheetTitle')} full footer={<Button variant="secondary" onClick={onClose}>{t('common.done')}</Button>}>
       <div className="searchbar">
@@ -237,7 +240,7 @@ export function ExercisePicker({ open, onClose, exercises, onPick }: { open: boo
           <Row key={e.id} onClick={() => onPick(e)} right={<IconPlus className="c-workout" />}>
             <ExerciseVisual exercise={e} animated={false} />
             <div className="row-main">
-              <div className="row-title">{e.name}</div>
+              <div className="row-title">{localizedExerciseName(e.id, e.name, lang)}</div>
               <div className="row-sub">{e.kind === 'time' ? `${e.defaultAmount} ${t('unit.s')}` : `${e.defaultAmount} ${t('unit.reps')}`} · {e.muscles.join(', ')}</div>
             </div>
           </Row>

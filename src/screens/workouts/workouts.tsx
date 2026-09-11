@@ -2,8 +2,9 @@ import { useMemo, useState } from 'react';
 import { bulkPut, remove } from '../../lib/db.js';
 import { fmtDuration, weekdayName } from '../../lib/dates.js';
 import { estimateWorkout } from '../../lib/calories.js';
+import { localizedWorkoutName } from '../../data/seed-i18n.js';
 import { useProfile } from '../../lib/hooks.js';
-import { useT } from '../../lib/i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import { useExerciseMap, useSchedule, useSessions, useWorkouts } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
 import { Button, Card, Empty, IconButton, Row, Screen, Section, Sheet, TopBar } from '../../ui/components.js';
@@ -11,6 +12,7 @@ import { IconChevron, IconDumbbell, IconHistory, IconPlus, IconStar } from '../.
 
 export function WorkoutsScreen() {
   const t = useT();
+  const lang = useLang();
   const [profile] = useProfile();
   const workouts = useWorkouts();
   const exercises = useExerciseMap();
@@ -48,7 +50,7 @@ export function WorkoutsScreen() {
             return (
               <button key={wd} className={w ? 'has' : ''} style={wd === todayWd ? { background: 'var(--surface-2)' } : undefined} onClick={() => setPickDay(wd)}>
                 <span>{weekdayName(wd)}</span>
-                {w ? <><span className="sched-swatch" style={{ background: w.color }} /><span className="w">{w.name}</span></> : <span className="w muted" style={{ fontWeight: 500 }}>—</span>}
+                {w ? <><span className="sched-swatch" style={{ background: w.color }} /><span className="w">{localizedWorkoutName(w.id, w.name, lang)}</span></> : <span className="w muted" style={{ fontWeight: 500 }}>—</span>}
               </button>
             );
           })}
@@ -67,7 +69,7 @@ export function WorkoutsScreen() {
                   <div className="workout-card">
                     <span className="workout-color" style={{ background: w.color }} />
                     <div className="row-main">
-                      <div className="row-title">{w.name}</div>
+                      <div className="row-title">{localizedWorkoutName(w.id, w.name, lang)}</div>
                       <div className="row-sub">{est ? `${fmtDuration(est.seconds)} · ${est.exercises} ${t('unit.exercises')} · ~${Math.round(est.kcal)} ${t('unit.kcal')}` : ''}</div>
                     </div>
                     <Button size="sm" onClick={() => navigate(`/workouts/${w.id}/play`)}>{t('today.start')}</Button>
@@ -85,7 +87,7 @@ export function WorkoutsScreen() {
           {(workouts ?? []).map((w) => (
             <Row key={w.id} onClick={() => pickDay !== null && setDay(pickDay, w.id)} right={pickDay !== null && byDay.get(pickDay) === w.id ? <span className="c-workout">{t('workouts.assigned')}</span> : undefined}>
               <span className="sched-swatch" style={{ background: w.color, width: 12, height: 12 }} />
-              <div className="row-main"><div className="row-title">{w.name}</div></div>
+              <div className="row-main"><div className="row-title">{localizedWorkoutName(w.id, w.name, lang)}</div></div>
             </Row>
           ))}
           <Row onClick={() => pickDay !== null && setDay(pickDay, null)}><div className="row-main"><div className="row-title muted">{t('workouts.restDayNothing')}</div></div></Row>

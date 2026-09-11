@@ -1,9 +1,10 @@
 import { put, remove } from '../../lib/db.js';
 import { fmtDuration } from '../../lib/dates.js';
 import { estimateWorkout, expandWorkout, kcalFor } from '../../lib/calories.js';
+import { localizedWorkoutName } from '../../data/seed-i18n.js';
 import { useProfile } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
-import { useT } from '../../lib/i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import type { Block } from '../../lib/models.js';
 import { useExerciseMap, useWorkout } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
@@ -18,6 +19,7 @@ function reId(blocks: Block[]): Block[] {
 
 export function WorkoutDetailScreen({ id }: { id: string }) {
   const t = useT();
+  const lang = useLang();
   const [profile] = useProfile();
   const workout = useWorkout(id);
   const exercises = useExerciseMap();
@@ -25,11 +27,12 @@ export function WorkoutDetailScreen({ id }: { id: string }) {
   if (workout === undefined || !exercises) return <Screen className="screen-no-tabs" />;
   if (workout === null) return <Screen className="screen-no-tabs"><Empty title={t('workouts.notFound')} action={<Button variant="secondary" onClick={() => navigate('/workouts')}>{t('common.back')}</Button>} /></Screen>;
 
+  const name = localizedWorkoutName(workout.id, workout.name, lang);
   const est = estimateWorkout(workout, exercises, profile.weightKg);
-  const steps = expandWorkout(workout, exercises);
+  const steps = expandWorkout(workout, exercises, lang);
 
   const del = async () => {
-    if (await confirmDialog({ title: t('workouts.deleteTitle', { name: workout.name }), message: t('workouts.deleteMsg'), confirmLabel: t('common.delete'), danger: true })) {
+    if (await confirmDialog({ title: t('workouts.deleteTitle', { name }), message: t('workouts.deleteMsg'), confirmLabel: t('common.delete'), danger: true })) {
       await remove('workouts', workout.id);
       navigate('/workouts', { replace: true });
     }
@@ -43,7 +46,7 @@ export function WorkoutDetailScreen({ id }: { id: string }) {
 
   return (
     <Screen className="screen-no-tabs">
-      <TopBar backTo="/workouts" title={workout.name} right={<>
+      <TopBar backTo="/workouts" title={name} right={<>
         <IconButton label={t('common.duplicate')} onClick={duplicate}><IconCopy size={20} /></IconButton>
         <IconButton label={t('common.edit')} onClick={() => navigate(`/workouts/${workout.id}/edit`)}><IconEdit size={20} /></IconButton>
         <IconButton label={t('common.delete')} onClick={del}><IconTrash size={20} /></IconButton>

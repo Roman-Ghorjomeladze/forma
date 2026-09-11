@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { put, remove } from '../../lib/db.js';
 import { todayKey } from '../../lib/dates.js';
+import { localizedDishName } from '../../data/seed-i18n.js';
 import { useBlobUrl } from '../../lib/hooks.js';
-import { useT } from '../../lib/i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import { dishTotal, fmtAmount, perServing } from '../../lib/nutrition.js';
 import { useDish } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
@@ -17,6 +18,7 @@ import { toast } from '../../ui/dialogs.js';
 
 export function DishDetailScreen({ id }: { id: string }) {
   const t = useT();
+  const lang = useLang();
   const LABEL: Record<string, string> = { breakfast: t('meal.breakfast'), lunch: t('meal.lunch'), dinner: t('meal.dinner'), snack: t('meal.snack') };
   const dish = useDish(id);
   const url = useBlobUrl(dish?.imageBlobId);
@@ -26,10 +28,11 @@ export function DishDetailScreen({ id }: { id: string }) {
   if (dish === undefined) return <Screen />;
   if (dish === null) return <Screen className="screen-no-tabs"><Empty title={t('dish.notFound')} action={<Button variant="secondary" onClick={() => navigate('/meals/dishes')}>{t('dish.backToDishes')}</Button>} /></Screen>;
 
+  const name = localizedDishName(dish.id, dish.name, lang);
   const n = perServing(dish);
   const total = dishTotal(dish);
   const del = async () => {
-    const ok = await confirmDialog({ title: t('dish.deleteTitle', { name: dish.name }), message: t('dish.deleteMsg'), confirmLabel: t('common.delete'), danger: true });
+    const ok = await confirmDialog({ title: t('dish.deleteTitle', { name }), message: t('dish.deleteMsg'), confirmLabel: t('common.delete'), danger: true });
     if (ok) { await remove('dishes', dish.id); navigate('/meals/dishes', { replace: true }); }
   };
 
@@ -53,7 +56,7 @@ export function DishDetailScreen({ id }: { id: string }) {
           <span className="tag tag-meals">{LABEL[dish.category]}</span>
           {dish.tags.map((tag) => <span key={tag} className="tag">{tag}</span>)}
         </div>
-        <h1 className="dish-title">{dish.name}</h1>
+        <h1 className="dish-title">{name}</h1>
         <div className="meta">
           {dish.prepMin + dish.cookMin > 0 && <span><IconClock size={15} strokeWidth={2.2} />{dish.prepMin + dish.cookMin} {t('unit.min')}{dish.cookMin > 0 && dish.prepMin > 0 ? ` (${dish.prepMin} ${t('dish.prepTime').toLowerCase()})` : ''}</span>}
           <span><IconUser size={15} strokeWidth={2.2} />{dish.servings} {dish.servings === 1 ? t('unit.serving') : t('unit.servings')}</span>

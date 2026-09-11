@@ -1,3 +1,4 @@
+import { localizedExerciseName } from '../data/seed-i18n.js';
 import { tGlobal } from './i18n.js';
 export const REST_MET = 1.3;
 /** kcal burned for `seconds` at a given MET and body weight. */
@@ -18,8 +19,8 @@ export function blockSeconds(block, ex) {
     const inner = block.blocks.reduce((s, b) => s + blockSeconds(b, ex), 0);
     return inner * block.rounds + block.restBetweenRounds * Math.max(0, block.rounds - 1);
 }
-/** Unroll groups into a flat list of timed steps. */
-export function expandWorkout(workout, ex) {
+/** Unroll groups into a flat list of timed steps. `lang` localizes exercise-name labels shown/spoken during playback. */
+export function expandWorkout(workout, ex, lang = 'en') {
     const steps = [];
     const push = (s) => steps.push({ ...s, index: steps.length });
     const walk = (blocks, round) => {
@@ -31,7 +32,7 @@ export function expandWorkout(workout, ex) {
                 const e = ex.get(b.exerciseId);
                 const seconds = blockSeconds(b, ex);
                 const reps = b.reps ?? (b.seconds == null && e?.kind === 'reps' ? e.defaultAmount : undefined);
-                push({ type: 'exercise', label: e?.name ?? tGlobal('step.exercise'), seconds, reps, exerciseId: b.exerciseId, met: e?.met ?? 4, round });
+                push({ type: 'exercise', label: e ? localizedExerciseName(e.id, e.name, lang) : tGlobal('step.exercise'), seconds, reps, exerciseId: b.exerciseId, met: e?.met ?? 4, round });
             }
             else {
                 for (let r = 1; r <= b.rounds; r++) {

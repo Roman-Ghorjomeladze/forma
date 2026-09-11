@@ -2,9 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { put } from '../../lib/db.js';
 import { fmtClock, fmtDuration } from '../../lib/dates.js';
 import { expandWorkout, kcalFor } from '../../lib/calories.js';
+import { localizedWorkoutName } from '../../data/seed-i18n.js';
 import { usePrefs, useProfile } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
-import { useT } from '../../lib/i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import type { Session, Step } from '../../lib/models.js';
 import { useExerciseMap, useWorkout } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
@@ -33,11 +34,13 @@ interface Timing {
 
 export function PlayerScreen({ id }: { id: string }) {
   const t = useT();
+  const lang = useLang();
   const workout = useWorkout(id);
   const exMap = useExerciseMap();
   const [profile] = useProfile();
   const [prefs, setPrefs] = usePrefs();
-  const steps = useMemo(() => (workout && exMap ? expandWorkout(workout, exMap) : []), [workout, exMap]);
+  const steps = useMemo(() => (workout && exMap ? expandWorkout(workout, exMap, lang) : []), [workout, exMap, lang]);
+  const workoutName = workout ? localizedWorkoutName(workout.id, workout.name, lang) : '';
 
   const [phase, setPhase] = useState<Phase>('ready');
   const [now, setNow] = useState(() => Date.now());
@@ -208,7 +211,7 @@ export function PlayerScreen({ id }: { id: string }) {
     const pct = Math.round((session.completedSteps / Math.max(1, session.totalSteps)) * 100);
     return (
       <div className="player">
-        <div className="player-head"><span /><div className="player-head-mid"><span className="t">{workout.name}</span></div><button className="iconbtn" aria-label={t('player.close')} onClick={() => navigate('/workouts', { replace: true })}><IconClose size={18} /></button></div>
+        <div className="player-head"><span /><div className="player-head-mid"><span className="t">{workoutName}</span></div><button className="iconbtn" aria-label={t('player.close')} onClick={() => navigate('/workouts', { replace: true })}><IconClose size={18} /></button></div>
         <div className="player-done">
           <div>
             <div className="player-phase">{pct >= 100 ? t('player.complete') : t('player.pctDone', { pct })}</div>
@@ -232,7 +235,7 @@ export function PlayerScreen({ id }: { id: string }) {
       <div className="player">
         <div className="player-head">
           <button className="iconbtn" aria-label={t('player.close')} onClick={quit}><IconClose size={18} /></button>
-          <div className="player-head-mid"><span className="t">{workout.name}</span><span className="s">{fmtDuration(totalSeconds)} · {steps.filter((s) => s.type === 'exercise').length} {t('unit.exercises')} · ~{Math.round(totalKcal)} {t('unit.kcal')}</span></div>
+          <div className="player-head-mid"><span className="t">{workoutName}</span><span className="s">{fmtDuration(totalSeconds)} · {steps.filter((s) => s.type === 'exercise').length} {t('unit.exercises')} · ~{Math.round(totalKcal)} {t('unit.kcal')}</span></div>
           <button className="iconbtn" aria-label={soundOn ? t('common.mute') : t('common.unmute')} onClick={() => setPrefs({ sound: !soundOn, voice: !soundOn })}><IconVolume size={18} off={!soundOn} /></button>
         </div>
         <div className="player-ready">
@@ -259,7 +262,7 @@ export function PlayerScreen({ id }: { id: string }) {
       <div className="player-head">
         <button className="iconbtn" aria-label={t('player.endWorkout')} onClick={quit}><IconClose size={18} /></button>
         <div className="player-head-mid">
-          <span className="t">{workout.name}</span>
+          <span className="t">{workoutName}</span>
           <span className="s">{step?.round ? t('player.roundOf', { n: step.round.n, of: step.round.of }) : ''}{t('player.elapsed', { clock: fmtClock(sessionElapsed) })}</span>
         </div>
         <button className="iconbtn" aria-label={soundOn ? t('common.mute') : t('common.unmute')} onClick={() => setPrefs({ sound: !soundOn, voice: !soundOn })}><IconVolume size={18} off={!soundOn} /></button>

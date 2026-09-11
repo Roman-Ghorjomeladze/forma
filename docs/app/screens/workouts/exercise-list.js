@@ -1,7 +1,8 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useMemo, useState } from 'react';
 import { EQUIPMENT_CATEGORIES } from '../../data/equipment-categories.js';
-import { useT } from '../../lib/i18n.js';
+import { localizedExerciseName } from '../../data/seed-i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import { useExercises } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
 import { Chip, IconButton, Screen, TopBar } from '../../ui/components.js';
@@ -24,6 +25,7 @@ function equipmentLabel(equipment, t) {
 }
 export function ExerciseListScreen() {
     const t = useT();
+    const lang = useLang();
     const exercises = useExercises();
     const [q, setQ] = useState('');
     const [group, setGroup] = useState('all');
@@ -37,7 +39,7 @@ export function ExerciseListScreen() {
         return (exercises ?? [])
             .filter((e) => group === 'all' || (group === 'custom' ? e.isCustom : e.muscles.some((m) => g.match.includes(m))))
             .filter((e) => !eqCat || eqCat.match(e.equipment))
-            .filter((e) => !ql || e.name.toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)) || e.equipment.some((m) => m.includes(ql)));
-    }, [exercises, q, group, equip]);
-    return (_jsxs(Screen, { children: [_jsx(TopBar, { large: true, backTo: "/workouts", title: t('exercise.titleList'), eyebrow: t('exercise.countInLibrary', { n: exercises?.length ?? 0 }), right: _jsx(IconButton, { label: t('exercise.newExercise'), tone: "accent", onClick: () => navigate('/workouts/exercise/new'), children: _jsx(IconPlus, {}) }) }), _jsxs("div", { className: "searchbar", children: [_jsx(IconSearch, { size: 18 }), _jsx("input", { className: "input", placeholder: t('exercise.searchPlaceholder'), value: q, onChange: (e) => setQ(e.target.value) })] }), _jsx("div", { className: "chips", children: GROUPS.map((g) => _jsx(Chip, { tone: "workout", active: group === g.key, onClick: () => setGroup(g.key), children: g.label }, g.key)) }), _jsx("div", { className: "chips", style: { marginTop: -4 }, children: EQUIP_CHIPS.map((c) => _jsx(Chip, { tone: "workout", active: equip === c.key, onClick: () => setEquip(c.key), children: c.label }, c.key)) }), _jsx("div", { className: "exercise-grid mt", children: list.map((e) => (_jsxs("button", { className: "exercise-tile", onClick: () => navigate(`/workouts/exercise/${e.id}`), children: [_jsx(ExerciseVisual, { exercise: e, size: "box" }), _jsx("div", { className: "exercise-name", children: e.name }), _jsxs("div", { className: "exercise-sub", children: [e.kind === 'time' ? t('exercise.timed') : t('unit.reps'), " \u00B7 MET ", e.met, " \u00B7 ", equipmentLabel(e.equipment, t)] })] }, e.id))) }), list.length === 0 && _jsx("div", { className: "empty", children: _jsx("div", { className: "empty-title", children: t('exercise.noneMatch') }) })] }));
+            .filter((e) => !ql || localizedExerciseName(e.id, e.name, lang).toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)) || e.equipment.some((m) => m.includes(ql)));
+    }, [exercises, q, group, equip, lang]);
+    return (_jsxs(Screen, { children: [_jsx(TopBar, { large: true, backTo: "/workouts", title: t('exercise.titleList'), eyebrow: t('exercise.countInLibrary', { n: exercises?.length ?? 0 }), right: _jsx(IconButton, { label: t('exercise.newExercise'), tone: "accent", onClick: () => navigate('/workouts/exercise/new'), children: _jsx(IconPlus, {}) }) }), _jsxs("div", { className: "searchbar", children: [_jsx(IconSearch, { size: 18 }), _jsx("input", { className: "input", placeholder: t('exercise.searchPlaceholder'), value: q, onChange: (e) => setQ(e.target.value) })] }), _jsx("div", { className: "chips", children: GROUPS.map((g) => _jsx(Chip, { tone: "workout", active: group === g.key, onClick: () => setGroup(g.key), children: g.label }, g.key)) }), _jsx("div", { className: "chips", style: { marginTop: -4 }, children: EQUIP_CHIPS.map((c) => _jsx(Chip, { tone: "workout", active: equip === c.key, onClick: () => setEquip(c.key), children: c.label }, c.key)) }), _jsx("div", { className: "exercise-grid mt", children: list.map((e) => (_jsxs("button", { className: "exercise-tile", onClick: () => navigate(`/workouts/exercise/${e.id}`), children: [_jsx(ExerciseVisual, { exercise: e, size: "box" }), _jsx("div", { className: "exercise-name", children: localizedExerciseName(e.id, e.name, lang) }), _jsxs("div", { className: "exercise-sub", children: [e.kind === 'time' ? t('exercise.timed') : t('unit.reps'), " \u00B7 MET ", e.met, " \u00B7 ", equipmentLabel(e.equipment, t)] })] }, e.id))) }), list.length === 0 && _jsx("div", { className: "empty", children: _jsx("div", { className: "empty-title", children: t('exercise.noneMatch') }) })] }));
 }

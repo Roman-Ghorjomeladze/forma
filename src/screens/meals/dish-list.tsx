@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { useT } from '../../lib/i18n.js';
+import { localizedDishName } from '../../data/seed-i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import { MEAL_CATEGORIES, type MealCategory } from '../../lib/models.js';
 import { perServing } from '../../lib/nutrition.js';
 import { useDishes } from '../../lib/queries.js';
@@ -10,6 +11,7 @@ import { DishThumb } from './dish-thumb.js';
 
 export function DishListScreen() {
   const t = useT();
+  const lang = useLang();
   const LABEL: Record<MealCategory, string> = { breakfast: t('meal.breakfast'), lunch: t('meal.lunch'), dinner: t('meal.dinner'), snack: t('meal.snack') };
   const dishes = useDishes();
   const [q, setQ] = useState('');
@@ -19,8 +21,8 @@ export function DishListScreen() {
     const ql = q.trim().toLowerCase();
     return (dishes ?? [])
       .filter((d) => cat === 'all' || (cat === 'fav' ? d.favorite : d.category === cat))
-      .filter((d) => !ql || d.name.toLowerCase().includes(ql) || d.tags.some((tag) => tag.toLowerCase().includes(ql)) || d.ingredients.some((i) => i.name.toLowerCase().includes(ql)));
-  }, [dishes, q, cat]);
+      .filter((d) => !ql || localizedDishName(d.id, d.name, lang).toLowerCase().includes(ql) || d.tags.some((tag) => tag.toLowerCase().includes(ql)) || d.ingredients.some((i) => i.name.toLowerCase().includes(ql)));
+  }, [dishes, q, cat, lang]);
 
   return (
     <Screen>
@@ -44,7 +46,7 @@ export function DishListScreen() {
               <Row key={d.id} onClick={() => navigate(`/meals/dish/${d.id}`)} right={<div style={{ textAlign: 'right' }}><div className="num">{Math.round(n.kcal)} {t('unit.kcal')}</div><div className="small muted num">{Math.round(n.protein)} g P</div></div>}>
                 <DishThumb dish={d} />
                 <div className="row-main">
-                  <div className="row-title">{d.favorite ? '★ ' : ''}{d.name}</div>
+                  <div className="row-title">{d.favorite ? '★ ' : ''}{localizedDishName(d.id, d.name, lang)}</div>
                   <div className="row-sub">{LABEL[d.category]}{d.prepMin + d.cookMin > 0 ? ` · ${d.prepMin + d.cookMin} ${t('unit.min')}` : ''}{d.tags.length ? ` · ${d.tags.slice(0, 2).join(', ')}` : ''}</div>
                 </div>
               </Row>

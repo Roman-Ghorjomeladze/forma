@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { put } from '../../lib/db.js';
 import { uid } from '../../lib/ids.js';
-import { useT } from '../../lib/i18n.js';
+import { localizedDishName } from '../../data/seed-i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import { MEAL_CATEGORIES, type Dish, type MealCategory } from '../../lib/models.js';
 import { perServing } from '../../lib/nutrition.js';
 import { useDishes } from '../../lib/queries.js';
@@ -14,6 +15,7 @@ import { DishThumb } from './dish-thumb.js';
 /** Pick a dish (and servings) to add to a day/slot. */
 export function AddDishSheet({ open, onClose, date, slot }: { open: boolean; onClose: () => void; date: string; slot?: MealCategory }) {
   const t = useT();
+  const lang = useLang();
   const LABEL: Record<MealCategory, string> = { breakfast: t('meal.breakfast'), lunch: t('meal.lunch'), dinner: t('meal.dinner'), snack: t('meal.snack') };
   const dishes = useDishes();
   const [q, setQ] = useState('');
@@ -27,9 +29,9 @@ export function AddDishSheet({ open, onClose, date, slot }: { open: boolean; onC
     const ql = q.trim().toLowerCase();
     return list
       .filter((d) => cat === 'all' || d.category === cat)
-      .filter((d) => !ql || d.name.toLowerCase().includes(ql) || d.tags.some((tag) => tag.toLowerCase().includes(ql)))
-      .sort((a, b) => Number(b.favorite) - Number(a.favorite) || a.name.localeCompare(b.name));
-  }, [dishes, q, cat]);
+      .filter((d) => !ql || localizedDishName(d.id, d.name, lang).toLowerCase().includes(ql) || d.tags.some((tag) => tag.toLowerCase().includes(ql)))
+      .sort((a, b) => Number(b.favorite) - Number(a.favorite) || localizedDishName(a.id, a.name, lang).localeCompare(localizedDishName(b.id, b.name, lang)));
+  }, [dishes, q, cat, lang]);
 
   const reset = () => { setPicked(null); setServings(1); setQ(''); };
   const close = () => { reset(); onClose(); };
@@ -37,12 +39,12 @@ export function AddDishSheet({ open, onClose, date, slot }: { open: boolean; onC
   const add = async () => {
     if (!picked) return;
     await put('mealSlots', { id: uid('slot'), date, slot: targetSlot, dishId: picked.id, servings, eaten: false, order: Date.now() });
-    toast(t('common.addedName', { name: picked.name }));
+    toast(t('common.addedName', { name: localizedDishName(picked.id, picked.name, lang) }));
     close();
   };
 
   return (
-    <Sheet open={open} onClose={close} title={picked ? picked.name : t('today.addDish')} full
+    <Sheet open={open} onClose={close} title={picked ? localizedDishName(picked.id, picked.name, lang) : t('today.addDish')} full
       footer={picked ? (
         <>
           <Button variant="secondary" onClick={() => setPicked(null)}>{t('common.back')}</Button>
@@ -86,7 +88,7 @@ export function AddDishSheet({ open, onClose, date, slot }: { open: boolean; onC
                 <Row key={d.id} onClick={() => { setPicked(d); setTargetSlot(slot ?? d.category); }} right={<span className="num">{Math.round(n.kcal)}</span>}>
                   <DishThumb dish={d} small />
                   <div className="row-main">
-                    <div className="row-title">{d.favorite ? '★ ' : ''}{d.name}</div>
+                    <div className="row-title">{d.favorite ? '★ ' : ''}{localizedDishName(d.id, d.name, lang)}</div>
                     <div className="row-sub">{LABEL[d.category]} · {Math.round(n.protein)} g {t('dish.protein')}</div>
                   </div>
                 </Row>

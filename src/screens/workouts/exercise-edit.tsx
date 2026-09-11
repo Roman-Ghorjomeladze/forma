@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { EQUIPMENT_CATEGORIES } from '../../data/equipment-categories.js';
 import { videoLibrary } from '../../data/exercise-video-library.js';
+import { localizedExerciseName } from '../../data/seed-i18n.js';
 import { get, put, saveBlob } from '../../lib/db.js';
 import { useBlobUrl } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
-import { useT } from '../../lib/i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import type { Demo, Exercise, ExerciseKind } from '../../lib/models.js';
 import { navigate } from '../../lib/router.js';
 import { Button, Chip, Field, NumberInput, Screen, Segmented, Sheet, TextArea, TextInput, TopBar } from '../../ui/components.js';
@@ -25,6 +26,7 @@ function blank(): Exercise {
 /** Full-screen sheet to browse the bundled exercise-video library and pick a demo clip. */
 function VideoPickerSheet({ open, onClose, onPick }: { open: boolean; onClose: () => void; onPick: (v: (typeof videoLibrary)[number]) => void }) {
   const t = useT();
+  const lang = useLang();
   const [q, setQ] = useState('');
   const [equip, setEquip] = useState('all');
   const EQUIP_CHIPS = [{ key: 'all', label: t('equipment.all') }, ...EQUIPMENT_CATEGORIES.map((c) => ({ key: c.key, label: t(c.labelKey) }))];
@@ -32,8 +34,8 @@ function VideoPickerSheet({ open, onClose, onPick }: { open: boolean; onClose: (
   const list = useMemo(() => {
     const ql = q.trim().toLowerCase();
     const eqCat = EQUIPMENT_CATEGORIES.find((c) => c.key === equip);
-    return videoLibrary.filter((v) => (!eqCat || eqCat.match(v.equipment)) && (!ql || v.name.toLowerCase().includes(ql) || v.muscles.some((m) => m.includes(ql))));
-  }, [q, equip]);
+    return videoLibrary.filter((v) => (!eqCat || eqCat.match(v.equipment)) && (!ql || localizedExerciseName(v.id, v.name, lang).toLowerCase().includes(ql) || v.muscles.some((m) => m.includes(ql))));
+  }, [q, equip, lang]);
 
   return (
     <Sheet open={open} onClose={onClose} title={t('exercise.chooseDemoVideoTitle')} full>
@@ -48,9 +50,9 @@ function VideoPickerSheet({ open, onClose, onPick }: { open: boolean; onClose: (
         {list.map((v) => (
           <button key={v.id} className="exercise-tile" onClick={() => onPick(v)}>
             <div className="demo-box" style={{ width: '100%', aspectRatio: '1.3' }}>
-              <video src={v.demo.type === 'video' ? v.demo.file : undefined} autoPlay loop muted playsInline />
+              <video src={v.demo.type === 'video' ? v.demo.file : undefined} poster={v.demo.type === 'video' ? v.demo.file.replace(/\.mp4$/, '.jpg') : undefined} autoPlay loop muted playsInline />
             </div>
-            <div className="exercise-name">{v.name}</div>
+            <div className="exercise-name">{localizedExerciseName(v.id, v.name, lang)}</div>
             <div className="exercise-sub">{v.muscles.join(', ')}</div>
           </button>
         ))}
@@ -62,6 +64,7 @@ function VideoPickerSheet({ open, onClose, onPick }: { open: boolean; onClose: (
 
 export function ExerciseEditScreen({ id }: { id?: string }) {
   const t = useT();
+  const lang = useLang();
   const [ex, setEx] = useState<Exercise | null>(id ? null : blank());
   const [muscles, setMuscles] = useState('');
   const [equipment, setEquipment] = useState('');
@@ -96,7 +99,7 @@ export function ExerciseEditScreen({ id }: { id?: string }) {
   const pickVideo = (v: (typeof videoLibrary)[number]) => {
     setPending(null);
     const p: Partial<Exercise> = { demo: v.demo as Demo };
-    if (!ex.name.trim()) p.name = v.name;
+    if (!ex.name.trim()) p.name = localizedExerciseName(v.id, v.name, lang);
     if (!muscles.trim()) setMuscles(v.muscles.join(', '));
     if (!equipment.trim()) setEquipment(v.equipment.join(', '));
     patch(p);
@@ -148,7 +151,7 @@ export function ExerciseEditScreen({ id }: { id?: string }) {
       <div className="small muted mb">{t('exercise.demoHint')}</div>
       <div className="demo-box demo-box-lg mb" onClick={() => (demoUrl || ex.demo.type === 'video' || ex.demo.type === 'builtin') ? setPickingVideo(true) : fileRef.current?.click()} role="button">
         {demoUrl ? <img src={demoUrl} alt="" />
-          : ex.demo.type === 'video' ? <video src={ex.demo.file} autoPlay loop muted playsInline />
+          : ex.demo.type === 'video' ? <video src={ex.demo.file} poster={ex.demo.file.replace(/\.mp4$/, '.jpg')} autoPlay loop muted playsInline />
           : ex.demo.type === 'builtin' ? <BuiltinDemo demoKey={ex.demo.key} />
           : <span className="hstack muted"><IconImage />{t('exercise.tapToUpload')}</span>}
       </div>

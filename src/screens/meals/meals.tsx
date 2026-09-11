@@ -2,8 +2,9 @@ import { useMemo, useState } from 'react';
 import { bulkPut, bulkRemove, put, remove } from '../../lib/db.js';
 import { uid } from '../../lib/ids.js';
 import { addDays, dayOfMonth, formatRange, relativeDay, startOfWeek, todayKey, weekDays, weekdayShort } from '../../lib/dates.js';
+import { localizedDishName } from '../../data/seed-i18n.js';
 import { useProfile } from '../../lib/hooks.js';
-import { useT } from '../../lib/i18n.js';
+import { useLang, useT } from '../../lib/i18n.js';
 import { MEAL_CATEGORIES, type MealCategory, type MealSlot } from '../../lib/models.js';
 import { dayNutrition, perServing } from '../../lib/nutrition.js';
 import { useDishMap, useMealSlots } from '../../lib/queries.js';
@@ -16,6 +17,7 @@ import { DishThumb } from './dish-thumb.js';
 
 export function MealsScreen() {
   const t = useT();
+  const lang = useLang();
   const LABEL: Record<MealCategory, string> = { breakfast: t('meal.breakfast'), lunch: t('meal.lunch'), dinner: t('meal.dinner'), snack: t('meal.snack') };
   const [profile] = useProfile();
   const today = todayKey();
@@ -128,7 +130,7 @@ export function MealsScreen() {
                     }>
                       <DishThumb dish={dish} />
                       <div className="row-main">
-                        <div className="row-title">{dish.name}</div>
+                        <div className="row-title">{localizedDishName(dish.id, dish.name, lang)}</div>
                         <div className="row-sub">{slot.servings} {slot.servings === 1 ? t('unit.serving') : t('unit.servings')} · {Math.round(n.kcal * slot.servings)} {t('unit.kcal')} · {Math.round(n.protein * slot.servings)} g {t('dish.protein')}</div>
                       </div>
                     </Row>
@@ -143,7 +145,7 @@ export function MealsScreen() {
 
       <AddDishSheet open={adding !== null} onClose={() => setAdding(null)} date={selected} slot={adding && adding !== 'any' ? adding : undefined} />
 
-      <Sheet open={!!editing} onClose={() => setEditing(null)} title={editing && dishes?.get(editing.dishId)?.name}>
+      <Sheet open={!!editing} onClose={() => setEditing(null)} title={(() => { const d = editing && dishes?.get(editing.dishId); return d ? localizedDishName(d.id, d.name, lang) : undefined; })()}>
         {editing && (
           <div className="stack">
             <div className="spread">
