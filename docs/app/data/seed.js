@@ -57,6 +57,43 @@ export function seedWorkouts(now = Date.now()) {
                 { id: 'c15', type: 'exercise', exerciseId: 'ex_glute_bridge', reps: 15 },
             ],
         },
+        {
+            id: 'wo_upper_body', name: 'Upper body strength', description: 'Push, pull and a core finisher for chest, back, shoulders and arms. No equipment.', color: '#B45CDE', createdAt: now, updatedAt: now,
+            blocks: [
+                { id: 'u1', type: 'exercise', exerciseId: 'ex_push_ups', reps: 12 }, { id: 'u2', type: 'rest', seconds: 20 },
+                { id: 'u3', type: 'exercise', exerciseId: 'exv_bodyweight-chest-incline-push-up', reps: 12 }, { id: 'u4', type: 'rest', seconds: 20 },
+                { id: 'u5', type: 'exercise', exerciseId: 'exv_bodyweight-back-inverted-row', reps: 10 }, { id: 'u6', type: 'rest', seconds: 20 },
+                { id: 'u7', type: 'exercise', exerciseId: 'ex_dips', reps: 12 }, { id: 'u8', type: 'rest', seconds: 20 },
+                { id: 'u9', type: 'exercise', exerciseId: 'exv_bodyweight-arms-shoulders-pike-push-up', reps: 10 }, { id: 'u10', type: 'rest', seconds: 20 },
+                { id: 'u11', type: 'exercise', exerciseId: 'exv_bodyweight-arms-shoulders-tricep-extension', reps: 12 }, { id: 'u12', type: 'rest', seconds: 20 },
+                { id: 'u13', type: 'exercise', exerciseId: 'ex_plank', seconds: 45 },
+            ],
+        },
+        {
+            id: 'wo_lower_body', name: 'Lower body strength', description: 'Squats, lunges and single-leg work for quads, glutes and hamstrings. No equipment.', color: '#E0A72E', createdAt: now, updatedAt: now,
+            blocks: [
+                { id: 'l1', type: 'exercise', exerciseId: 'ex_squats', reps: 15 }, { id: 'l2', type: 'rest', seconds: 20 },
+                { id: 'l3', type: 'exercise', exerciseId: 'ex_lunges', reps: 12 }, { id: 'l4', type: 'rest', seconds: 20 },
+                { id: 'l5', type: 'exercise', exerciseId: 'exv_bodyweight-legs-bulgarian-split-squat', reps: 10 }, { id: 'l6', type: 'rest', seconds: 20 },
+                { id: 'l7', type: 'exercise', exerciseId: 'ex_glute_bridge', reps: 15 }, { id: 'l8', type: 'rest', seconds: 20 },
+                { id: 'l9', type: 'exercise', exerciseId: 'exv_bodyweight-legs-single-leg-deadlift', reps: 10 }, { id: 'l10', type: 'rest', seconds: 20 },
+                { id: 'l11', type: 'exercise', exerciseId: 'exv_bodyweight-legs-sumo-squat', reps: 15 }, { id: 'l12', type: 'rest', seconds: 20 },
+                { id: 'l13', type: 'exercise', exerciseId: 'exv_bodyweight-legs-calf-raise', reps: 20 },
+            ],
+        },
+        {
+            id: 'wo_mobility', name: 'Mobility & stretch', description: 'A gentle full-body stretch flow to loosen up or cool down. No equipment.', color: '#5BA3A0', createdAt: now, updatedAt: now,
+            blocks: [
+                { id: 'm1', type: 'exercise', exerciseId: 'ex_stretch', seconds: 60 }, { id: 'm2', type: 'rest', seconds: 10 },
+                { id: 'm3', type: 'exercise', exerciseId: 'exv_stretching-upper-body-childs-pose-back-stretch', seconds: 40 }, { id: 'm4', type: 'rest', seconds: 10 },
+                { id: 'm5', type: 'exercise', exerciseId: 'exv_stretching-lower-body-standing-quadricep-stretch', seconds: 30 }, { id: 'm6', type: 'rest', seconds: 10 },
+                { id: 'm7', type: 'exercise', exerciseId: 'exv_stretching-lower-body-kneeling-hamstring-stretch', seconds: 30 }, { id: 'm8', type: 'rest', seconds: 10 },
+                { id: 'm9', type: 'exercise', exerciseId: 'exv_stretching-upper-body-doorway-chest-stretch', seconds: 30 }, { id: 'm10', type: 'rest', seconds: 10 },
+                { id: 'm11', type: 'exercise', exerciseId: 'exv_stretching-lower-body-hip-flexor-stretch', seconds: 30 }, { id: 'm12', type: 'rest', seconds: 10 },
+                { id: 'm13', type: 'exercise', exerciseId: 'exv_stretching-upper-body-rear-deltoid-stretch', seconds: 30 }, { id: 'm14', type: 'rest', seconds: 10 },
+                { id: 'm15', type: 'exercise', exerciseId: 'exv_stretching-lower-body-lunging-calf-stretch', seconds: 30 },
+            ],
+        },
     ];
 }
 export function seedWeekPlan(weekStartsOn = 1) {
@@ -81,9 +118,12 @@ export function seedWeekPlan(weekStartsOn = 1) {
 }
 export const seedSchedule = [
     { weekday: 1, workoutId: 'wo_full_body' },
+    { weekday: 2, workoutId: 'wo_upper_body' },
     { weekday: 3, workoutId: 'wo_hiit' },
-    { weekday: 5, workoutId: 'wo_full_body' },
-    { weekday: 6, workoutId: 'wo_core' },
+    { weekday: 4, workoutId: 'wo_lower_body' },
+    { weekday: 5, workoutId: 'wo_core' },
+    { weekday: 6, workoutId: 'wo_mobility' },
+    // Sunday (weekday 0) is left as a rest day.
 ];
 /** Seeds starter content on first launch only. */
 export async function seedIfEmpty() {
