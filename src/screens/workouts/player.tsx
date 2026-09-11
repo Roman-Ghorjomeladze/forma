@@ -3,11 +3,11 @@ import { put } from '../../lib/db.js';
 import { fmtClock, fmtDuration } from '../../lib/dates.js';
 import { expandWorkout, kcalFor } from '../../lib/calories.js';
 import { localizedWorkoutName } from '../../data/seed-i18n.js';
-import { usePrefs, useProfile } from '../../lib/hooks.js';
+import { useBlobUrls, usePrefs, useProfile } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
 import { useLang, useT } from '../../lib/i18n.js';
 import type { Session, Step } from '../../lib/models.js';
-import { useExerciseMap, useWorkout } from '../../lib/queries.js';
+import { useExerciseMap, useMusicTracks, useWorkout } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
 import { sounds, speak, startMusic, stopMusic, stopSpeaking, unlockAudio } from '../../lib/audio.js';
 import { keepAwake } from '../../lib/wakelock.js';
@@ -54,6 +54,8 @@ export function PlayerScreen({ id }: { id: string }) {
   const weight = profile.weightKg;
   const soundOn = prefs.sound;
   const musicOn = prefs.music;
+  const musicTracks = useMusicTracks();
+  const playlist = useBlobUrls(useMemo(() => (musicTracks ?? []).map((tr) => tr.blobId), [musicTracks]));
 
   const audioSheetEl = (
     <Sheet open={audioSheet} onClose={() => setAudioSheet(false)} title={t('player.audioSheetTitle')}>
@@ -62,6 +64,13 @@ export function PlayerScreen({ id }: { id: string }) {
         <div className="settings-row"><span className="l">{t('settings.voiceCues')}<small>{t('settings.voiceCuesHint')}</small></span><Toggle checked={prefs.voice} onChange={(v) => setPrefs({ voice: v })} /></div>
         <div className="settings-row"><span className="l">{t('settings.music')}<small>{t('settings.musicHint')}</small></span><Toggle checked={prefs.music} onChange={(v) => setPrefs({ music: v })} /></div>
       </div>
+      {prefs.music && (
+        <div className="small muted" style={{ padding: '10px 4px 0' }}>
+          {musicTracks && musicTracks.length > 0 ? t('player.usingYourTracks', { n: musicTracks.length }) : t('player.usingBuiltinBeat')}
+          {' '}
+          <button style={{ color: 'var(--workout)', fontWeight: 600, textDecoration: 'underline' }} onClick={() => { setAudioSheet(false); navigate('/settings'); }}>{t('player.manageTracksLink')}</button>
+        </div>
+      )}
     </Sheet>
   );
 
@@ -165,9 +174,10 @@ export function PlayerScreen({ id }: { id: string }) {
   // Background music tracks the running phase and the music preference; toggling
   // either one starts/stops the loop (restarting from 0 is imperceptible).
   useEffect(() => {
-    if (phase === 'running' && musicOn) startMusic();
+    if (phase === 'running' && musicOn) startMusic(playlist);
     else stopMusic();
-  }, [phase, musicOn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, musicOn, playlist.join(',')]);
 
   useEffect(() => () => { keepAwake(false); stopSpeaking(); stopMusic(); }, []);
 

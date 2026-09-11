@@ -1,10 +1,10 @@
 // A tiny promise-based IndexedDB layer with change notifications (no dependencies).
-import type { Dish, Exercise, MealSlot, ScheduleEntry, Session, StoredBlob, Workout } from './models.js';
+import type { Dish, Exercise, MealSlot, MusicTrack, ScheduleEntry, Session, StoredBlob, Workout } from './models.js';
 
 export const DB_NAME = 'forma';
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
 
-export type TableName = 'exercises' | 'workouts' | 'sessions' | 'dishes' | 'mealSlots' | 'schedule' | 'blobs' | 'settings';
+export type TableName = 'exercises' | 'workouts' | 'sessions' | 'dishes' | 'mealSlots' | 'schedule' | 'blobs' | 'musicTracks' | 'settings';
 
 interface SettingRow { key: string; value: unknown }
 
@@ -16,10 +16,11 @@ type RowOf<T extends TableName> =
   T extends 'mealSlots' ? MealSlot :
   T extends 'schedule' ? ScheduleEntry :
   T extends 'blobs' ? StoredBlob :
+  T extends 'musicTracks' ? MusicTrack :
   SettingRow;
 
 const KEY_PATH: Record<TableName, string> = {
-  exercises: 'id', workouts: 'id', sessions: 'id', dishes: 'id', mealSlots: 'id', schedule: 'weekday', blobs: 'id', settings: 'key',
+  exercises: 'id', workouts: 'id', sessions: 'id', dishes: 'id', mealSlots: 'id', schedule: 'weekday', blobs: 'id', musicTracks: 'id', settings: 'key',
 };
 
 let dbPromise: Promise<IDBDatabase> | null = null;
@@ -152,7 +153,7 @@ export async function count(table: TableName): Promise<number> {
   return reqToPromise(db.transaction(table, 'readonly').objectStore(table).count());
 }
 
-export const ALL_TABLES: TableName[] = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'settings'];
+export const ALL_TABLES: TableName[] = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings'];
 
 // ---- settings helpers ---------------------------------------------------------------------
 export async function getSetting<T>(key: string, fallback: T): Promise<T> {
@@ -170,6 +171,10 @@ export async function saveBlob(blob: Blob, name: string, id?: string): Promise<s
   const blobId = id ?? uid('blob');
   await put('blobs', { id: blobId, blob, type: blob.type, name });
   return blobId;
+}
+
+export async function deleteBlob(blobId: string): Promise<void> {
+  await remove('blobs', blobId);
 }
 
 export async function deleteDatabase(): Promise<void> {

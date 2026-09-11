@@ -105,6 +105,37 @@ export function useBlobUrl(blobId) {
     }, [blobId]);
     return url;
 }
+/** Object URLs for a list of stored blob ids, in order (revoked on change/unmount). Used for the custom music playlist. */
+export function useBlobUrls(blobIds) {
+    const [urls, setUrls] = useState([]);
+    const key = blobIds.join(',');
+    useEffect(() => {
+        let alive = true;
+        const created = [];
+        if (blobIds.length === 0) {
+            setUrls([]);
+            return;
+        }
+        (async () => {
+            const list = [];
+            for (const id of blobIds) {
+                const row = await get('blobs', id);
+                if (row) {
+                    const u = URL.createObjectURL(row.blob);
+                    list.push(u);
+                    created.push(u);
+                }
+            }
+            if (alive)
+                setUrls(list);
+            else
+                created.forEach((u) => URL.revokeObjectURL(u));
+        })();
+        return () => { alive = false; created.forEach((u) => URL.revokeObjectURL(u)); };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [key]);
+    return urls;
+}
 /** Boolean that becomes true once and can be reset (for transient UI like "Saved ✓"). */
 export function useFlash(ms = 1600) {
     const [on, setOn] = useState(false);

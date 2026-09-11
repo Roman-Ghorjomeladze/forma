@@ -1,7 +1,7 @@
 export const DB_NAME = 'forma';
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
 const KEY_PATH = {
-    exercises: 'id', workouts: 'id', sessions: 'id', dishes: 'id', mealSlots: 'id', schedule: 'weekday', blobs: 'id', settings: 'key',
+    exercises: 'id', workouts: 'id', sessions: 'id', dishes: 'id', mealSlots: 'id', schedule: 'weekday', blobs: 'id', musicTracks: 'id', settings: 'key',
 };
 let dbPromise = null;
 export function openDb() {
@@ -125,7 +125,7 @@ export async function count(table) {
     const db = await openDb();
     return reqToPromise(db.transaction(table, 'readonly').objectStore(table).count());
 }
-export const ALL_TABLES = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'settings'];
+export const ALL_TABLES = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings'];
 // ---- settings helpers ---------------------------------------------------------------------
 export async function getSetting(key, fallback) {
     const row = await get('settings', key);
@@ -140,6 +140,9 @@ export async function saveBlob(blob, name, id) {
     const blobId = id ?? uid('blob');
     await put('blobs', { id: blobId, blob, type: blob.type, name });
     return blobId;
+}
+export async function deleteBlob(blobId) {
+    await remove('blobs', blobId);
 }
 export async function deleteDatabase() {
     const db = await openDb();

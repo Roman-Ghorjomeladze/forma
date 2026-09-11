@@ -2,14 +2,18 @@ import { useEffect, useRef, useState } from 'react';
 import { restoreStarterContent } from '../data/seed.js';
 import { exportBackup, importBackup, shareOrDownloadJson, type BackupFile } from '../lib/backup.js';
 import { suggestDailyKcal } from '../lib/calories.js';
-import { deleteDatabase } from '../lib/db.js';
+import { deleteBlob, deleteDatabase, put, remove, saveBlob } from '../lib/db.js';
 import { usePrefs, useProfile } from '../lib/hooks.js';
+import { uid } from '../lib/ids.js';
 import { useT } from '../lib/i18n.js';
 import { canPromptInstall, isInstalled, promptInstall, subscribeInstall } from '../lib/install-prompt.js';
 import type { Lang, Theme } from '../lib/models.js';
-import { Button, Field, NumberInput, Screen, Segmented, Select, Toggle, TopBar } from '../ui/components.js';
+import { useMusicTracks } from '../lib/queries.js';
+import { Button, Field, NumberInput, Row, Screen, Segmented, Select, Toggle, TopBar } from '../ui/components.js';
 import { confirmDialog, toast } from '../ui/dialogs.js';
-import { IconDownload, IconUpload } from '../ui/icons.js';
+import { IconDownload, IconMusic, IconTrash, IconUpload } from '../ui/icons.js';
+
+const MAX_TRACK_BYTES = 25 * 1024 * 1024; // 25MB - generous for a full song at typical mp3 bitrates
 
 const IS_STANDALONE = (() => { try { return matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone === true; } catch { return false; } })();
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
@@ -20,10 +24,33 @@ export function SettingsScreen() {
   const [profile, setProfile] = useProfile();
   const [prefs, setPrefs] = usePrefs();
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const musicFileRef = useRef<HTMLInputElement | null>(null);
   const [busy, setBusy] = useState(false);
+  const [musicBusy, setMusicBusy] = useState(false);
+  const musicTracks = useMusicTracks();
   const [canInstall, setCanInstall] = useState(canPromptInstall());
   const [installed, setInstalled] = useState(isInstalled());
   useEffect(() => subscribeInstall(() => { setCanInstall(canPromptInstall()); setInstalled(isInstalled()); }), []);
+
+  const addMusicTracks = async (files: FileList) => {
+    setMusicBusy(true);
+    try {
+      let skipped = 0;
+      for (const file of Array.from(files)) {
+        if (file.size > MAX_TRACK_BYTES) { skipped++; continue; }
+        const blobId = await saveBlob(file, file.name);
+        await put('musicTracks', { id: uid('mtr'), name: file.name.replace(/\.[^.]+$/, ''), blobId, addedAt: Date.now() });
+      }
+      if (skipped > 0) toast(t('settings.musicTrackTooBig', { n: skipped }));
+    } finally { setMusicBusy(false); }
+  };
+
+  const removeMusicTrack = async (track: { id: string; name: string; blobId: string }) => {
+    const ok = await confirmDialog({ title: t('settings.removeTrackTitle', { name: track.name }), confirmLabel: t('common.remove'), danger: true });
+    if (!ok) return;
+    await deleteBlob(track.blobId);
+    await remove('musicTracks', track.id);
+  };
 
   const doInstall = async () => {
     const outcome = await promptInstall();
@@ -126,6 +153,23 @@ export function SettingsScreen() {
           <div className="settings-row"><span className="l">{t('settings.keepAwake')}<small>{t('settings.keepAwakeHint')}</small></span><Toggle checked={prefs.keepAwake} onChange={(v) => setPrefs({ keepAwake: v })} /></div>
           <div className="settings-row"><span className="l">{t('settings.countdownCue')}</span><Segmented value={String(prefs.countdownSeconds) as '3' | '5' | '10'} onChange={(v) => setPrefs({ countdownSeconds: Number(v) })} options={[{ value: '3', label: '3 s' }, { value: '5', label: '5 s' }, { value: '10', label: '10 s' }]} /></div>
         </div>
+      </div>
+
+      <div className="settings-group">
+        <div className="section-label">{t('settings.yourMusic')}</div>
+        <div className="small muted mb">{t('settings.yourMusicHint')}</div>
+        {musicTracks && musicTracks.length > 0 && (
+          <div className="list mb">
+            {musicTracks.map((tr) => (
+              <Row key={tr.id} right={<Button variant="ghost" size="sm" icon={<IconTrash size={16} />} onClick={() => removeMusicTrack(tr)} />}>
+                <div className="thumb"><IconMusic size={18} /></div>
+                <div className="row-main"><div className="row-title">{tr.name}</div></div>
+              </Row>
+            ))}
+          </div>
+        )}
+        <Button variant="secondary" full icon={<IconUpload size={18} />} disabled={musicBusy} onClick={() => musicFileRef.current?.click()}>{musicBusy ? t('common.uploading') : t('settings.addMusicTrack')}</Button>
+        <input ref={musicFileRef} type="file" accept="audio/*,.mp3" multiple hidden onChange={(e: { target: HTMLInputElement }) => { const files = e.target.files; if (files && files.length) addMusicTracks(files); e.target.value = ''; }} />
       </div>
 
       <div className="settings-group">

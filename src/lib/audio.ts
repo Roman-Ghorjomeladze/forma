@@ -152,8 +152,35 @@ function getMusicBuffer(): Promise<AudioBuffer | null> {
   return musicBufferPromise;
 }
 
-export async function startMusic() {
-  if (!ctx || musicSource) return;
+// ---- Custom playlist (user-uploaded mp3s) -----------------------------------
+// Plays through a plain <audio> element instead of the AudioContext graph - far
+// lighter than decoding whole songs into an AudioBuffer, and just as capable of
+// looping a single track or advancing through several via the `ended` event.
+let customAudio: HTMLAudioElement | null = null;
+let customUrls: string[] = [];
+let customIndex = 0;
+
+function playCustomAt(i: number) {
+  if (!customAudio || customUrls.length === 0) return;
+  customIndex = ((i % customUrls.length) + customUrls.length) % customUrls.length;
+  customAudio.src = customUrls[customIndex];
+  customAudio.play().catch(() => { /* autoplay may be blocked; startMusic() is always called from a user gesture though */ });
+}
+
+/** Starts the background music. Pass a playlist of object URLs (uploaded tracks) to play those
+ *  instead of the built-in synthesized loop - looping a single track, or advancing through several. */
+export async function startMusic(playlist?: string[]) {
+  stopMusic();
+  if (playlist && playlist.length > 0) {
+    customUrls = playlist;
+    customAudio = new Audio();
+    customAudio.volume = 0.55;
+    customAudio.loop = playlist.length === 1;
+    customAudio.addEventListener('ended', () => playCustomAt(customIndex + 1));
+    playCustomAt(0);
+    return;
+  }
+  if (!ctx) return;
   const buffer = await getMusicBuffer();
   if (!buffer || !ctx || musicSource) return; // guard against races (stopMusic/quit during await)
   const src = ctx.createBufferSource();
@@ -173,9 +200,12 @@ export function stopMusic() {
   try { musicGainNode?.disconnect(); } catch { /* ignore */ }
   musicSource = null;
   musicGainNode = null;
+  if (customAudio) { try { customAudio.pause(); } catch { /* ignore */ } customAudio.src = ''; }
+  customAudio = null;
+  customUrls = [];
 }
 
-export function isMusicPlaying(): boolean { return !!musicSource; }
+export function isMusicPlaying(): boolean { return !!musicSource || (!!customAudio && !customAudio.paused); }
 
 let voiceEnabled = true;
 export function setVoiceEnabled(v: boolean) { voiceEnabled = v; }

@@ -1,6 +1,6 @@
 import { get, getAll, getByIndex } from './db.js';
 import { useLiveQuery } from './hooks.js';
-import type { Dish, Exercise, MealSlot, ScheduleEntry, Session, Workout } from './models.js';
+import type { Dish, Exercise, MealSlot, MusicTrack, ScheduleEntry, Session, Workout } from './models.js';
 
 export function useExercises(): Exercise[] | undefined {
   return useLiveQuery(async () => (await getAll('exercises')).sort((a, b) => a.name.localeCompare(b.name)), ['exercises']);
@@ -50,4 +50,8 @@ export function useSessions(limit = 200): Session[] | undefined {
 
 export function useSchedule(): ScheduleEntry[] | undefined {
   return useLiveQuery(async () => getAll('schedule'), ['schedule']);
+}
+
+export function useMusicTracks(): MusicTrack[] | undefined {
+  return useLiveQuery(async () => (await getAll('musicTracks')).sort((a, b) => a.addedAt - b.addedAt), ['musicTracks']);
 }

@@ -4,10 +4,10 @@ import { put } from '../../lib/db.js';
 import { fmtClock, fmtDuration } from '../../lib/dates.js';
 import { expandWorkout, kcalFor } from '../../lib/calories.js';
 import { localizedWorkoutName } from '../../data/seed-i18n.js';
-import { usePrefs, useProfile } from '../../lib/hooks.js';
+import { useBlobUrls, usePrefs, useProfile } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
 import { useLang, useT } from '../../lib/i18n.js';
-import { useExerciseMap, useWorkout } from '../../lib/queries.js';
+import { useExerciseMap, useMusicTracks, useWorkout } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
 import { sounds, speak, startMusic, stopMusic, stopSpeaking, unlockAudio } from '../../lib/audio.js';
 import { keepAwake } from '../../lib/wakelock.js';
@@ -36,7 +36,9 @@ export function PlayerScreen({ id }) {
     const weight = profile.weightKg;
     const soundOn = prefs.sound;
     const musicOn = prefs.music;
-    const audioSheetEl = (_jsx(Sheet, { open: audioSheet, onClose: () => setAudioSheet(false), title: t('player.audioSheetTitle'), children: _jsxs("div", { className: "list", children: [_jsxs("div", { className: "settings-row", children: [_jsxs("span", { className: "l", children: [t('settings.sounds'), _jsx("small", { children: t('settings.soundsHint') })] }), _jsx(Toggle, { checked: prefs.sound, onChange: (v) => setPrefs({ sound: v }) })] }), _jsxs("div", { className: "settings-row", children: [_jsxs("span", { className: "l", children: [t('settings.voiceCues'), _jsx("small", { children: t('settings.voiceCuesHint') })] }), _jsx(Toggle, { checked: prefs.voice, onChange: (v) => setPrefs({ voice: v }) })] }), _jsxs("div", { className: "settings-row", children: [_jsxs("span", { className: "l", children: [t('settings.music'), _jsx("small", { children: t('settings.musicHint') })] }), _jsx(Toggle, { checked: prefs.music, onChange: (v) => setPrefs({ music: v }) })] })] }) }));
+    const musicTracks = useMusicTracks();
+    const playlist = useBlobUrls(useMemo(() => (musicTracks ?? []).map((tr) => tr.blobId), [musicTracks]));
+    const audioSheetEl = (_jsxs(Sheet, { open: audioSheet, onClose: () => setAudioSheet(false), title: t('player.audioSheetTitle'), children: [_jsxs("div", { className: "list", children: [_jsxs("div", { className: "settings-row", children: [_jsxs("span", { className: "l", children: [t('settings.sounds'), _jsx("small", { children: t('settings.soundsHint') })] }), _jsx(Toggle, { checked: prefs.sound, onChange: (v) => setPrefs({ sound: v }) })] }), _jsxs("div", { className: "settings-row", children: [_jsxs("span", { className: "l", children: [t('settings.voiceCues'), _jsx("small", { children: t('settings.voiceCuesHint') })] }), _jsx(Toggle, { checked: prefs.voice, onChange: (v) => setPrefs({ voice: v }) })] }), _jsxs("div", { className: "settings-row", children: [_jsxs("span", { className: "l", children: [t('settings.music'), _jsx("small", { children: t('settings.musicHint') })] }), _jsx(Toggle, { checked: prefs.music, onChange: (v) => setPrefs({ music: v }) })] })] }), prefs.music && (_jsxs("div", { className: "small muted", style: { padding: '10px 4px 0' }, children: [musicTracks && musicTracks.length > 0 ? t('player.usingYourTracks', { n: musicTracks.length }) : t('player.usingBuiltinBeat'), ' ', _jsx("button", { style: { color: 'var(--workout)', fontWeight: 600, textDecoration: 'underline' }, onClick: () => { setAudioSheet(false); navigate('/settings'); }, children: t('player.manageTracksLink') })] }))] }));
     const stepAt = (i) => steps[i];
     const durationOf = (i) => (i < 0 ? LEAD_IN : stepAt(i)?.seconds ?? 0);
     const announce = useCallback((i) => {
@@ -162,10 +164,11 @@ export function PlayerScreen({ id }) {
     // either one starts/stops the loop (restarting from 0 is imperceptible).
     useEffect(() => {
         if (phase === 'running' && musicOn)
-            startMusic();
+            startMusic(playlist);
         else
             stopMusic();
-    }, [phase, musicOn]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phase, musicOn, playlist.join(',')]);
     useEffect(() => () => { keepAwake(false); stopSpeaking(); stopMusic(); }, []);
     const start = () => {
         unlockAudio();

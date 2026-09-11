@@ -40,3 +40,6 @@ export function useSessions(limit = 200) {
 export function useSchedule() {
     return useLiveQuery(async () => getAll('schedule'), ['schedule']);
 }
+export function useMusicTracks() {
+    return useLiveQuery(async () => (await getAll('musicTracks')).sort((a, b) => a.addedAt - b.addedAt), ['musicTracks']);
+}

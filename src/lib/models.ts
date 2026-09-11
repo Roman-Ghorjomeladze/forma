@@ -114,6 +114,9 @@ export interface ScheduleEntry {
 
 export interface StoredBlob { id: string; blob: Blob; type: string; name: string }
 
+/** A user-uploaded audio file to play as background music during workouts (metadata only - the file itself lives in `blobs`). */
+export interface MusicTrack { id: string; name: string; blobId: string; addedAt: number }
+
 export type Theme = 'system' | 'light' | 'dark';
 export type Lang = 'en' | 'ka';
 
