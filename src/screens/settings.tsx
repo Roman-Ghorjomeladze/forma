@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { restoreStarterContent } from '../data/seed.js';
 import { exportBackup, importBackup, shareOrDownloadJson, type BackupFile } from '../lib/backup.js';
 import { suggestDailyKcal } from '../lib/calories.js';
 import { deleteDatabase } from '../lib/db.js';
 import { usePrefs, useProfile } from '../lib/hooks.js';
 import { useT } from '../lib/i18n.js';
+import { canPromptInstall, isInstalled, promptInstall, subscribeInstall } from '../lib/install-prompt.js';
 import type { Lang, Theme } from '../lib/models.js';
 import { Button, Field, NumberInput, Screen, Segmented, Select, Toggle, TopBar } from '../ui/components.js';
 import { confirmDialog, toast } from '../ui/dialogs.js';
@@ -12,6 +13,7 @@ import { IconDownload, IconUpload } from '../ui/icons.js';
 
 const IS_STANDALONE = (() => { try { return matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone === true; } catch { return false; } })();
 const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+const IS_ANDROID = /Android/.test(navigator.userAgent);
 
 export function SettingsScreen() {
   const t = useT();
@@ -19,6 +21,14 @@ export function SettingsScreen() {
   const [prefs, setPrefs] = usePrefs();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [busy, setBusy] = useState(false);
+  const [canInstall, setCanInstall] = useState(canPromptInstall());
+  const [installed, setInstalled] = useState(isInstalled());
+  useEffect(() => subscribeInstall(() => { setCanInstall(canPromptInstall()); setInstalled(isInstalled()); }), []);
+
+  const doInstall = async () => {
+    const outcome = await promptInstall();
+    if (outcome === 'accepted') toast(t('settings.appInstalled'));
+  };
 
   const suggest = (goal: 'lose' | 'maintain' | 'gain') => {
     const kcal = suggestDailyKcal(profile.weightKg, profile.heightCm, profile.age, profile.sex, goal);
@@ -100,11 +110,11 @@ export function SettingsScreen() {
             </button>
           ))}
         </div>
-        <div className="mt">
-          <Field label={t('settings.language')} inline>
-            <Segmented value={prefs.language} onChange={(v: Lang) => setPrefs({ language: v })} options={[{ value: 'en', label: 'English' }, { value: 'ka', label: 'ქართული' }]} />
-          </Field>
-        </div>
+      </div>
+
+      <div className="settings-group">
+        <div className="section-label">{t('settings.language')}</div>
+        <Segmented value={prefs.language} onChange={(v: Lang) => setPrefs({ language: v })} options={[{ value: 'en', label: 'English' }, { value: 'ka', label: 'ქართული' }]} />
       </div>
 
       <div className="settings-group">
@@ -129,19 +139,31 @@ export function SettingsScreen() {
         </div>
       </div>
 
-      {!IS_STANDALONE && (
+      {!IS_STANDALONE && !installed && (
         <div className="settings-group">
           <div className="section-label">{t('settings.install')}</div>
           <div className="install-hint">
-            {IS_IOS ? (
+            {canInstall ? (
+              <>
+                <span>{t('settings.installPromptBody')}</span>
+                <Button icon={<IconDownload size={18} />} onClick={doInstall}>{t('settings.installAppButton')}</Button>
+              </>
+            ) : IS_IOS ? (
               <>
                 <span><b>{t('settings.installIosTitle')}</b> {t('settings.installIosBody')}</span>
                 <span>{t('settings.installIosStep1', { share: t('settings.share') })}</span>
                 <span>{t('settings.installIosStep2', { addHome: t('settings.addToHomeScreen'), add: t('settings.add') })}</span>
                 <span className="muted">{t('settings.installIosNote')}</span>
               </>
+            ) : IS_ANDROID ? (
+              <>
+                <span><b>{t('settings.installAndroidTitle')}</b> {t('settings.installAndroidBody')}</span>
+                <span>{t('settings.installAndroidStep1')}</span>
+                <span>{t('settings.installAndroidStep2')}</span>
+                <span className="muted">{t('settings.installAndroidNote')}</span>
+              </>
             ) : (
-              <span>{t('settings.installOther', { share: t('settings.shareArrowAddHome') })}</span>
+              <span>{t('settings.installDesktop')}</span>
             )}
           </div>
         </div>
