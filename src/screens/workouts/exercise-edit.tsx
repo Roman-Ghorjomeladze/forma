@@ -1,14 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { EQUIPMENT_CATEGORIES } from '../../data/equipment-categories.js';
+import { videoLibrary } from '../../data/exercise-video-library.js';
 import { get, put, saveBlob } from '../../lib/db.js';
 import { useBlobUrl } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
 import { useT } from '../../lib/i18n.js';
-import type { Exercise, ExerciseKind } from '../../lib/models.js';
+import type { Demo, Exercise, ExerciseKind } from '../../lib/models.js';
 import { navigate } from '../../lib/router.js';
-import { Button, Field, NumberInput, Screen, Segmented, TextArea, TextInput, TopBar } from '../../ui/components.js';
+import { Button, Chip, Field, NumberInput, Screen, Segmented, Sheet, TextArea, TextInput, TopBar } from '../../ui/components.js';
 import { confirmDialog, toast } from '../../ui/dialogs.js';
-import { DEMO_KEYS, Demo } from '../../ui/demos.js';
-import { IconImage, IconTrash } from '../../ui/icons.js';
+import { Demo as BuiltinDemo } from '../../ui/demos.js';
+import { IconImage, IconPlay, IconSearch, IconTrash } from '../../ui/icons.js';
 
 const MET_PRESET_DEFS: { labelKey: string; met: number }[] = [
   { labelKey: 'exercise.met.stretching', met: 2.3 }, { labelKey: 'exercise.met.light', met: 3 }, { labelKey: 'exercise.met.moderate', met: 4 },
@@ -20,6 +22,44 @@ function blank(): Exercise {
   return { id: uid('ex'), name: '', muscles: [], equipment: [], kind: 'reps', met: 4, secPerRep: 3, defaultAmount: 12, demo: { type: 'none' }, cues: [], isCustom: true, createdAt: now, updatedAt: now };
 }
 
+/** Full-screen sheet to browse the bundled exercise-video library and pick a demo clip. */
+function VideoPickerSheet({ open, onClose, onPick }: { open: boolean; onClose: () => void; onPick: (v: (typeof videoLibrary)[number]) => void }) {
+  const t = useT();
+  const [q, setQ] = useState('');
+  const [equip, setEquip] = useState('all');
+  const EQUIP_CHIPS = [{ key: 'all', label: t('equipment.all') }, ...EQUIPMENT_CATEGORIES.map((c) => ({ key: c.key, label: t(c.labelKey) }))];
+
+  const list = useMemo(() => {
+    const ql = q.trim().toLowerCase();
+    const eqCat = EQUIPMENT_CATEGORIES.find((c) => c.key === equip);
+    return videoLibrary.filter((v) => (!eqCat || eqCat.match(v.equipment)) && (!ql || v.name.toLowerCase().includes(ql) || v.muscles.some((m) => m.includes(ql))));
+  }, [q, equip]);
+
+  return (
+    <Sheet open={open} onClose={onClose} title={t('exercise.chooseDemoVideoTitle')} full>
+      <div className="searchbar">
+        <IconSearch size={18} />
+        <input className="input" placeholder={t('exercise.searchVideos')} value={q} onChange={(e: { target: HTMLInputElement }) => setQ(e.target.value)} />
+      </div>
+      <div className="chips" style={{ margin: '0 0 10px', padding: 0 }}>
+        {EQUIP_CHIPS.map((c) => <Chip key={c.key} tone="workout" active={equip === c.key} onClick={() => setEquip(c.key)}>{c.label}</Chip>)}
+      </div>
+      <div className="exercise-grid mb">
+        {list.map((v) => (
+          <button key={v.id} className="exercise-tile" onClick={() => onPick(v)}>
+            <div className="demo-box" style={{ width: '100%', aspectRatio: '1.3' }}>
+              <video src={v.demo.type === 'video' ? v.demo.file : undefined} autoPlay loop muted playsInline />
+            </div>
+            <div className="exercise-name">{v.name}</div>
+            <div className="exercise-sub">{v.muscles.join(', ')}</div>
+          </button>
+        ))}
+        {list.length === 0 && <div className="empty"><div className="empty-title">{t('exercise.noVideosMatch')}</div></div>}
+      </div>
+    </Sheet>
+  );
+}
+
 export function ExerciseEditScreen({ id }: { id?: string }) {
   const t = useT();
   const [ex, setEx] = useState<Exercise | null>(id ? null : blank());
@@ -28,6 +68,7 @@ export function ExerciseEditScreen({ id }: { id?: string }) {
   const [cues, setCues] = useState('');
   const [pending, setPending] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | undefined>(undefined);
+  const [pickingVideo, setPickingVideo] = useState(false);
   const existing = useBlobUrl(ex?.demo.type === 'blob' ? ex.demo.blobId : undefined);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
@@ -51,6 +92,16 @@ export function ExerciseEditScreen({ id }: { id?: string }) {
   if (!ex) return <Screen className="screen-no-tabs" />;
   const patch = (p: Partial<Exercise>) => setEx({ ...ex, ...p });
   const split = (s: string) => s.split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
+
+  const pickVideo = (v: (typeof videoLibrary)[number]) => {
+    setPending(null);
+    const p: Partial<Exercise> = { demo: v.demo as Demo };
+    if (!ex.name.trim()) p.name = v.name;
+    if (!muscles.trim()) setMuscles(v.muscles.join(', '));
+    if (!equipment.trim()) setEquipment(v.equipment.join(', '));
+    patch(p);
+    setPickingVideo(false);
+  };
 
   const save = async () => {
     if (!ex.name.trim()) { toast(t('exercise.giveItAName')); return; }
@@ -95,21 +146,17 @@ export function ExerciseEditScreen({ id }: { id?: string }) {
 
       <div className="section-label mt">{t('exercise.demo')}</div>
       <div className="small muted mb">{t('exercise.demoHint')}</div>
-      <div className="demo-box demo-box-lg mb" onClick={() => fileRef.current?.click()} role="button">
-        {demoUrl ? <img src={demoUrl} alt="" /> : ex.demo.type === 'builtin' ? <Demo demoKey={ex.demo.key} /> : <span className="hstack muted"><IconImage />{t('exercise.tapToUpload')}</span>}
+      <div className="demo-box demo-box-lg mb" onClick={() => (demoUrl || ex.demo.type === 'video' || ex.demo.type === 'builtin') ? setPickingVideo(true) : fileRef.current?.click()} role="button">
+        {demoUrl ? <img src={demoUrl} alt="" />
+          : ex.demo.type === 'video' ? <video src={ex.demo.file} autoPlay loop muted playsInline />
+          : ex.demo.type === 'builtin' ? <BuiltinDemo demoKey={ex.demo.key} />
+          : <span className="hstack muted"><IconImage />{t('exercise.tapToUpload')}</span>}
       </div>
       <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e: { target: HTMLInputElement }) => { const f = e.target.files?.[0]; if (f) { setPending(f); } }} />
-      <div className="hstack mb">
+      <div className="hstack wrap mb">
+        <Button variant="secondary" size="sm" icon={<IconPlay size={16} />} onClick={() => setPickingVideo(true)}>{t('exercise.chooseVideo')}</Button>
         <Button variant="secondary" size="sm" icon={<IconImage size={16} />} onClick={() => fileRef.current?.click()}>{t('exercise.uploadGif')}</Button>
         {(pending || ex.demo.type !== 'none') && <Button variant="ghost" size="sm" icon={<IconTrash size={16} />} onClick={() => { setPending(null); patch({ demo: { type: 'none' } }); }}>{t('common.remove')}</Button>}
-      </div>
-      <div className="exercise-grid mb">
-        {DEMO_KEYS.map((k) => (
-          <button key={k} className="exercise-tile" style={ex.demo.type === 'builtin' && ex.demo.key === k && !pending ? { borderColor: 'var(--workout)' } : undefined} onClick={() => { setPending(null); patch({ demo: { type: 'builtin', key: k } }); }}>
-            <div className="demo-box" style={{ width: '100%', aspectRatio: '1.6' }}><Demo demoKey={k} animated={false} /></div>
-            <div className="exercise-sub">{k.replace(/-/g, ' ')}</div>
-          </button>
-        ))}
       </div>
 
       <Field label={t('exercise.formCues')} hint={t('exercise.formCuesHint')}><TextArea rows={3} value={cues} onChange={setCues} placeholder={'Chest up\nKnees over toes'} /></Field>
@@ -118,6 +165,8 @@ export function ExerciseEditScreen({ id }: { id?: string }) {
         <Button size="lg" full onClick={save}>{id ? t('common.saveChanges') : t('exercise.createExercise')}</Button>
         <Button variant="ghost" full onClick={cancel}>{t('common.cancel')}</Button>
       </div>
+
+      <VideoPickerSheet open={pickingVideo} onClose={() => setPickingVideo(false)} onPick={pickVideo} />
     </Screen>
   );
 }

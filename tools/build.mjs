@@ -46,9 +46,13 @@ export function build({ watch = false } = {}) {
 
 export function writeServiceWorker() {
   const files = [];
+  // exercise-videos/ is a large (many small files) asset bundle — cache clips lazily as the
+  // user actually views them (the fetch handler below does this) instead of blocking install
+  // on downloading the whole library up front.
   const walk = (dir) => {
     for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
       const p = path.join(dir, e.name);
+      if (path.relative(dist, p) === 'exercise-videos') continue;
       if (e.isDirectory()) walk(p);
       else if (e.name !== 'sw.js') files.push('./' + path.relative(dist, p).split(path.sep).join('/'));
     }

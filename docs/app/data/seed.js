@@ -2,6 +2,7 @@ import { bulkPut, count, getSetting, setSetting } from '../lib/db.js';
 import { addDays, startOfWeek, todayKey } from '../lib/dates.js';
 import { seedDishes } from './seed-dishes.js';
 import { seedExercises } from './seed-exercises.js';
+import { seedVideoLibrary } from './exercise-video-library.js';
 export function seedWorkouts(now = Date.now()) {
     return [
         {
@@ -93,6 +94,7 @@ export async function seedIfEmpty() {
     if (existing === 0) {
         const now = Date.now();
         await bulkPut('exercises', seedExercises(now));
+        await bulkPut('exercises', seedVideoLibrary(now));
         await bulkPut('dishes', seedDishes(now));
         await bulkPut('workouts', seedWorkouts(now));
         await bulkPut('mealSlots', seedWeekPlan(1));
@@ -109,6 +111,7 @@ export async function restoreStarterContent() {
     const haveDish = new Set((await getAll('dishes')).map((d) => d.id));
     const haveWo = new Set((await getAll('workouts')).map((w) => w.id));
     await bulkPut('exercises', seedExercises(now).filter((e) => !haveEx.has(e.id)));
+    await bulkPut('exercises', seedVideoLibrary(now).filter((e) => !haveEx.has(e.id)));
     await bulkPut('dishes', seedDishes(now).filter((d) => !haveDish.has(d.id)));
     await bulkPut('workouts', seedWorkouts(now).filter((w) => !haveWo.has(w.id)));
 }

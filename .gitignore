@@ -4,3 +4,5 @@ shots/
 workout-animations/
 _sync.tar.gz
 _docs_sync.tar.gz
+tools/.video-jobs.tsv
+tools/.video-fail.log

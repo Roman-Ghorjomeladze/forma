@@ -82,6 +82,7 @@ export function App() {
     const [ready, setReady] = useState(false);
     useTheme();
     const sw = useServiceWorker();
+    const t = useT();
     useEffect(() => {
         (async () => {
             try {
@@ -166,7 +167,6 @@ export function App() {
         screen = _jsx(SettingsScreen, {});
     else
         screen = _jsx(TodayScreen, {});
-    const t = useT();
     return (_jsxs("div", { className: "app", children: [screen, showTabs && _jsx(TabBar, { active: top }), sw.waiting && (_jsxs("div", { className: "update-banner", children: [_jsx("span", { children: t('app.updateReady') }), _jsx("button", { className: "btn", onClick: sw.update, children: t('app.update') })] })), _jsx(DialogHost, {})] }));
 }
 function TabBar({ active }) {

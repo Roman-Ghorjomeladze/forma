@@ -5,6 +5,7 @@ export type ExerciseKind = 'time' | 'reps';
 export type Demo =
   | { type: 'builtin'; key: string }
   | { type: 'blob'; blobId: string }
+  | { type: 'video'; file: string }
   | { type: 'none' };
 
 export interface Exercise {

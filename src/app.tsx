@@ -73,6 +73,7 @@ export function App() {
   const [ready, setReady] = useState(false);
   useTheme();
   const sw = useServiceWorker();
+  const t = useT();
 
   useEffect(() => {
     (async () => {
@@ -117,7 +118,6 @@ export function App() {
   } else if (top === 'settings') screen = <SettingsScreen />;
   else screen = <TodayScreen />;
 
-  const t = useT();
   return (
     <div className="app">
       {screen as any}

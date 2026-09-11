@@ -1,0 +1,5353 @@
+export const videoLibrary = [
+    {
+        "id": "exv_barbell-arms-barbell-behind-back-wrist-curl",
+        "name": "Barbell Behind Back Wrist Curl",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/arms-barbell-behind-back-wrist-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-arms-barbell-bench-wrist-curl",
+        "name": "Barbell Bench Wrist Curl",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/arms-barbell-bench-wrist-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-arms-barbell-bicep-curl",
+        "name": "Barbell Bicep Curl",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/arms-barbell-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-arms-barbell-lying-tricep-extension",
+        "name": "Barbell Lying Tricep Extension",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/arms-barbell-lying-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-arms-barbell-overhead-tricep-extension",
+        "name": "Barbell Overhead Tricep Extension",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/arms-barbell-overhead-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-arms-barbell-seated-preacher-curl",
+        "name": "Barbell Seated Preacher Curl",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/arms-barbell-seated-preacher-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-arms-barbell-seated-wrist-curl",
+        "name": "Barbell Seated Wrist Curl",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/arms-barbell-seated-wrist-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-arms-barbell-spider-bicep-curl",
+        "name": "Barbell Spider Bicep Curl",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/arms-barbell-spider-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-back-barbell-bent-over-row",
+        "name": "Barbell Bent Over Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/back-barbell-bent-over-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-back-barbell-landmine-row",
+        "name": "Barbell Landmine Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/back-barbell-landmine-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-back-barbell-one-arm-row",
+        "name": "Barbell One Arm Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/back-barbell-one-arm-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-back-barbell-pendlay-row",
+        "name": "Barbell Pendlay Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/back-barbell-pendlay-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-back-barbell-reverse-grip-bent-over-row",
+        "name": "Barbell Reverse Grip Bent Over Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/back-barbell-reverse-grip-bent-over-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-back-barbell-seal-row",
+        "name": "Barbell Seal Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/back-barbell-seal-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-back-barbell-shrug",
+        "name": "Barbell Shrug",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/back-barbell-shrug.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-chest-barbell-bench-press",
+        "name": "Barbell Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/chest-barbell-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-chest-barbell-close-grip-bench-press",
+        "name": "Barbell Close Grip Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/chest-barbell-close-grip-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-chest-barbell-decline-bench-press",
+        "name": "Barbell Decline Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/chest-barbell-decline-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-chest-barbell-incline-bench-press",
+        "name": "Barbell Incline Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/chest-barbell-incline-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-chest-barbell-squeeze-press",
+        "name": "Barbell Squeeze Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/chest-barbell-squeeze-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-legs-barbell-back-squat",
+        "name": "Barbell Back Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/legs-barbell-back-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-legs-barbell-deadlift",
+        "name": "Barbell Deadlift",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/legs-barbell-deadlift.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-legs-barbell-hip-thrust",
+        "name": "Barbell Hip Thrust",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/legs-barbell-hip-thrust.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-legs-barbell-landmine-front-squat",
+        "name": "Barbell Landmine Front Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/legs-barbell-landmine-front-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-legs-barbell-romanian-deadlift",
+        "name": "Barbell Romanian Deadlift",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/legs-barbell-romanian-deadlift.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-legs-barbell-split-squat",
+        "name": "Barbell Split Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/legs-barbell-split-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-legs-barbell-sumo-deadlift",
+        "name": "Barbell Sumo Deadlift",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/legs-barbell-sumo-deadlift.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-legs-barbell-sumo-squat",
+        "name": "Barbell Sumo Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/legs-barbell-sumo-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-shoulders-barbell-incline-front-raise",
+        "name": "Barbell Incline Front Raise",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/shoulders-barbell-incline-front-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-shoulders-barbell-kneeling-shoulder-press",
+        "name": "Barbell Kneeling Shoulder Press",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/shoulders-barbell-kneeling-shoulder-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-shoulders-barbell-rear-delt-row",
+        "name": "Barbell Rear Delt Row",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/shoulders-barbell-rear-delt-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-shoulders-barbell-seated-shoulder-press",
+        "name": "Barbell Seated Shoulder Press",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/shoulders-barbell-seated-shoulder-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-shoulders-barbell-upright-row",
+        "name": "Barbell Upright Row",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/shoulders-barbell-upright-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_barbell-shoulders-plate-front-raise",
+        "name": "Plate Front Raise",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "barbell"
+        ],
+        "kind": "reps",
+        "met": 5.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/barbell/shoulders-plate-front-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-abs-dead-bug",
+        "name": "Dead Bug",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/abs-dead-bug.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-abs-sit-up",
+        "name": "Sit Up",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/abs-sit-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-arms-shoulders-bench-dip",
+        "name": "Bench Dip",
+        "muscles": [
+            "arms",
+            "shoulders"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/arms-shoulders-bench-dip.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-arms-shoulders-body-saw",
+        "name": "Body Saw",
+        "muscles": [
+            "arms",
+            "shoulders"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/arms-shoulders-body-saw.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-arms-shoulders-pike-push-up",
+        "name": "Pike Push Up",
+        "muscles": [
+            "arms",
+            "shoulders"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/arms-shoulders-pike-push-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-arms-shoulders-pseudo-push-up",
+        "name": "Pseudo Push Up",
+        "muscles": [
+            "arms",
+            "shoulders"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/arms-shoulders-pseudo-push-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-arms-shoulders-tricep-extension",
+        "name": "Tricep Extension",
+        "muscles": [
+            "arms",
+            "shoulders"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/arms-shoulders-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-back-inverted-row",
+        "name": "Inverted Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/back-inverted-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-back-lying-back-extension",
+        "name": "Lying Back Extension",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/back-lying-back-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-back-parallel-grip-pull-up",
+        "name": "Parallel Grip Pull Up",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/back-parallel-grip-pull-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-cardio-butt-kicks",
+        "name": "Butt Kicks",
+        "muscles": [
+            "cardio"
+        ],
+        "equipment": [],
+        "kind": "time",
+        "met": 8,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/cardio-butt-kicks.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-cardio-running-in-place-punches",
+        "name": "Running in Place Punches",
+        "muscles": [
+            "cardio"
+        ],
+        "equipment": [],
+        "kind": "time",
+        "met": 8,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/cardio-running-in-place-punches.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-cardio-running-in-place",
+        "name": "Running in Place",
+        "muscles": [
+            "cardio"
+        ],
+        "equipment": [],
+        "kind": "time",
+        "met": 8,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/cardio-running-in-place.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-chest-decline-push-up",
+        "name": "Decline Push Up",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/chest-decline-push-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-chest-deficit-push-up",
+        "name": "Deficit Push Up",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/chest-deficit-push-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-chest-incline-push-up",
+        "name": "Incline Push Up",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/chest-incline-push-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-legs-bulgarian-split-squat",
+        "name": "Bulgarian Split Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/legs-bulgarian-split-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-legs-calf-raise",
+        "name": "Calf Raise",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/legs-calf-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-legs-reverse-hyperextension",
+        "name": "Reverse Hyperextension",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/legs-reverse-hyperextension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-legs-single-leg-deadlift",
+        "name": "SIngle Leg Deadlift",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/legs-single-leg-deadlift.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_bodyweight-legs-sumo-squat",
+        "name": "Sumo Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/bodyweight/legs-sumo-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-abs-cable-lying-leg-raise",
+        "name": "Cable Lying Leg Raise",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/abs-cable-lying-leg-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-abs-cable-reverse-crunch",
+        "name": "Cable Reverse Crunch",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/abs-cable-reverse-crunch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-abs-cable-side-bend",
+        "name": "Cable Side Bend",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/abs-cable-side-bend.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-abs-kneeling-cable-crunch",
+        "name": "Kneeling Cable Crunch",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/abs-kneeling-cable-crunch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-abs-standing-cable-crunch",
+        "name": "Standing Cable Crunch",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/abs-standing-cable-crunch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-back-cable-bent-over-row",
+        "name": "Cable Bent Over Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/back-cable-bent-over-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-back-cable-half-kneeling-single-arm-row",
+        "name": "Cable Half Kneeling Single Arm Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/back-cable-half-kneeling-single-arm-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-back-cable-parallel-grip-pulldown",
+        "name": "Cable Parallel Grip Pulldown",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/back-cable-parallel-grip-pulldown.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-back-cable-pulldown",
+        "name": "Cable Pulldown",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/back-cable-pulldown.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-back-cable-seated-row",
+        "name": "Cable Seated Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/back-cable-seated-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-back-cable-seated-wide-grip-row",
+        "name": "Cable Seated Wide Grip Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/back-cable-seated-wide-grip-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-back-cable-standing-pullover",
+        "name": "Cable Standing Pullover",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/back-cable-standing-pullover.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-biceps-cable-bayesian-bicep-curl",
+        "name": "Cable Bayesian Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/biceps-cable-bayesian-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-biceps-cable-bicep-curl",
+        "name": "Cable Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/biceps-cable-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-biceps-cable-incline-bicep-curl",
+        "name": "Cable Incline Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/biceps-cable-incline-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-biceps-cable-overhead-bicep-curl",
+        "name": "Cable Overhead Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/biceps-cable-overhead-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-biceps-cable-preacher-hammer-curl",
+        "name": "Cable Preacher Hammer Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/biceps-cable-preacher-hammer-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-biceps-cable-reverse-grip-bicep-curl",
+        "name": "Cable Reverse Grip Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/biceps-cable-reverse-grip-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-biceps-cable-spider-bicep-curl",
+        "name": "Cable Spider Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/biceps-cable-spider-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-chest-cable-bench-press",
+        "name": "Cable Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/chest-cable-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-chest-cable-bent-over-crossover",
+        "name": "Cable Bent Over Crossover",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/chest-cable-bent-over-crossover.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-chest-cable-chest-fly",
+        "name": "Cable Chest Fly",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/chest-cable-chest-fly.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-chest-cable-chest-press",
+        "name": "Cable Chest Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/chest-cable-chest-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-chest-cable-decline-bench-press",
+        "name": "Cable Decline Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/chest-cable-decline-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-chest-cable-incline-bench-press",
+        "name": "Cable Incline Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/chest-cable-incline-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-legs-cable-calf-raise",
+        "name": "Cable Calf Raise",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/legs-cable-calf-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-legs-cable-donkey-kickback",
+        "name": "Cable Donkey Kickback",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/legs-cable-donkey-kickback.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-legs-cable-goblet-squat",
+        "name": "Cable Goblet Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/legs-cable-goblet-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-legs-cable-hip-abduction",
+        "name": "Cable Hip Abduction",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/legs-cable-hip-abduction.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-legs-cable-kneeling-donkey-kickback",
+        "name": "Cable Kneeling Donkey Kickback",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/legs-cable-kneeling-donkey-kickback.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-legs-cable-lunge",
+        "name": "Cable Lunge",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/legs-cable-lunge.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-legs-cable-romanian-deadlift",
+        "name": "Cable Romanian Deadlift",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/legs-cable-romanian-deadlift.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-shoulders-cable-external-rotation",
+        "name": "Cable External Rotation",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/shoulders-cable-external-rotation.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-shoulders-cable-leaning-lateral-raise",
+        "name": "Cable Leaning Lateral Raise",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/shoulders-cable-leaning-lateral-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-shoulders-cable-one-arm-reverse-fly",
+        "name": "Cable One Arm Reverse Fly",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/shoulders-cable-one-arm-reverse-fly.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-shoulders-cable-seated-shoulders-press",
+        "name": "Cable Seated Shoulders Press",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/shoulders-cable-seated-shoulders-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-shoulders-cable-shoulders-front-raise",
+        "name": "Cable Shoulders Front Raise",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/shoulders-cable-shoulders-front-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-shoulders-cable-standing-face-pull",
+        "name": "Cable Standing Face Pull",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/shoulders-cable-standing-face-pull.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-shoulders-cable-standing-rear-delt-row",
+        "name": "Cable Standing Rear Delt Row",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/shoulders-cable-standing-rear-delt-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-shoulders-cable-upright-row",
+        "name": "Cable Upright Row",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/shoulders-cable-upright-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-triceps-cable-high-pulley-tricep-extension",
+        "name": "Cable High Pulley Tricep Extension",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/triceps-cable-high-pulley-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-triceps-cable-lying-tricep-extension",
+        "name": "Cable Lying Tricep Extension",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/triceps-cable-lying-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-triceps-cable-seated-overhead-tricep-extension",
+        "name": "Cable Seated Overhead Tricep Extension",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/triceps-cable-seated-overhead-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-triceps-cable-tricep-kickback",
+        "name": "Cable Tricep Kickback",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/triceps-cable-tricep-kickback.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-triceps-cable-tricep-pushdown",
+        "name": "Cable Tricep Pushdown",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/triceps-cable-tricep-pushdown.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_cable-machine-triceps-cable-tricep-rope-grip-pushdown",
+        "name": "Cable Tricep Rope Grip Pushdown",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "cable machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/cable-machine/triceps-cable-tricep-rope-grip-pushdown.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-abs-dumbbell-side-bend",
+        "name": "Dumbbell Side Bend",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/abs-dumbbell-side-bend.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-abs-dumbbell-weighted-cocoons",
+        "name": "Dumbbell Weighted Cocoons",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/abs-dumbbell-weighted-cocoons.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-abs-dumbbell-weighted-crunch",
+        "name": "Dumbbell Weighted Crunch",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/abs-dumbbell-weighted-crunch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-abs-dumbbell-weighted-decline-sit-up",
+        "name": "Dumbbell Weighted Decline Sit Up",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/abs-dumbbell-weighted-decline-sit-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-abs-dumbbell-weighted-sit-up",
+        "name": "Dumbbell Weighted Sit Up",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/abs-dumbbell-weighted-sit-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-abs-dumbbell-weighted-v-up",
+        "name": "Dumbbell Weighted V Up",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/abs-dumbbell-weighted-v-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-back-dumbbell-bench-one-arm-row",
+        "name": "Dumbbell Bench One Arm Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/back-dumbbell-bench-one-arm-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-back-dumbbell-renegade-row",
+        "name": "Dumbbell Renegade Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/back-dumbbell-renegade-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-back-dumbbell-reverse-fly",
+        "name": "Dumbbell Reverse Fly",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/back-dumbbell-reverse-fly.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-back-dumbbell-seated-reverse-fly",
+        "name": "Dumbbell Seated Reverse Fly",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/back-dumbbell-seated-reverse-fly.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-back-dumbbell-shrug",
+        "name": "Dumbbell Shrug",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/back-dumbbell-shrug.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-biceps-cross-body-hammer-curl",
+        "name": "Cross Body Hammer Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/biceps-cross-body-hammer-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-biceps-incline-bicep-curl",
+        "name": "Incline Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/biceps-incline-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-biceps-preacher-one-arm-hammer-curl",
+        "name": "Preacher One Arm Hammer Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/biceps-preacher-one-arm-hammer-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-biceps-seated-hammer-curl",
+        "name": "Seated Hammer Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/biceps-seated-hammer-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-biceps-spider-bicep-curl",
+        "name": "Spider Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/biceps-spider-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-chest-dumbbell-bench-fly",
+        "name": "Dumbbell Bench Fly",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/chest-dumbbell-bench-fly.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-chest-dumbbell-bench-press",
+        "name": "Dumbbell Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/chest-dumbbell-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-chest-dumbbell-bench-pullover",
+        "name": "Dumbbell Bench Pullover",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/chest-dumbbell-bench-pullover.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-chest-dumbbell-decline-bench-press",
+        "name": "Dumbbell Decline Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/chest-dumbbell-decline-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-chest-dumbbell-hammer-grip-bench-press",
+        "name": "Dumbbell Hammer Grip Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/chest-dumbbell-hammer-grip-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-chest-dumbbell-incline-bench-press",
+        "name": "Dumbbell Incline Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/chest-dumbbell-incline-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-forearm-dumbbell-behind-back-wrist-curl",
+        "name": "Dumbbell Behind Back Wrist Curl",
+        "muscles": [
+            "forearm"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/forearm-dumbbell-behind-back-wrist-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-forearm-dumbbell-bench-wrist-curl",
+        "name": "Dumbbell Bench Wrist Curl",
+        "muscles": [
+            "forearm"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/forearm-dumbbell-bench-wrist-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-forearm-dumbbell-bench-wrist-hammer-curl",
+        "name": "Dumbbell Bench Wrist Hammer Curl",
+        "muscles": [
+            "forearm"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/forearm-dumbbell-bench-wrist-hammer-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-forearm-dumbbell-radial-deviation",
+        "name": "Dumbbell Radial Deviation",
+        "muscles": [
+            "forearm"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/forearm-dumbbell-radial-deviation.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-forearm-dumbbell-seated-wrist-curl",
+        "name": "Dumbbell Seated Wrist Curl",
+        "muscles": [
+            "forearm"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/forearm-dumbbell-seated-wrist-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-forearm-dumbbell-ulnar-deviation",
+        "name": "Dumbbell Ulnar Deviation",
+        "muscles": [
+            "forearm"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/forearm-dumbbell-ulnar-deviation.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-legs-dumbbell-good-morning",
+        "name": "Dumbbell Good Morning",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/legs-dumbbell-good-morning.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-legs-dumbbell-hip-thrust",
+        "name": "Dumbbell Hip Thrust",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/legs-dumbbell-hip-thrust.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-legs-dumbbell-seated-calf-raise",
+        "name": "Dumbbell Seated Calf Raise",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/legs-dumbbell-seated-calf-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-legs-dumbbell-split-squat",
+        "name": "Dumbbell Split Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/legs-dumbbell-split-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-legs-dumbbell-squat",
+        "name": "Dumbbell Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/legs-dumbbell-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-legs-dumbbell-sumo-squat",
+        "name": "Dumbbell Sumo Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/legs-dumbbell-sumo-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-shoulders-dumbbell-leaning-lateral-raise",
+        "name": "Dumbbell Leaning Lateral Raise",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/shoulders-dumbbell-leaning-lateral-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-shoulders-dumbbell-seated-hammer-press",
+        "name": "Dumbbell Seated Hammer Press",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/shoulders-dumbbell-seated-hammer-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-shoulders-dumbbell-seated-rear-delt-row",
+        "name": "Dumbbell Seated Rear Delt Row",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/shoulders-dumbbell-seated-rear-delt-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-shoulders-dumbbell-standing-front-raise",
+        "name": "Dumbbell Standing Front Raise",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/shoulders-dumbbell-standing-front-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-shoulders-dumbbell-upright-row",
+        "name": "Dumbbell Upright Row",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/shoulders-dumbbell-upright-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-triceps-dumbbell-bench-lying-tricep-extension",
+        "name": "Dumbbell Bench Lying Tricep Extension",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/triceps-dumbbell-bench-lying-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-triceps-dumbbell-bench-one-arm-tricep-kickback",
+        "name": "Dumbbell Bench One Arm Tricep Kickback",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/triceps-dumbbell-bench-one-arm-tricep-kickback.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-triceps-dumbbell-seated-one-arm-tricep-extension",
+        "name": "Dumbbell Seated One Arm Tricep Extension",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/triceps-dumbbell-seated-one-arm-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-triceps-dumbbell-seated-tricep-extension",
+        "name": "Dumbbell Seated Tricep Extension",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/triceps-dumbbell-seated-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-triceps-dumbbell-standing-tricep-extension",
+        "name": "Dumbbell Standing Tricep Extension",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/triceps-dumbbell-standing-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_dumbbell-triceps-dumbbell-tricep-kickback",
+        "name": "Dumbbell Tricep Kickback",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "dumbbell"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/dumbbell/triceps-dumbbell-tricep-kickback.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-back-assisted-parallel-grip-pull-up",
+        "name": "Assisted Parallel Grip Pull Up",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/back-assisted-parallel-grip-pull-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-back-lever-back-extension",
+        "name": "Lever Back Extension",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/back-lever-back-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-back-lever-high-row",
+        "name": "Lever High Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/back-lever-high-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-back-lever-low-row",
+        "name": "Lever Low Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/back-lever-low-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-back-lever-pulldown",
+        "name": "Lever Pulldown",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/back-lever-pulldown.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-back-lever-seated-grip-row",
+        "name": "Lever Seated Grip Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/back-lever-seated-grip-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-back-lever-seated-wide-grip-row",
+        "name": "Lever Seated Wide Grip Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/back-lever-seated-wide-grip-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-back-lever-t-bar-row",
+        "name": "Lever T-Bar Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/back-lever-t-bar-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-chest-assisted-dip",
+        "name": "Assisted Dip",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/chest-assisted-dip.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-chest-lever-chest-press",
+        "name": "Lever Chest Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/chest-lever-chest-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-chest-lever-decline-chest-press",
+        "name": "Lever Decline Chest Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/chest-lever-decline-chest-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-chest-lever-dip",
+        "name": "Lever Dip",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/chest-lever-dip.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-chest-lever-incline-chest-press",
+        "name": "Lever Incline Chest Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/chest-lever-incline-chest-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-chest-lever-pec-deck",
+        "name": "Lever Pec Deck",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/chest-lever-pec-deck.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-legs-lever-hip-thrust",
+        "name": "Lever Hip Thrust",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/legs-lever-hip-thrust.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-legs-lever-leg-extension",
+        "name": "Lever Leg Extension",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/legs-lever-leg-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-legs-lever-lying-leg-curl",
+        "name": "Lever Lying Leg Curl",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/legs-lever-lying-leg-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-legs-lever-seated-calf-raise",
+        "name": "Lever Seated Calf Raise",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/legs-lever-seated-calf-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-legs-lever-standing-donkey-kickback",
+        "name": "Lever Standing Donkey Kickback",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/legs-lever-standing-donkey-kickback.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-legs-sled-full-hack-squat",
+        "name": "Sled Full Hack Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/legs-sled-full-hack-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-legs-sled-horizontal-leg-press",
+        "name": "Sled Horizontal Leg Press",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/legs-sled-horizontal-leg-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_machine-legs-sled-leg-press",
+        "name": "Sled Leg Press",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "machine"
+        ],
+        "kind": "reps",
+        "met": 4,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/machine/legs-sled-leg-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-abs-band-dead-bug-leg-lowering",
+        "name": "Band Dead Bug Leg Lowering",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/abs-band-dead-bug-leg-lowering.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-abs-band-kneeling-crunch",
+        "name": "Band Kneeling Crunch",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/abs-band-kneeling-crunch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-abs-band-mountain-climber",
+        "name": "Band Mountain Climber",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/abs-band-mountain-climber.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-abs-band-reverse-crunch",
+        "name": "Band Reverse Crunch",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/abs-band-reverse-crunch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-abs-band-side-bend",
+        "name": "Band Side Bend",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/abs-band-side-bend.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-abs-band-standing-crunch",
+        "name": "Band Standing Crunch",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/abs-band-standing-crunch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-back-band-assisted-pull-up",
+        "name": "Band Assisted Pull Up",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/back-band-assisted-pull-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-back-band-bent-over-row",
+        "name": "Band Bent Over Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/back-band-bent-over-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-back-band-half-kneeling-row",
+        "name": "Band Half Kneeling Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/back-band-half-kneeling-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-back-band-pulldown-side",
+        "name": "Band Pulldown (side)",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/back-band-pulldown-side.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-back-band-seated-row",
+        "name": "Band Seated Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/back-band-seated-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-back-band-seated-wide-grip-row",
+        "name": "Band Seated Wide Grip Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/back-band-seated-wide-grip-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-back-band-shrug",
+        "name": "Band Shrug",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/back-band-shrug.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-back-band-standing-pullover",
+        "name": "Band Standing Pullover",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/back-band-standing-pullover.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-biceps-band-bayesian-bicep-curl",
+        "name": "Band Bayesian Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/biceps-band-bayesian-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-biceps-band-bicep-curl",
+        "name": "Band Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/biceps-band-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-biceps-band-hammer-curl",
+        "name": "Band Hammer Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/biceps-band-hammer-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-biceps-band-lying-bicep-curl",
+        "name": "Band Lying Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/biceps-band-lying-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-biceps-band-overhead-one-arm-curl",
+        "name": "Band Overhead One Arm Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/biceps-band-overhead-one-arm-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-biceps-band-seated-bicep-curl",
+        "name": "Band Seated Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/biceps-band-seated-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-biceps-band-squatting-bicep-curl",
+        "name": "Band Squatting Bicep Curl",
+        "muscles": [
+            "biceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/biceps-band-squatting-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-chest-band-assisted-dip",
+        "name": "Band Assisted Dip",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/chest-band-assisted-dip.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-chest-band-chest-press",
+        "name": "Band Chest Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/chest-band-chest-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-chest-band-decline-chest-press",
+        "name": "Band Decline Chest Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/chest-band-decline-chest-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-chest-band-floor-press",
+        "name": "Band Floor Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/chest-band-floor-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-chest-band-incline-chest-press",
+        "name": "Band Incline Chest Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/chest-band-incline-chest-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-chest-band-push-up",
+        "name": "Band Push Up",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/chest-band-push-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-legs-band-bulgarian-split-squat",
+        "name": "Band Bulgarian Split Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/legs-band-bulgarian-split-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-legs-band-glute-bridge",
+        "name": "Band Glute Bridge",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/legs-band-glute-bridge.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-legs-band-leg-press",
+        "name": "Band Leg Press",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/legs-band-leg-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-legs-band-lying-leg-curl",
+        "name": "Band Lying Leg Curl",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/legs-band-lying-leg-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-legs-band-romanian-deadlift",
+        "name": "Band Romanian Deadlift",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/legs-band-romanian-deadlift.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-legs-band-split-squat",
+        "name": "Band Split Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/legs-band-split-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-legs-band-squat",
+        "name": "Band Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/legs-band-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-legs-band-standing-leg-curl",
+        "name": "Band Standing Leg Curl",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/legs-band-standing-leg-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-shoulders-band-bent-over-rear-delt-row",
+        "name": "Band Bent Over Rear Delt Row",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/shoulders-band-bent-over-rear-delt-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-shoulders-band-bent-over-reverse-fly",
+        "name": "Band Bent Over Reverse Fly",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/shoulders-band-bent-over-reverse-fly.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-shoulders-band-external-rotation",
+        "name": "Band External Rotation",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/shoulders-band-external-rotation.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-shoulders-band-front-raise",
+        "name": "Band Front Raise",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/shoulders-band-front-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-shoulders-band-half-kneeling-face-pull",
+        "name": "Band Half Kneeling Face Pull",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/shoulders-band-half-kneeling-face-pull.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-shoulders-band-one-arm-lateral-raise",
+        "name": "Band One Arm Lateral Raise",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/shoulders-band-one-arm-lateral-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-shoulders-band-shoulders-press",
+        "name": "Band Shoulders Press",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/shoulders-band-shoulders-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-shoulders-band-upright-row",
+        "name": "Band Upright Row",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/shoulders-band-upright-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-triceps-band-kneeling-tricep-extension",
+        "name": "Band Kneeling Tricep Extension",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/triceps-band-kneeling-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-triceps-band-one-arm-tricep-extension",
+        "name": "Band One Arm Tricep Extension",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/triceps-band-one-arm-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-triceps-band-overhead-tricep-extension",
+        "name": "Band Overhead Tricep Extension",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/triceps-band-overhead-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-triceps-band-rope-tricep-pushdown",
+        "name": "Band Rope Tricep Pushdown",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/triceps-band-rope-tricep-pushdown.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-triceps-band-tricep-kickback",
+        "name": "Band Tricep Kickback",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/triceps-band-tricep-kickback.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_resistance-band-triceps-band-tricep-pushdown",
+        "name": "Band Tricep Pushdown",
+        "muscles": [
+            "triceps"
+        ],
+        "equipment": [
+            "resistance band"
+        ],
+        "kind": "reps",
+        "met": 3.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/resistance-band/triceps-band-tricep-pushdown.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-back-smith-bent-over-row-side-view",
+        "name": "Smith Bent-Over Row (side view)",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/back-smith-bent-over-row-side-view.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-back-smith-bent-over-row",
+        "name": "Smith Bent-Over Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/back-smith-bent-over-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-back-smith-reverse-grip-bent-over-row",
+        "name": "Smith Reverse Grip Bent-Over Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/back-smith-reverse-grip-bent-over-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-back-smith-shrug",
+        "name": "Smith Shrug",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/back-smith-shrug.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-back-smith-single-arm-row",
+        "name": "Smith Single Arm Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/back-smith-single-arm-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-chest-smith-bench-press-side-view",
+        "name": "Smith Bench Press (side view)",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/chest-smith-bench-press-side-view.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-chest-smith-bench-press",
+        "name": "Smith Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/chest-smith-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-chest-smith-close-grip-bench-press",
+        "name": "Smith Close Grip Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/chest-smith-close-grip-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-chest-smith-decline-bench-press",
+        "name": "Smith Decline Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/chest-smith-decline-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-chest-smith-incline-bench-press",
+        "name": "Smith Incline Bench Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/chest-smith-incline-bench-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-legs-smith-back-squat",
+        "name": "Smith Back Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/legs-smith-back-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-legs-smith-bulgarian-split-squat",
+        "name": "Smith Bulgarian Split Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/legs-smith-bulgarian-split-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-legs-smith-deadlift",
+        "name": "Smith Deadlift",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/legs-smith-deadlift.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-legs-smith-front-squat",
+        "name": "Smith Front Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/legs-smith-front-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-legs-smith-hip-thrust",
+        "name": "Smith Hip Thrust",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/legs-smith-hip-thrust.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-legs-smith-romanian-deadlift",
+        "name": "Smith Romanian Deadlift",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/legs-smith-romanian-deadlift.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-legs-smith-split-squat",
+        "name": "Smith Split Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/legs-smith-split-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-legs-smith-standing-calf-raise",
+        "name": "Smith Standing Calf Raise",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/legs-smith-standing-calf-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-legs-smith-sumo-deadlift",
+        "name": "Smith Sumo Deadlift",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/legs-smith-sumo-deadlift.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_smith-machine-legs-smith-sumo-squat",
+        "name": "Smith Sumo Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "smith machine"
+        ],
+        "kind": "reps",
+        "met": 5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/smith-machine/legs-smith-sumo-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-lower-body-hip-flexor-stretch",
+        "name": "Hip Flexor Stretch",
+        "muscles": [
+            "legs",
+            "lower body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/lower-body-hip-flexor-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-lower-body-kneeling-hamstring-stretch",
+        "name": "Kneeling Hamstring Stretch",
+        "muscles": [
+            "legs",
+            "lower body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/lower-body-kneeling-hamstring-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-lower-body-lunging-calf-stretch",
+        "name": "Lunging Calf Stretch",
+        "muscles": [
+            "legs",
+            "lower body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/lower-body-lunging-calf-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-lower-body-lying-glute-stretch",
+        "name": "Lying Glute Stretch",
+        "muscles": [
+            "legs",
+            "lower body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/lower-body-lying-glute-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-lower-body-side-lunge-stretch",
+        "name": "Side Lunge Stretch",
+        "muscles": [
+            "legs",
+            "lower body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/lower-body-side-lunge-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-lower-body-standing-forward-bending",
+        "name": "Standing Forward Bending",
+        "muscles": [
+            "legs",
+            "lower body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/lower-body-standing-forward-bending.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-lower-body-standing-knee-to-chest-stretch",
+        "name": "Standing Knee to Chest Stretch",
+        "muscles": [
+            "legs",
+            "lower body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/lower-body-standing-knee-to-chest-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-lower-body-standing-quadricep-stretch",
+        "name": "Standing Quadricep Stretch",
+        "muscles": [
+            "legs",
+            "lower body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/lower-body-standing-quadricep-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-upper-body-bench-kneeling-lat-stretch",
+        "name": "Bench Kneeling Lat Stretch",
+        "muscles": [
+            "upper body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/upper-body-bench-kneeling-lat-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-upper-body-childs-pose-back-stretch",
+        "name": "Child's Pose Back Stretch",
+        "muscles": [
+            "upper body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/upper-body-childs-pose-back-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-upper-body-doorway-chest-stretch",
+        "name": "Doorway Chest Stretch",
+        "muscles": [
+            "upper body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/upper-body-doorway-chest-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-upper-body-downward-facing-dog",
+        "name": "Downward Facing Dog",
+        "muscles": [
+            "upper body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/upper-body-downward-facing-dog.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-upper-body-overhead-tricep-stretch",
+        "name": "Overhead Tricep Stretch",
+        "muscles": [
+            "upper body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/upper-body-overhead-tricep-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-upper-body-rear-deltoid-stretch",
+        "name": "Rear Deltoid Stretch",
+        "muscles": [
+            "upper body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/upper-body-rear-deltoid-stretch.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-upper-body-side-tilt",
+        "name": "Side Tilt",
+        "muscles": [
+            "upper body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/upper-body-side-tilt.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_stretching-upper-body-upward-facing-dog",
+        "name": "Upward Facing Dog",
+        "muscles": [
+            "upper body"
+        ],
+        "equipment": [
+            "stretching"
+        ],
+        "kind": "time",
+        "met": 2.3,
+        "secPerRep": 1,
+        "defaultAmount": 30,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/stretching/upper-body-upward-facing-dog.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-abs-trx-ab-rollout",
+        "name": "TRX AB Rollout",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/abs-trx-ab-rollout.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-abs-trx-body-saw",
+        "name": "TRX Body Saw",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/abs-trx-body-saw.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-abs-trx-pike",
+        "name": "TRX Pike",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/abs-trx-pike.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-abs-trx-side-bridge",
+        "name": "TRX Side Bridge",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/abs-trx-side-bridge.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-abs-trx-tuck-knee",
+        "name": "TRX Tuck Knee",
+        "muscles": [
+            "abs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/abs-trx-tuck-knee.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-arms-trx-bicep-curl",
+        "name": "TRX Bicep Curl",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/arms-trx-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-arms-trx-hammer-curl",
+        "name": "TRX Hammer Curl",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/arms-trx-hammer-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-arms-trx-overhead-bicep-curl",
+        "name": "TRX Overhead Bicep Curl",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/arms-trx-overhead-bicep-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-arms-trx-tricep-extension",
+        "name": "TRX Tricep Extension",
+        "muscles": [
+            "arms"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/arms-trx-tricep-extension.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-back-trx-bent-knee-row",
+        "name": "TRX Bent Knee Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/back-trx-bent-knee-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-back-trx-pullover",
+        "name": "TRX Pullover",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/back-trx-pullover.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-back-trx-row",
+        "name": "TRX Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/back-trx-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-back-trx-standing-row",
+        "name": "TRX Standing Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/back-trx-standing-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-back-trx-standing-wide-grip-row",
+        "name": "TRX Standing Wide Grip Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/back-trx-standing-wide-grip-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-back-trx-wide-grip-row",
+        "name": "TRX Wide Grip Row",
+        "muscles": [
+            "back"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/back-trx-wide-grip-row.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-chest-trx-atomic-push-up",
+        "name": "TRX Atomic Push Up",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/chest-trx-atomic-push-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-chest-trx-chest-fly",
+        "name": "TRX Chest Fly",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/chest-trx-chest-fly.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-chest-trx-chest-press",
+        "name": "TRX Chest Press",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/chest-trx-chest-press.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-chest-trx-push-up",
+        "name": "TRX Push Up",
+        "muscles": [
+            "chest"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/chest-trx-push-up.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-legs-trx-calf-raise",
+        "name": "TRX Calf Raise",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/legs-trx-calf-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-legs-trx-glute-bridge",
+        "name": "TRX Glute Bridge",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/legs-trx-glute-bridge.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-legs-trx-hamstring-curl",
+        "name": "TRX Hamstring Curl",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/legs-trx-hamstring-curl.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-legs-trx-lunge",
+        "name": "TRX Lunge",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/legs-trx-lunge.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-legs-trx-pistol-squat",
+        "name": "TRX Pistol Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/legs-trx-pistol-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-legs-trx-reverse-lunge-to-knee-drive",
+        "name": "TRX Reverse Lunge to Knee Drive",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/legs-trx-reverse-lunge-to-knee-drive.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-legs-trx-romanian-deadlift",
+        "name": "TRX Romanian Deadlift",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/legs-trx-romanian-deadlift.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-legs-trx-squat",
+        "name": "TRX Squat",
+        "muscles": [
+            "legs"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/legs-trx-squat.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-shoulders-trx-face-pull",
+        "name": "TRX Face Pull",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/shoulders-trx-face-pull.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-shoulders-trx-shoulders-front-raise",
+        "name": "TRX Shoulders Front Raise",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/shoulders-trx-shoulders-front-raise.mp4"
+        },
+        "cues": []
+    },
+    {
+        "id": "exv_trx-shoulders-trx-standing-rear-delt-row",
+        "name": "TRX Standing Rear Delt Row",
+        "muscles": [
+            "shoulders"
+        ],
+        "equipment": [
+            "trx"
+        ],
+        "kind": "reps",
+        "met": 4.5,
+        "secPerRep": 3,
+        "defaultAmount": 12,
+        "demo": {
+            "type": "video",
+            "file": "exercise-videos/trx/shoulders-trx-standing-rear-delt-row.mp4"
+        },
+        "cues": []
+    }
+];
+export function seedVideoLibrary(now = Date.now()) {
+    return videoLibrary.map((s) => ({ ...s, isCustom: false, createdAt: now, updatedAt: now }));
+}

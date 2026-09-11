@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { EQUIPMENT_CATEGORIES } from '../../data/equipment-categories.js';
 import { useT } from '../../lib/i18n.js';
 import { useExercises } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
@@ -9,27 +10,38 @@ import { ExerciseVisual } from './exercise-visual.js';
 const GROUP_DEFS: { key: string; labelKey: string; match: string[] }[] = [
   { key: 'all', labelKey: 'exercise.group.all', match: [] },
   { key: 'cardio', labelKey: 'exercise.group.cardio', match: ['cardio'] },
-  { key: 'legs', labelKey: 'exercise.group.legs', match: ['quads', 'glutes', 'hamstrings', 'calves', 'legs'] },
-  { key: 'upper', labelKey: 'exercise.group.upper', match: ['chest', 'back', 'shoulders', 'biceps', 'triceps'] },
+  { key: 'legs', labelKey: 'exercise.group.legs', match: ['quads', 'glutes', 'hamstrings', 'calves', 'legs', 'lower body'] },
+  { key: 'upper', labelKey: 'exercise.group.upper', match: ['chest', 'back', 'shoulders', 'biceps', 'triceps', 'arms', 'forearm', 'upper body'] },
   { key: 'core', labelKey: 'exercise.group.core', match: ['core', 'abs', 'obliques', 'lower back', 'hip flexors'] },
   { key: 'custom', labelKey: 'exercise.group.custom', match: [] },
 ];
+
+/** Best-effort friendly label for an exercise's equipment (falls back to the raw tag). */
+function equipmentLabel(equipment: string[], t: (key: string) => string): string {
+  if (equipment.length === 0) return t('equipment.bodyweight');
+  const cat = EQUIPMENT_CATEGORIES.find((c) => c.key !== 'bodyweight' && c.match(equipment));
+  return cat ? t(cat.labelKey) : equipment.join(', ');
+}
 
 export function ExerciseListScreen() {
   const t = useT();
   const exercises = useExercises();
   const [q, setQ] = useState('');
   const [group, setGroup] = useState('all');
+  const [equip, setEquip] = useState('all');
 
   const GROUPS = GROUP_DEFS.map((g) => ({ ...g, label: t(g.labelKey) }));
+  const EQUIP_CHIPS = [{ key: 'all', label: t('equipment.all') }, ...EQUIPMENT_CATEGORIES.map((c) => ({ key: c.key, label: t(c.labelKey) }))];
 
   const list = useMemo(() => {
     const ql = q.trim().toLowerCase();
     const g = GROUP_DEFS.find((x) => x.key === group)!;
+    const eqCat = EQUIPMENT_CATEGORIES.find((c) => c.key === equip);
     return (exercises ?? [])
       .filter((e) => group === 'all' || (group === 'custom' ? e.isCustom : e.muscles.some((m) => g.match.includes(m))))
+      .filter((e) => !eqCat || eqCat.match(e.equipment))
       .filter((e) => !ql || e.name.toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)) || e.equipment.some((m) => m.includes(ql)));
-  }, [exercises, q, group]);
+  }, [exercises, q, group, equip]);
 
   return (
     <Screen>
@@ -41,12 +53,15 @@ export function ExerciseListScreen() {
       <div className="chips">
         {GROUPS.map((g) => <Chip key={g.key} tone="workout" active={group === g.key} onClick={() => setGroup(g.key)}>{g.label}</Chip>)}
       </div>
+      <div className="chips" style={{ marginTop: -4 }}>
+        {EQUIP_CHIPS.map((c) => <Chip key={c.key} tone="workout" active={equip === c.key} onClick={() => setEquip(c.key)}>{c.label}</Chip>)}
+      </div>
       <div className="exercise-grid mt">
         {list.map((e) => (
           <button key={e.id} className="exercise-tile" onClick={() => navigate(`/workouts/exercise/${e.id}`)}>
             <ExerciseVisual exercise={e} size="box" />
             <div className="exercise-name">{e.name}</div>
-            <div className="exercise-sub">{e.kind === 'time' ? t('exercise.timed') : t('unit.reps')} · MET {e.met}{e.equipment.length ? ` · ${e.equipment.join(', ')}` : ''}</div>
+            <div className="exercise-sub">{e.kind === 'time' ? t('exercise.timed') : t('unit.reps')} · MET {e.met} · {equipmentLabel(e.equipment, t)}</div>
           </button>
         ))}
       </div>

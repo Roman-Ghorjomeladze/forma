@@ -347,7 +347,7 @@ h1, h2, h3, p { margin: 0; }
 .block.dragging { opacity: 0.5; }
 .block.dragover { box-shadow: 0 -3px 0 0 var(--workout); }
 .demo-thumb { width: 40px; height: 40px; border-radius: 12px; background: var(--surface-2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; color: var(--text); }
-.demo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.demo-thumb img, .demo-thumb video { width: 100%; height: 100%; object-fit: cover; }
 .demo-thumb svg { width: 32px; height: 32px; }
 
 .exercise-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
@@ -355,7 +355,7 @@ h1, h2, h3, p { margin: 0; }
 .exercise-tile:active { background: var(--surface-2); }
 .exercise-tile .demo-box { width: 100%; aspect-ratio: 1.3; }
 .demo-box { background: var(--surface-2); border-radius: 14px; display: flex; align-items: center; justify-content: center; overflow: hidden; color: var(--text); }
-.demo-box img { width: 100%; height: 100%; object-fit: contain; }
+.demo-box img, .demo-box video { width: 100%; height: 100%; object-fit: contain; }
 .demo-box svg { width: 70%; height: 70%; }
 .demo-box-lg { width: 100%; height: 240px; border-radius: 24px; }
 .demo-box-lg svg { width: 55%; height: 80%; }
@@ -375,7 +375,7 @@ h1, h2, h3, p { margin: 0; }
 .player-progress > div.rest > div { background: #6E6B62; }
 .player-demo { background: #17171A; border-radius: 28px; height: 34dvh; min-height: 180px; max-height: 300px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; color: #F3F1EC; }
 .player-demo svg { height: 80%; width: auto; }
-.player-demo img { width: 100%; height: 100%; object-fit: contain; }
+.player-demo img, .player-demo video { width: 100%; height: 100%; object-fit: contain; }
 .player-demo.rest { color: #6E6B62; }
 .player-badge { position: absolute; top: 14px; right: 14px; height: 26px; padding: 0 10px; border-radius: 999px; background: #0B0B0C; color: #9A978F; font-size: 11px; font-weight: 700; display: flex; align-items: center; letter-spacing: 0.08em; }
 .player-label { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
@@ -419,9 +419,9 @@ h1, h2, h3, p { margin: 0; }
 .theme-swatch { width: 100%; height: 44px; border-radius: 10px; border: 1px solid var(--border); }
 
 .history-item { display: flex; align-items: center; gap: 12px; }
-.calendar-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
-.calendar-week button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 0; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); font-size: 11px; font-weight: 600; color: var(--muted); min-height: 72px; }
-.calendar-week button .w { width: 100%; padding: 0 4px; font-size: 10px; font-weight: 700; color: var(--text); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.calendar-week { display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; padding-bottom: 4px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+.calendar-week button { flex: 0 0 auto; width: 88px; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 10px 8px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); font-size: 11px; font-weight: 600; color: var(--muted); min-height: 72px; }
+.calendar-week button .w { width: 100%; padding: 0 2px; font-size: 10px; font-weight: 700; color: var(--text); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .calendar-week button.has { border-color: var(--workout); }
 .sched-swatch { width: 10px; height: 10px; border-radius: 999px; }
 
