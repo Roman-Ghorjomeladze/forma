@@ -475,8 +475,8 @@ const EN: Dict = {
   'player.say.exerciseReps': '{label}, {reps} reps',
   'player.say.exerciseSeconds': '{label}, {n} seconds',
   'player.say.halfway': 'Halfway',
-  'player.say.complete': 'Workout complete. Nice work.',
-  'player.say.getReadyFirstUp': 'Get ready. First up: {label}',
+  'player.say.complete': 'Workout complete, nice work',
+  'player.say.getReadyFirstUp': 'Get ready, first up, {label}',
   // Spoken countdown numbers (1-10, matches the max countdown-cue setting)
   'player.count.1': '1', 'player.count.2': '2', 'player.count.3': '3', 'player.count.4': '4', 'player.count.5': '5',
   'player.count.6': '6', 'player.count.7': '7', 'player.count.8': '8', 'player.count.9': '9', 'player.count.10': '10',
@@ -955,8 +955,8 @@ const KA: Dict = {
   'player.say.exerciseReps': '{label}, {reps} გამეორება',
   'player.say.exerciseSeconds': '{label}, {n} წამი',
   'player.say.halfway': 'შუა გზაზეა',
-  'player.say.complete': 'ვარჯიში დასრულებულია. კარგად ივარჯიშე.',
-  'player.say.getReadyFirstUp': 'მოემზადე. პირველია: {label}',
+  'player.say.complete': 'ვარჯიში დასრულებულია, კარგად ივარჯიშე',
+  'player.say.getReadyFirstUp': 'მოემზადე, პირველია, {label}',
   'player.count.1': 'ერთი', 'player.count.2': 'ორი', 'player.count.3': 'სამი', 'player.count.4': 'ოთხი', 'player.count.5': 'ხუთი',
   'player.count.6': 'ექვსი', 'player.count.7': 'შვიდი', 'player.count.8': 'რვა', 'player.count.9': 'ცხრა', 'player.count.10': 'ათი',
 

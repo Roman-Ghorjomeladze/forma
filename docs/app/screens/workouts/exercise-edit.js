@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { EQUIPMENT_CATEGORIES } from '../../data/equipment-categories.js';
+import { EXERCISE_GROUP_DEFS } from '../../data/exercise-groups.js';
 import { videoLibrary } from '../../data/exercise-video-library.js';
 import { localizedExerciseName } from '../../data/seed-i18n.js';
 import { get, put, saveBlob } from '../../lib/db.js';
@@ -25,14 +26,29 @@ function VideoPickerSheet({ open, onClose, onPick }) {
     const t = useT();
     const lang = useLang();
     const [q, setQ] = useState('');
+    const [group, setGroup] = useState('all');
     const [equip, setEquip] = useState('all');
+    // Filtering ~300 videos on every keystroke can lag the search box - defer the query so typing
+    // stays responsive and the (expensive) filtered grid catches up a beat later.
+    const dq = useDeferredValue(q);
+    const GROUPS = EXERCISE_GROUP_DEFS.map((g) => ({ ...g, label: t(g.labelKey) }));
     const EQUIP_CHIPS = [{ key: 'all', label: t('equipment.all') }, ...EQUIPMENT_CATEGORIES.map((c) => ({ key: c.key, label: t(c.labelKey) }))];
     const list = useMemo(() => {
-        const ql = q.trim().toLowerCase();
+        const ql = dq.trim().toLowerCase();
+        const g = EXERCISE_GROUP_DEFS.find((x) => x.key === group);
         const eqCat = EQUIPMENT_CATEGORIES.find((c) => c.key === equip);
-        return videoLibrary.filter((v) => (!eqCat || eqCat.match(v.equipment)) && (!ql || localizedExerciseName(v.id, v.name, lang).toLowerCase().includes(ql) || v.muscles.some((m) => m.includes(ql))));
-    }, [q, equip, lang]);
-    return (_jsxs(Sheet, { open: open, onClose: onClose, title: t('exercise.chooseDemoVideoTitle'), full: true, children: [_jsxs("div", { className: "searchbar", children: [_jsx(IconSearch, { size: 18 }), _jsx("input", { className: "input", placeholder: t('exercise.searchVideos'), value: q, onChange: (e) => setQ(e.target.value) })] }), _jsx("div", { className: "chips", style: { margin: '0 0 10px', padding: 0 }, children: EQUIP_CHIPS.map((c) => _jsx(Chip, { tone: "workout", active: equip === c.key, onClick: () => setEquip(c.key), children: c.label }, c.key)) }), _jsxs("div", { className: "exercise-grid mb", children: [list.map((v) => (_jsxs("button", { className: "exercise-tile", onClick: () => onPick(v), children: [_jsx("div", { className: "demo-box", style: { width: '100%', aspectRatio: '1.3' }, children: _jsx("video", { src: v.demo.type === 'video' ? v.demo.file : undefined, poster: v.demo.type === 'video' ? v.demo.file.replace(/\.mp4$/, '.jpg') : undefined, autoPlay: true, loop: true, muted: true, playsInline: true }) }), _jsx("div", { className: "exercise-name", children: localizedExerciseName(v.id, v.name, lang) }), _jsx("div", { className: "exercise-sub", children: v.muscles.join(', ') })] }, v.id))), list.length === 0 && _jsx("div", { className: "empty", children: _jsx("div", { className: "empty-title", children: t('exercise.noVideosMatch') }) })] })] }));
+        return videoLibrary
+            .filter((v) => group === 'all' || v.muscles.some((m) => g.match.includes(m)))
+            .filter((v) => !eqCat || eqCat.match(v.equipment))
+            .filter((v) => !ql || localizedExerciseName(v.id, v.name, lang).toLowerCase().includes(ql) || v.muscles.some((m) => m.includes(ql)));
+    }, [dq, group, equip, lang]);
+    // Bail before building the (potentially ~300-tile) grid at all when the sheet isn't open -
+    // <Sheet> itself also skips rendering while closed, but its children are still constructed by
+    // this component's own render, so this early return is what actually avoids that cost. Hooks
+    // above still run every render (required), but they're cheap when nothing changed.
+    if (!open)
+        return null;
+    return (_jsxs(Sheet, { open: open, onClose: onClose, title: t('exercise.chooseDemoVideoTitle'), full: true, children: [_jsxs("div", { className: "searchbar", children: [_jsx(IconSearch, { size: 18 }), _jsx("input", { className: "input", placeholder: t('exercise.searchVideos'), value: q, onChange: (e) => setQ(e.target.value) })] }), _jsx("div", { className: "chips", style: { margin: '0 0 4px', padding: 0 }, children: GROUPS.map((g) => _jsx(Chip, { tone: "workout", active: group === g.key, onClick: () => setGroup(g.key), children: g.label }, g.key)) }), _jsx("div", { className: "chips", style: { margin: '0 0 10px', padding: 0 }, children: EQUIP_CHIPS.map((c) => _jsx(Chip, { tone: "workout", active: equip === c.key, onClick: () => setEquip(c.key), children: c.label }, c.key)) }), _jsxs("div", { className: "exercise-grid mb", children: [list.map((v) => (_jsxs("button", { className: "exercise-tile", onClick: () => onPick(v), children: [_jsx("div", { className: "demo-box", style: { width: '100%', aspectRatio: '1.3' }, children: v.demo.type === 'video' && _jsx("img", { src: v.demo.file.replace(/\.mp4$/, '.jpg'), alt: "", loading: "lazy", decoding: "async" }) }), _jsx("div", { className: "exercise-name", children: localizedExerciseName(v.id, v.name, lang) }), _jsx("div", { className: "exercise-sub", children: v.muscles.join(', ') })] }, v.id))), list.length === 0 && _jsx("div", { className: "empty", children: _jsx("div", { className: "empty-title", children: t('exercise.noVideosMatch') }) })] })] }));
 }
 export function ExerciseEditScreen({ id }) {
     const t = useT();
@@ -74,18 +90,22 @@ export function ExerciseEditScreen({ id }) {
         return _jsx(Screen, { className: "screen-no-tabs" });
     const patch = (p) => setEx({ ...ex, ...p });
     const split = (s) => s.split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
-    const pickVideo = (v) => {
+    const pickVideo = useCallback((v) => {
         setPending(null);
-        const p = { demo: v.demo };
-        if (!ex.name.trim())
-            p.name = localizedExerciseName(v.id, v.name, lang);
-        if (!muscles.trim())
-            setMuscles(v.muscles.join(', '));
-        if (!equipment.trim())
-            setEquipment(v.equipment.join(', '));
-        patch(p);
+        setEx((cur) => {
+            if (!cur)
+                return cur;
+            const p = { demo: v.demo };
+            if (!cur.name.trim())
+                p.name = localizedExerciseName(v.id, v.name, lang);
+            return { ...cur, ...p };
+        });
+        setMuscles((cur) => (cur.trim() ? cur : v.muscles.join(', ')));
+        setEquipment((cur) => (cur.trim() ? cur : v.equipment.join(', ')));
         setPickingVideo(false);
-    };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lang]);
+    const closeVideoPicker = useCallback(() => setPickingVideo(false), []);
     const save = async () => {
         if (!ex.name.trim()) {
             toast(t('exercise.giveItAName'));
@@ -116,5 +136,5 @@ export function ExerciseEditScreen({ id }) {
                         : ex.demo.type === 'builtin' ? _jsx(BuiltinDemo, { demoKey: ex.demo.key })
                             : _jsxs("span", { className: "hstack muted", children: [_jsx(IconImage, {}), t('exercise.tapToUpload')] }) }), _jsx("input", { ref: fileRef, type: "file", accept: "image/*", hidden: true, onChange: (e) => { const f = e.target.files?.[0]; if (f) {
                     setPending(f);
-                } } }), _jsxs("div", { className: "hstack wrap mb", children: [_jsx(Button, { variant: "secondary", size: "sm", icon: _jsx(IconPlay, { size: 16 }), onClick: () => setPickingVideo(true), children: t('exercise.chooseVideo') }), _jsx(Button, { variant: "secondary", size: "sm", icon: _jsx(IconImage, { size: 16 }), onClick: () => fileRef.current?.click(), children: t('exercise.uploadGif') }), (pending || ex.demo.type !== 'none') && _jsx(Button, { variant: "ghost", size: "sm", icon: _jsx(IconTrash, { size: 16 }), onClick: () => { setPending(null); patch({ demo: { type: 'none' } }); }, children: t('common.remove') })] }), _jsx(Field, { label: t('exercise.formCues'), hint: t('exercise.formCuesHint'), children: _jsx(TextArea, { rows: 3, value: cues, onChange: setCues, placeholder: 'Chest up\nKnees over toes' }) }), _jsxs("div", { className: "stack mt", children: [_jsx(Button, { size: "lg", full: true, onClick: save, children: id ? t('common.saveChanges') : t('exercise.createExercise') }), _jsx(Button, { variant: "ghost", full: true, onClick: cancel, children: t('common.cancel') })] }), _jsx(VideoPickerSheet, { open: pickingVideo, onClose: () => setPickingVideo(false), onPick: pickVideo })] }));
+                } } }), _jsxs("div", { className: "hstack wrap mb", children: [_jsx(Button, { variant: "secondary", size: "sm", icon: _jsx(IconPlay, { size: 16 }), onClick: () => setPickingVideo(true), children: t('exercise.chooseVideo') }), _jsx(Button, { variant: "secondary", size: "sm", icon: _jsx(IconImage, { size: 16 }), onClick: () => fileRef.current?.click(), children: t('exercise.uploadGif') }), (pending || ex.demo.type !== 'none') && _jsx(Button, { variant: "ghost", size: "sm", icon: _jsx(IconTrash, { size: 16 }), onClick: () => { setPending(null); patch({ demo: { type: 'none' } }); }, children: t('common.remove') })] }), _jsx(Field, { label: t('exercise.formCues'), hint: t('exercise.formCuesHint'), children: _jsx(TextArea, { rows: 3, value: cues, onChange: setCues, placeholder: 'Chest up\nKnees over toes' }) }), _jsxs("div", { className: "stack mt", children: [_jsx(Button, { size: "lg", full: true, onClick: save, children: id ? t('common.saveChanges') : t('exercise.createExercise') }), _jsx(Button, { variant: "ghost", full: true, onClick: cancel, children: t('common.cancel') })] }), _jsx(VideoPickerSheet, { open: pickingVideo, onClose: closeVideoPicker, onPick: pickVideo })] }));
 }

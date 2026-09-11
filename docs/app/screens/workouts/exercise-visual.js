@@ -13,10 +13,14 @@ export function ExerciseVisual({ exercise, size = 'thumb', animated = true }) {
     const cls = size === 'thumb' ? 'demo-thumb' : size === 'player' ? 'player-demo' : `demo-box ${size === 'large' ? 'demo-box-lg' : ''}`;
     let inner;
     if (exercise?.demo.type === 'video') {
-        // key forces the <video> to remount when the clip changes, so it doesn't keep playing a stale source.
-        // poster shows a real frame immediately even when preload="none"/not autoplaying (small list thumbs),
-        // instead of a blank black box.
-        inner = (_jsx("video", { src: exercise.demo.file, poster: exercise.demo.file.replace(/\.mp4$/, '.jpg'), autoPlay: animated, loop: true, muted: true, playsInline: true, preload: size === 'thumb' ? 'none' : 'metadata', "aria-label": name }, exercise.demo.file));
+        const poster = exercise.demo.file.replace(/\.mp4$/, '.jpg');
+        // A non-animated tile only ever shows the poster frame anyway - a real <video> element buys
+        // nothing there and costs a lot (media engine setup, network/parse) when hundreds are on
+        // screen at once (grids/pickers). Render a plain lazy-loaded <img> in that case instead;
+        // key forces the <video> to remount when the clip changes, so it doesn't keep a stale source.
+        inner = animated
+            ? _jsx("video", { src: exercise.demo.file, poster: poster, autoPlay: true, loop: true, muted: true, playsInline: true, preload: size === 'thumb' ? 'none' : 'metadata', "aria-label": name }, exercise.demo.file)
+            : _jsx("img", { src: poster, alt: name, loading: "lazy", decoding: "async" });
     }
     else if (url)
         inner = _jsx("img", { src: url, alt: name });

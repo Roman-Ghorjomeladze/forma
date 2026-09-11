@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { EQUIPMENT_CATEGORIES } from '../../data/equipment-categories.js';
+import { EXERCISE_GROUP_DEFS } from '../../data/exercise-groups.js';
 import { videoLibrary } from '../../data/exercise-video-library.js';
 import { localizedExerciseName } from '../../data/seed-i18n.js';
 import { get, put, saveBlob } from '../../lib/db.js';
@@ -28,20 +29,38 @@ function VideoPickerSheet({ open, onClose, onPick }: { open: boolean; onClose: (
   const t = useT();
   const lang = useLang();
   const [q, setQ] = useState('');
+  const [group, setGroup] = useState('all');
   const [equip, setEquip] = useState('all');
+  // Filtering ~300 videos on every keystroke can lag the search box - defer the query so typing
+  // stays responsive and the (expensive) filtered grid catches up a beat later.
+  const dq = useDeferredValue(q);
+  const GROUPS = EXERCISE_GROUP_DEFS.map((g) => ({ ...g, label: t(g.labelKey) }));
   const EQUIP_CHIPS = [{ key: 'all', label: t('equipment.all') }, ...EQUIPMENT_CATEGORIES.map((c) => ({ key: c.key, label: t(c.labelKey) }))];
 
   const list = useMemo(() => {
-    const ql = q.trim().toLowerCase();
+    const ql = dq.trim().toLowerCase();
+    const g = EXERCISE_GROUP_DEFS.find((x) => x.key === group)!;
     const eqCat = EQUIPMENT_CATEGORIES.find((c) => c.key === equip);
-    return videoLibrary.filter((v) => (!eqCat || eqCat.match(v.equipment)) && (!ql || localizedExerciseName(v.id, v.name, lang).toLowerCase().includes(ql) || v.muscles.some((m) => m.includes(ql))));
-  }, [q, equip, lang]);
+    return videoLibrary
+      .filter((v) => group === 'all' || v.muscles.some((m) => g.match.includes(m)))
+      .filter((v) => !eqCat || eqCat.match(v.equipment))
+      .filter((v) => !ql || localizedExerciseName(v.id, v.name, lang).toLowerCase().includes(ql) || v.muscles.some((m) => m.includes(ql)));
+  }, [dq, group, equip, lang]);
+
+  // Bail before building the (potentially ~300-tile) grid at all when the sheet isn't open -
+  // <Sheet> itself also skips rendering while closed, but its children are still constructed by
+  // this component's own render, so this early return is what actually avoids that cost. Hooks
+  // above still run every render (required), but they're cheap when nothing changed.
+  if (!open) return null;
 
   return (
     <Sheet open={open} onClose={onClose} title={t('exercise.chooseDemoVideoTitle')} full>
       <div className="searchbar">
         <IconSearch size={18} />
         <input className="input" placeholder={t('exercise.searchVideos')} value={q} onChange={(e: { target: HTMLInputElement }) => setQ(e.target.value)} />
+      </div>
+      <div className="chips" style={{ margin: '0 0 4px', padding: 0 }}>
+        {GROUPS.map((g) => <Chip key={g.key} tone="workout" active={group === g.key} onClick={() => setGroup(g.key)}>{g.label}</Chip>)}
       </div>
       <div className="chips" style={{ margin: '0 0 10px', padding: 0 }}>
         {EQUIP_CHIPS.map((c) => <Chip key={c.key} tone="workout" active={equip === c.key} onClick={() => setEquip(c.key)}>{c.label}</Chip>)}
@@ -50,7 +69,7 @@ function VideoPickerSheet({ open, onClose, onPick }: { open: boolean; onClose: (
         {list.map((v) => (
           <button key={v.id} className="exercise-tile" onClick={() => onPick(v)}>
             <div className="demo-box" style={{ width: '100%', aspectRatio: '1.3' }}>
-              <video src={v.demo.type === 'video' ? v.demo.file : undefined} poster={v.demo.type === 'video' ? v.demo.file.replace(/\.mp4$/, '.jpg') : undefined} autoPlay loop muted playsInline />
+              {v.demo.type === 'video' && <img src={v.demo.file.replace(/\.mp4$/, '.jpg')} alt="" loading="lazy" decoding="async" />}
             </div>
             <div className="exercise-name">{localizedExerciseName(v.id, v.name, lang)}</div>
             <div className="exercise-sub">{v.muscles.join(', ')}</div>
@@ -96,15 +115,20 @@ export function ExerciseEditScreen({ id }: { id?: string }) {
   const patch = (p: Partial<Exercise>) => setEx({ ...ex, ...p });
   const split = (s: string) => s.split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
 
-  const pickVideo = (v: (typeof videoLibrary)[number]) => {
+  const pickVideo = useCallback((v: (typeof videoLibrary)[number]) => {
     setPending(null);
-    const p: Partial<Exercise> = { demo: v.demo as Demo };
-    if (!ex.name.trim()) p.name = localizedExerciseName(v.id, v.name, lang);
-    if (!muscles.trim()) setMuscles(v.muscles.join(', '));
-    if (!equipment.trim()) setEquipment(v.equipment.join(', '));
-    patch(p);
+    setEx((cur) => {
+      if (!cur) return cur;
+      const p: Partial<Exercise> = { demo: v.demo as Demo };
+      if (!cur.name.trim()) p.name = localizedExerciseName(v.id, v.name, lang);
+      return { ...cur, ...p };
+    });
+    setMuscles((cur) => (cur.trim() ? cur : v.muscles.join(', ')));
+    setEquipment((cur) => (cur.trim() ? cur : v.equipment.join(', ')));
     setPickingVideo(false);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
+  const closeVideoPicker = useCallback(() => setPickingVideo(false), []);
 
   const save = async () => {
     if (!ex.name.trim()) { toast(t('exercise.giveItAName')); return; }
@@ -169,7 +193,7 @@ export function ExerciseEditScreen({ id }: { id?: string }) {
         <Button variant="ghost" full onClick={cancel}>{t('common.cancel')}</Button>
       </div>
 
-      <VideoPickerSheet open={pickingVideo} onClose={() => setPickingVideo(false)} onPick={pickVideo} />
+      <VideoPickerSheet open={pickingVideo} onClose={closeVideoPicker} onPick={pickVideo} />
     </Screen>
   );
 }

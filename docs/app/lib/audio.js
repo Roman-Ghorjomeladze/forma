@@ -230,6 +230,12 @@ export function stopMusic() {
 export function isMusicPlaying() { return !!musicSource || (!!customAudio && !customAudio.paused); }
 let voiceEnabled = true;
 export function setVoiceEnabled(v) { voiceEnabled = v; }
+// Some TTS voices read stray sentence punctuation literally ("dot", "colon") instead of
+// treating it as a silent pause. Swap it for commas (always just a pause, never a spoken
+// word) so cues like "Get ready. First up: Squats" don't come out as "...ready dot first up colon squats".
+function speechSafe(text) {
+    return text.replace(/[.:;]+\s*/g, ', ').replace(/,\s*$/, '').trim();
+}
 export function speak(text, { interrupt = true, rate = 1.05 } = {}) {
     if (!voiceEnabled)
         return;
@@ -238,7 +244,7 @@ export function speak(text, { interrupt = true, rate = 1.05 } = {}) {
             return;
         if (interrupt)
             speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text);
+        const u = new SpeechSynthesisUtterance(speechSafe(text));
         u.rate = rate;
         // iOS/Safari falls back to a default system voice if no Georgian voice is installed —
         // the cue still plays (just pronounced with an English voice), it never throws.
