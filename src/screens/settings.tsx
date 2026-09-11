@@ -122,6 +122,7 @@ export function SettingsScreen() {
         <div className="list">
           <div className="settings-row"><span className="l">{t('settings.sounds')}<small>{t('settings.soundsHint')}</small></span><Toggle checked={prefs.sound} onChange={(v) => setPrefs({ sound: v })} /></div>
           <div className="settings-row"><span className="l">{t('settings.voiceCues')}<small>{t('settings.voiceCuesHint')}</small></span><Toggle checked={prefs.voice} onChange={(v) => setPrefs({ voice: v })} /></div>
+          <div className="settings-row"><span className="l">{t('settings.music')}<small>{t('settings.musicHint')}</small></span><Toggle checked={prefs.music} onChange={(v) => setPrefs({ music: v })} /></div>
           <div className="settings-row"><span className="l">{t('settings.keepAwake')}<small>{t('settings.keepAwakeHint')}</small></span><Toggle checked={prefs.keepAwake} onChange={(v) => setPrefs({ keepAwake: v })} /></div>
           <div className="settings-row"><span className="l">{t('settings.countdownCue')}</span><Segmented value={String(prefs.countdownSeconds) as '3' | '5' | '10'} onChange={(v) => setPrefs({ countdownSeconds: Number(v) })} options={[{ value: '3', label: '3 s' }, { value: '5', label: '5 s' }, { value: '10', label: '10 s' }]} /></div>
         </div>

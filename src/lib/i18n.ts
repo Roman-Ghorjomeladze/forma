@@ -145,6 +145,8 @@ const EN: Dict = {
   'settings.soundsHint': 'Beeps on countdown and step changes',
   'settings.voiceCues': 'Voice cues',
   'settings.voiceCuesHint': 'Announces exercises and counts down',
+  'settings.music': 'Motivational music',
+  'settings.musicHint': 'Plays a background beat while you work out',
   'settings.keepAwake': 'Keep screen awake',
   'settings.keepAwakeHint': 'While a workout is running',
   'settings.countdownCue': 'Countdown cue',
@@ -458,6 +460,7 @@ const EN: Dict = {
   'player.keepScreenOnHint': 'Keep the screen on and the volume up for voice cues.',
   'player.andMoreSteps': '…and {n} more steps',
   'player.thenNext': ', then {name}',
+  'player.audioSheetTitle': 'Sound',
   // Voice / spoken cues
   'player.say.rest': 'Rest, {n} seconds',
   'player.say.exerciseReps': '{label}, {reps} reps',
@@ -465,6 +468,9 @@ const EN: Dict = {
   'player.say.halfway': 'Halfway',
   'player.say.complete': 'Workout complete. Nice work.',
   'player.say.getReadyFirstUp': 'Get ready. First up: {label}',
+  // Spoken countdown numbers (1-10, matches the max countdown-cue setting)
+  'player.count.1': '1', 'player.count.2': '2', 'player.count.3': '3', 'player.count.4': '4', 'player.count.5': '5',
+  'player.count.6': '6', 'player.count.7': '7', 'player.count.8': '8', 'player.count.9': '9', 'player.count.10': '10',
 
   // Equipment categories (tag exercise-video-library clips; also used as filter chips)
   'equipment.all': 'All',
@@ -611,6 +617,8 @@ const KA: Dict = {
   'settings.soundsHint': 'ბიპები ათვლისას და ეტაპების შეცვლისას',
   'settings.voiceCues': 'ხმოვანი მითითებები',
   'settings.voiceCuesHint': 'აცხადებს ვარჯიშებს და ითვლის უკუღმა',
+  'settings.music': 'მოტივაციური მუსიკა',
+  'settings.musicHint': 'უკრავს ფონურ რიტმს ვარჯიშის დროს',
   'settings.keepAwake': 'ეკრანის აქტიურად დატოვება',
   'settings.keepAwakeHint': 'ვარჯიშის მიმდინარეობისას',
   'settings.countdownCue': 'ათვლის ხანგრძლივობა',
@@ -924,12 +932,15 @@ const KA: Dict = {
   'player.keepScreenOnHint': 'დატოვე ეკრანი ჩართული და ხმა აწეული ხმოვანი მითითებებისთვის.',
   'player.andMoreSteps': '…და კიდევ {n} ეტაპი',
   'player.thenNext': ', შემდეგ {name}',
+  'player.audioSheetTitle': 'ხმა',
   'player.say.rest': 'შესვენება, {n} წამი',
   'player.say.exerciseReps': '{label}, {reps} გამეორება',
   'player.say.exerciseSeconds': '{label}, {n} წამი',
   'player.say.halfway': 'შუა გზაზეა',
   'player.say.complete': 'ვარჯიში დასრულებულია. კარგად ივარჯიშე.',
   'player.say.getReadyFirstUp': 'მოემზადე. პირველია: {label}',
+  'player.count.1': 'ერთი', 'player.count.2': 'ორი', 'player.count.3': 'სამი', 'player.count.4': 'ოთხი', 'player.count.5': 'ხუთი',
+  'player.count.6': 'ექვსი', 'player.count.7': 'შვიდი', 'player.count.8': 'რვა', 'player.count.9': 'ცხრა', 'player.count.10': 'ათი',
 
   'equipment.all': 'ყველა',
   'equipment.bodyweight': 'საკუთარი წონა',

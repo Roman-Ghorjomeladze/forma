@@ -51,3 +51,5 @@ export const IconTarget = (p: IconProps) => <Icon {...p}><circle cx="12" cy="12"
 export const IconUser = (p: IconProps) => <Icon {...p}><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></Icon>;
 export const IconStar = (p: IconProps) => <Icon {...p}><path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z" /></Icon>;
 export const IconCamera = (p: IconProps) => <Icon {...p}><path d="M4 8h3l2-3h6l2 3h3v12H4z" /><circle cx="12" cy="13" r="3.5" /></Icon>;
+export const IconMusic = (p: IconProps & { off?: boolean }) => <Icon {...p}><path d="M9 18V5l11-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="17" cy="16" r="3" />{p.off && <path d="M3 3l18 18" />}</Icon>;
+export const IconMic = (p: IconProps & { off?: boolean }) => <Icon {...p}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0" /><path d="M12 18v3" />{p.off && <path d="M3 3l18 18" />}</Icon>;

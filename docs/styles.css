@@ -363,7 +363,7 @@ h1, h2, h3, p { margin: 0; }
 .exercise-sub { font-size: 12px; color: var(--muted); }
 
 /* ===== Player ========================================================================= */
-.player { min-height: 100dvh; background: #0B0B0C; color: #F3F1EC; display: flex; flex-direction: column; padding: calc(var(--safe-top) + 14px) 20px calc(var(--safe-bottom) + 20px); gap: 16px; color-scheme: dark; overscroll-behavior: none; }
+.player { height: 100dvh; overflow: hidden; background: #0B0B0C; color: #F3F1EC; display: flex; flex-direction: column; padding: calc(var(--safe-top) + 14px) 20px calc(var(--safe-bottom) + 20px); gap: clamp(8px, 2dvh, 16px); color-scheme: dark; overscroll-behavior: none; }
 .player .iconbtn { background: #17171A; color: #F3F1EC; }
 .player-head { display: flex; justify-content: space-between; align-items: center; }
 .player-head-mid { display: flex; flex-direction: column; align-items: center; gap: 2px; text-align: center; min-width: 0; }
@@ -373,7 +373,7 @@ h1, h2, h3, p { margin: 0; }
 .player-progress > div { flex: 1; height: 4px; border-radius: 999px; background: #2A2A2E; overflow: hidden; }
 .player-progress > div > div { height: 100%; background: var(--workout); }
 .player-progress > div.rest > div { background: #6E6B62; }
-.player-demo { background: #17171A; border-radius: 28px; height: 34dvh; min-height: 180px; max-height: 300px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; color: #F3F1EC; }
+.player-demo { background: #17171A; border-radius: 28px; height: 34dvh; min-height: 140px; max-height: 300px; flex: 0 1 auto; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; color: #F3F1EC; }
 .player-demo svg { height: 80%; width: auto; }
 .player-demo img, .player-demo video { width: 100%; height: 100%; object-fit: contain; }
 .player-demo.rest { color: #6E6B62; }
@@ -381,8 +381,8 @@ h1, h2, h3, p { margin: 0; }
 .player-label { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
 .player-phase { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: var(--workout); }
 .player-phase.rest { color: #9A978F; }
-.player-name { font-family: var(--font-display); font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
-.player-cue { font-size: 14px; color: #9A978F; max-width: 320px; }
+.player-name { font-family: var(--font-display); font-size: clamp(20px, 6.5vw, 30px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 100%; }
+.player-cue { font-size: 14px; color: #9A978F; max-width: 320px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .player-time { text-align: center; }
 .player-clock { font-family: var(--font-display); font-size: clamp(72px, 26vw, 120px); font-weight: 800; letter-spacing: -0.05em; line-height: 1; font-variant-numeric: tabular-nums; }
 .player-clock.warn { color: var(--workout); }
@@ -395,8 +395,8 @@ h1, h2, h3, p { margin: 0; }
 .player-next .k { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: #9A978F; }
 .player-next .sep { width: 1px; height: 24px; background: #2A2A2E; }
 .player-next .m { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.player-next .m .t { font-size: 14px; font-weight: 600; }
-.player-next .m .s { font-size: 12px; color: #9A978F; }
+.player-next .m .t { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player-next .m .s { font-size: 12px; color: #9A978F; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .player-done { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center; }
 .player-done .big { font-family: var(--font-display); font-size: 40px; font-weight: 800; letter-spacing: -0.03em; }
 .player-done .stats { width: 100%; }
@@ -406,6 +406,17 @@ h1, h2, h3, p { margin: 0; }
 .player-ready .list { background: #17171A; border-color: transparent; }
 .player-ready .row { background: transparent; border-color: #26262B; }
 .player-ready .row-sub { color: #9A978F; }
+
+/* Shorter viewports (older/smaller phones, landscape): shrink the big elements so
+   everything - including the "up next" card - still fits without scrolling. */
+@media (max-height: 700px) {
+  .player { gap: 6px; }
+  .player-demo { height: 22dvh; min-height: 100px; }
+  .player-clock { font-size: clamp(48px, 20vw, 84px); }
+  .player-name { font-size: clamp(17px, 5.5vw, 22px); }
+  .player-controls .iconbtn { width: 50px; height: 50px; }
+  .player-main { width: 70px; height: 70px; }
+}
 
 /* ===== Settings ======================================================================= */
 .settings-group { margin-bottom: 22px; }

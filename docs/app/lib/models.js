@@ -25,6 +25,7 @@ export const DEFAULT_PREFS = {
     theme: 'system',
     sound: true,
     voice: true,
+    music: true,
     countdownSeconds: 3,
     keepAwake: true,
     language: detectLanguage(),

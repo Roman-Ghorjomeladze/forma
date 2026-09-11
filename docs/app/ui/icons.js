@@ -44,3 +44,5 @@ export const IconTarget = (p) => _jsxs(Icon, { ...p, children: [_jsx("circle", {
 export const IconUser = (p) => _jsxs(Icon, { ...p, children: [_jsx("circle", { cx: "12", cy: "8", r: "4" }), _jsx("path", { d: "M4 21c0-4 4-6 8-6s8 2 8 6" })] });
 export const IconStar = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z" }) });
 export const IconCamera = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M4 8h3l2-3h6l2 3h3v12H4z" }), _jsx("circle", { cx: "12", cy: "13", r: "3.5" })] });
+export const IconMusic = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M9 18V5l11-2v13" }), _jsx("circle", { cx: "6", cy: "18", r: "3" }), _jsx("circle", { cx: "17", cy: "16", r: "3" }), p.off && _jsx("path", { d: "M3 3l18 18" })] });
+export const IconMic = (p) => _jsxs(Icon, { ...p, children: [_jsx("rect", { x: "9", y: "3", width: "6", height: "11", rx: "3" }), _jsx("path", { d: "M5 11a7 7 0 0 0 14 0" }), _jsx("path", { d: "M12 18v3" }), p.off && _jsx("path", { d: "M3 3l18 18" })] });

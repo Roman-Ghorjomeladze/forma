@@ -45,6 +45,154 @@ export const sounds = {
     done() { tone(880, 150); tone(1100, 150, 0.16); tone(1320, 150, 0.32); tone(1760, 400, 0.48); },
     halfway() { tone(990, 90); },
 };
+// ---- Motivational background music -----------------------------------------
+// A short, fully synthesized loop (four-on-the-floor kick, hats, a pulsing bass
+// line and a plucked arpeggio over an Am-F-C-G progression) rendered once via
+// OfflineAudioContext into an AudioBuffer, then looped on the live AudioContext.
+// No audio files/licensing involved - it's generated the same way the cue tones are.
+function renderMusicLoop(sampleRate) {
+    const OfflineCtx = window.OfflineAudioContext
+        ?? window.webkitOfflineAudioContext;
+    if (!OfflineCtx)
+        return null;
+    const bpm = 120;
+    const beat = 60 / bpm; // seconds per beat
+    const step = beat / 4; // 16th note
+    const stepsPerBar = 16;
+    const bars = 4;
+    const totalSteps = bars * stepsPerBar;
+    const duration = totalSteps * step; // 8s, loops seamlessly (whole bars, decayed notes)
+    const off = new OfflineCtx(2, Math.ceil(duration * sampleRate), sampleRate);
+    const kick = (t) => {
+        const osc = off.createOscillator();
+        const g = off.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, t);
+        osc.frequency.exponentialRampToValueAtTime(45, t + 0.15);
+        g.gain.setValueAtTime(0.9, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+        osc.connect(g).connect(off.destination);
+        osc.start(t);
+        osc.stop(t + 0.25);
+    };
+    const hat = (t, accent) => {
+        const n = Math.floor(off.sampleRate * 0.05);
+        const buf = off.createBuffer(1, n, off.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < n; i++)
+            data[i] = (Math.random() * 2 - 1) * (1 - i / n);
+        const src = off.createBufferSource();
+        src.buffer = buf;
+        const hp = off.createBiquadFilter();
+        hp.type = 'highpass';
+        hp.frequency.value = 7000;
+        const g = off.createGain();
+        g.gain.setValueAtTime(accent ? 0.32 : 0.16, t);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+        src.connect(hp).connect(g).connect(off.destination);
+        src.start(t);
+    };
+    const bassNote = (t, freq, dur) => {
+        const osc = off.createOscillator();
+        osc.type = 'sawtooth';
+        osc.frequency.value = freq;
+        const filt = off.createBiquadFilter();
+        filt.type = 'lowpass';
+        filt.frequency.value = 900;
+        const g = off.createGain();
+        g.gain.setValueAtTime(0.001, t);
+        g.gain.linearRampToValueAtTime(0.45, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+        osc.connect(filt).connect(g).connect(off.destination);
+        osc.start(t);
+        osc.stop(t + dur + 0.05);
+    };
+    const pluck = (t, freq) => {
+        const osc = off.createOscillator();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        const g = off.createGain();
+        g.gain.setValueAtTime(0.001, t);
+        g.gain.linearRampToValueAtTime(0.18, t + 0.008);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+        osc.connect(g).connect(off.destination);
+        osc.start(t);
+        osc.stop(t + 0.18);
+    };
+    // Am - F - C - G, one chord per bar - a common, upbeat/"epic" progression.
+    const chords = [
+        { root: 220.00 }, // A3 (Am)
+        { root: 174.61, maj: true }, // F3
+        { root: 130.81, maj: true }, // C3
+        { root: 196.00, maj: true }, // G3
+    ];
+    for (let bar = 0; bar < bars; bar++) {
+        const c = chords[bar % chords.length];
+        const third = c.root * (c.maj ? 1.25 : 1.2);
+        const fifth = c.root * 1.5;
+        for (let s = 0; s < stepsPerBar; s++) {
+            const t = (bar * stepsPerBar + s) * step;
+            if (s % 4 === 0) {
+                kick(t);
+                bassNote(t, c.root, beat * 0.9);
+            }
+            if (s % 2 === 0)
+                hat(t, s % 4 === 0);
+            if (s % 2 === 1)
+                pluck(t, [c.root, third, fifth][(s >> 1) % 3] * 2);
+        }
+    }
+    return off.startRendering();
+}
+let musicSource = null;
+let musicGainNode = null;
+let musicBufferPromise = null;
+function getMusicBuffer() {
+    if (!musicBufferPromise) {
+        try {
+            const sr = ctx?.sampleRate ?? 44100;
+            const p = renderMusicLoop(sr);
+            musicBufferPromise = p ? p.catch(() => null) : Promise.resolve(null);
+        }
+        catch {
+            musicBufferPromise = Promise.resolve(null);
+        }
+    }
+    return musicBufferPromise;
+}
+export async function startMusic() {
+    if (!ctx || musicSource)
+        return;
+    const buffer = await getMusicBuffer();
+    if (!buffer || !ctx || musicSource)
+        return; // guard against races (stopMusic/quit during await)
+    const src = ctx.createBufferSource();
+    src.buffer = buffer;
+    src.loop = true;
+    const g = ctx.createGain();
+    g.gain.value = 0.3;
+    src.connect(g).connect(ctx.destination);
+    src.start(0);
+    musicSource = src;
+    musicGainNode = g;
+}
+export function stopMusic() {
+    try {
+        musicSource?.stop();
+    }
+    catch { /* ignore */ }
+    try {
+        musicSource?.disconnect();
+    }
+    catch { /* ignore */ }
+    try {
+        musicGainNode?.disconnect();
+    }
+    catch { /* ignore */ }
+    musicSource = null;
+    musicGainNode = null;
+}
+export function isMusicPlaying() { return !!musicSource; }
 let voiceEnabled = true;
 export function setVoiceEnabled(v) { voiceEnabled = v; }
 export function speak(text, { interrupt = true, rate = 1.05 } = {}) {

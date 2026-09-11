@@ -133,6 +133,7 @@ export interface Prefs {
   theme: Theme;
   sound: boolean;
   voice: boolean;
+  music: boolean; // background motivational music during workouts
   countdownSeconds: number; // "3-2-1" cue length
   keepAwake: boolean;
   language: Lang;
@@ -163,6 +164,7 @@ export const DEFAULT_PREFS: Prefs = {
   theme: 'system',
   sound: true,
   voice: true,
+  music: true,
   countdownSeconds: 3,
   keepAwake: true,
   language: detectLanguage(),

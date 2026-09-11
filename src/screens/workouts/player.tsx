@@ -9,9 +9,9 @@ import { useLang, useT } from '../../lib/i18n.js';
 import type { Session, Step } from '../../lib/models.js';
 import { useExerciseMap, useWorkout } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
-import { sounds, speak, stopSpeaking, unlockAudio } from '../../lib/audio.js';
+import { sounds, speak, startMusic, stopMusic, stopSpeaking, unlockAudio } from '../../lib/audio.js';
 import { keepAwake } from '../../lib/wakelock.js';
-import { Button, Empty, Row, Stat } from '../../ui/components.js';
+import { Button, Empty, Row, Sheet, Stat, Toggle } from '../../ui/components.js';
 import { confirmDialog } from '../../ui/dialogs.js';
 import { IconClose, IconHourglass, IconNext, IconPause, IconPlay, IconPrev, IconVolume } from '../../ui/icons.js';
 import { ExerciseVisual } from './exercise-visual.js';
@@ -49,9 +49,21 @@ export function PlayerScreen({ id }: { id: string }) {
   const rerender = () => force((x) => x + 1);
   const savedRef = useRef(false);
   const [session, setSession] = useState<Session | null>(null);
+  const [audioSheet, setAudioSheet] = useState(false);
 
   const weight = profile.weightKg;
   const soundOn = prefs.sound;
+  const musicOn = prefs.music;
+
+  const audioSheetEl = (
+    <Sheet open={audioSheet} onClose={() => setAudioSheet(false)} title={t('player.audioSheetTitle')}>
+      <div className="list">
+        <div className="settings-row"><span className="l">{t('settings.sounds')}<small>{t('settings.soundsHint')}</small></span><Toggle checked={prefs.sound} onChange={(v) => setPrefs({ sound: v })} /></div>
+        <div className="settings-row"><span className="l">{t('settings.voiceCues')}<small>{t('settings.voiceCuesHint')}</small></span><Toggle checked={prefs.voice} onChange={(v) => setPrefs({ voice: v })} /></div>
+        <div className="settings-row"><span className="l">{t('settings.music')}<small>{t('settings.musicHint')}</small></span><Toggle checked={prefs.music} onChange={(v) => setPrefs({ music: v })} /></div>
+      </div>
+    </Sheet>
+  );
 
   const stepAt = (i: number): Step | undefined => steps[i];
   const durationOf = (i: number) => (i < 0 ? LEAD_IN : stepAt(i)?.seconds ?? 0);
@@ -137,7 +149,7 @@ export function PlayerScreen({ id }: { id: string }) {
       if (secLeft <= prefs.countdownSeconds && secLeft >= 1 && tm.cuedSecond !== secLeft && durationOf(tm.index) > prefs.countdownSeconds) {
         tm.cuedSecond = secLeft;
         if (soundOn) sounds.tick();
-        if (tm.index >= 0 || true) speak(String(secLeft), { rate: 1.2 });
+        if (tm.index >= 0 || true) speak(t(`player.count.${secLeft}`), { rate: 1.2 });
       }
       const dur = durationOf(tm.index);
       if (tm.index >= 0 && dur >= 40 && Math.abs(remaining - dur / 2) < 0.12 && tm.cuedSecond !== -2) { tm.cuedSecond = -2; if (soundOn) sounds.halfway(); speak(t('player.say.halfway')); }
@@ -150,7 +162,14 @@ export function PlayerScreen({ id }: { id: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, steps, weight, prefs.countdownSeconds, soundOn, t]);
 
-  useEffect(() => () => { keepAwake(false); stopSpeaking(); }, []);
+  // Background music tracks the running phase and the music preference; toggling
+  // either one starts/stops the loop (restarting from 0 is imperceptible).
+  useEffect(() => {
+    if (phase === 'running' && musicOn) startMusic();
+    else stopMusic();
+  }, [phase, musicOn]);
+
+  useEffect(() => () => { keepAwake(false); stopSpeaking(); stopMusic(); }, []);
 
   const start = () => {
     unlockAudio();
@@ -236,7 +255,7 @@ export function PlayerScreen({ id }: { id: string }) {
         <div className="player-head">
           <button className="iconbtn" aria-label={t('player.close')} onClick={quit}><IconClose size={18} /></button>
           <div className="player-head-mid"><span className="t">{workoutName}</span><span className="s">{fmtDuration(totalSeconds)} · {steps.filter((s) => s.type === 'exercise').length} {t('unit.exercises')} · ~{Math.round(totalKcal)} {t('unit.kcal')}</span></div>
-          <button className="iconbtn" aria-label={soundOn ? t('common.mute') : t('common.unmute')} onClick={() => setPrefs({ sound: !soundOn, voice: !soundOn })}><IconVolume size={18} off={!soundOn} /></button>
+          <button className="iconbtn" aria-label={t('player.audioSheetTitle')} onClick={() => setAudioSheet(true)}><IconVolume size={18} off={!soundOn && !prefs.voice && !musicOn} /></button>
         </div>
         <div className="player-ready">
           <div className="player-demo"><ExerciseVisual exercise={steps[0].exerciseId ? exMap.get(steps[0].exerciseId) : undefined} size="player" /></div>
@@ -252,6 +271,7 @@ export function PlayerScreen({ id }: { id: string }) {
           <Button size="lg" full icon={<IconPlay size={22} />} onClick={start}>{t('today.start')}</Button>
           <div className="small" style={{ color: '#9A978F', textAlign: 'center' }}>{t('player.keepScreenOnHint')}</div>
         </div>
+        {audioSheetEl}
       </div>
     );
   }
@@ -265,7 +285,7 @@ export function PlayerScreen({ id }: { id: string }) {
           <span className="t">{workoutName}</span>
           <span className="s">{step?.round ? t('player.roundOf', { n: step.round.n, of: step.round.of }) : ''}{t('player.elapsed', { clock: fmtClock(sessionElapsed) })}</span>
         </div>
-        <button className="iconbtn" aria-label={soundOn ? t('common.mute') : t('common.unmute')} onClick={() => setPrefs({ sound: !soundOn, voice: !soundOn })}><IconVolume size={18} off={!soundOn} /></button>
+        <button className="iconbtn" aria-label={t('player.audioSheetTitle')} onClick={() => setAudioSheet(true)}><IconVolume size={18} off={!soundOn && !prefs.voice && !musicOn} /></button>
       </div>
 
       <div className="player-progress" aria-hidden="true">
@@ -306,6 +326,7 @@ export function PlayerScreen({ id }: { id: string }) {
           {nextStep ? <><span className="t">{nextStep.label}</span><span className="s">{nextStep.reps ? `${nextStep.reps} ${t('unit.reps')}` : `${nextStep.seconds} ${t('unit.s')}`}{steps[idx + 2] ? t('player.thenNext', { name: steps[idx + 2].label }) : ''}</span></> : <><span className="t">{t('player.finish')}</span><span className="s">{t('player.lastStep')}</span></>}
         </div>
       </div>
+      {audioSheetEl}
     </div>
   );
 }
