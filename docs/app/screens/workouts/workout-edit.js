@@ -1,15 +1,16 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
-import { useEffect, useMemo, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { get, put } from '../../lib/db.js';
 import { fmtDuration } from '../../lib/dates.js';
 import { blockSeconds, estimateWorkout, kcalFor } from '../../lib/calories.js';
+import { EXERCISE_GROUP_DEFS } from '../../data/exercise-groups.js';
 import { localizedExerciseName } from '../../data/seed-i18n.js';
 import { useProfile } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
 import { useLang, useT } from '../../lib/i18n.js';
 import { useExerciseMap, useExercises } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
-import { Button, Field, IconButton, Row, Screen, Segmented, Sheet, Stepper, TextArea, TextInput, TopBar } from '../../ui/components.js';
+import { Button, Chip, Field, IconButton, Row, Screen, Segmented, Sheet, Stepper, TextArea, TextInput, TopBar } from '../../ui/components.js';
 import { confirmDialog, toast } from '../../ui/dialogs.js';
 import { IconChevronDown, IconCopy, IconHourglass, IconPlus, IconRepeat, IconSearch, IconTrash } from '../../ui/icons.js';
 import { ExerciseVisual } from './exercise-visual.js';
@@ -120,11 +121,36 @@ function BlockEditor({ block, exercise, onChange }) {
     const mode = block.reps != null ? 'reps' : 'time';
     return (_jsxs("div", { className: "stack", children: [exercise && _jsx("div", { style: { alignSelf: 'center' }, children: _jsx(ExerciseVisual, { exercise: exercise, size: "box" }) }), _jsx(Segmented, { value: mode, onChange: (m) => onChange(m === 'reps' ? { id: block.id, type: 'exercise', exerciseId: block.exerciseId, reps: exercise?.kind === 'reps' ? exercise.defaultAmount : 10 } : { id: block.id, type: 'exercise', exerciseId: block.exerciseId, seconds: exercise?.kind === 'time' ? exercise.defaultAmount : 30 }), options: [{ value: 'time', label: t('workouts.forTime') }, { value: 'reps', label: t('workouts.forReps') }] }), mode === 'time' ? (_jsxs(_Fragment, { children: [_jsxs("div", { className: "spread", children: [_jsx("span", { className: "bold", children: t('workouts.duration') }), _jsx(Stepper, { value: block.seconds ?? 30, min: 5, max: 3600, step: 5, format: (v) => `${v} ${t('unit.s')}`, onChange: (v) => onChange({ ...block, seconds: v }) })] }), _jsx("div", { className: "hstack wrap", children: [20, 30, 40, 45, 60, 90, 120].map((s) => _jsxs("button", { className: `chip ${block.seconds === s ? 'chip-active' : ''}`, onClick: () => onChange({ ...block, seconds: s }), children: [s, " ", t('unit.s')] }, s)) })] })) : (_jsxs(_Fragment, { children: [_jsxs("div", { className: "spread", children: [_jsx("span", { className: "bold", children: t('workouts.reps') }), _jsx(Stepper, { value: block.reps ?? 10, min: 1, max: 500, onChange: (v) => onChange({ ...block, reps: v }) })] }), _jsx("div", { className: "small muted", children: t('workouts.timedAtPerRep', { n: exercise?.secPerRep ?? 3 }) })] }))] }));
 }
+// Group defs for the picker's category badges, plus a 'custom' badge for the user's own exercises
+// (not part of the shared muscle-group list since it's not a muscle group at all).
+const PICKER_GROUP_DEFS = [...EXERCISE_GROUP_DEFS.filter((g) => g.key !== 'all'), { key: 'custom', labelKey: 'exercise.group.custom', match: [] }];
 export function ExercisePicker({ open, onClose, exercises, onPick }) {
     const t = useT();
     const lang = useLang();
     const [q, setQ] = useState('');
-    const ql = q.trim().toLowerCase();
-    const list = exercises.filter((e) => !ql || localizedExerciseName(e.id, e.name, lang).toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)));
-    return (_jsxs(Sheet, { open: open, onClose: onClose, title: t('workouts.addExerciseSheetTitle'), full: true, footer: _jsx(Button, { variant: "secondary", onClick: onClose, children: t('common.done') }), children: [_jsxs("div", { className: "searchbar", children: [_jsx(IconSearch, { size: 18 }), _jsx("input", { className: "input", placeholder: t('workouts.searchExercises'), value: q, onChange: (e) => setQ(e.target.value) })] }), _jsxs("div", { className: "list", children: [list.map((e) => (_jsxs(Row, { onClick: () => onPick(e), right: _jsx(IconPlus, { className: "c-workout" }), children: [_jsx(ExerciseVisual, { exercise: e, animated: false }), _jsxs("div", { className: "row-main", children: [_jsx("div", { className: "row-title", children: localizedExerciseName(e.id, e.name, lang) }), _jsxs("div", { className: "row-sub", children: [e.kind === 'time' ? `${e.defaultAmount} ${t('unit.s')}` : `${e.defaultAmount} ${t('unit.reps')}`, " \u00B7 ", e.muscles.join(', ')] })] })] }, e.id))), list.length === 0 && _jsx("div", { className: "empty", children: _jsx("div", { className: "empty-text", children: t('workouts.noExercisesMatch') }) })] }), _jsx(Button, { variant: "secondary", full: true, className: "mt", icon: _jsx(IconPlus, { size: 18 }), onClick: () => { onClose(); navigate('/workouts/exercise/new'); }, children: t('workouts.createCustomExercise') })] }));
+    // Multiple badges can be active at once (e.g. Cardio + Legs) - an exercise matching ANY
+    // selected category shows, per the user's "select cardio and leg, see only those two" ask.
+    const [groups, setGroups] = useState(() => new Set());
+    const dq = useDeferredValue(q);
+    const toggleGroup = (key) => setGroups((prev) => {
+        const next = new Set(prev);
+        if (next.has(key))
+            next.delete(key);
+        else
+            next.add(key);
+        return next;
+    });
+    const ql = dq.trim().toLowerCase();
+    const list = exercises
+        .filter((e) => {
+        if (groups.size === 0)
+            return true;
+        for (const key of groups) {
+            if (key === 'custom' ? e.isCustom : PICKER_GROUP_DEFS.find((g) => g.key === key)?.match.some((m) => e.muscles.includes(m)))
+                return true;
+        }
+        return false;
+    })
+        .filter((e) => !ql || localizedExerciseName(e.id, e.name, lang).toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)));
+    return (_jsxs(Sheet, { open: open, onClose: onClose, title: t('workouts.addExerciseSheetTitle'), full: true, footer: _jsx(Button, { variant: "secondary", onClick: onClose, children: t('common.done') }), children: [_jsxs("div", { className: "searchbar", children: [_jsx(IconSearch, { size: 18 }), _jsx("input", { className: "input", placeholder: t('workouts.searchExercises'), value: q, onChange: (e) => setQ(e.target.value) })] }), _jsxs("div", { className: "chips", style: { margin: '0 0 10px', padding: 0 }, children: [_jsx(Chip, { tone: "workout", active: groups.size === 0, onClick: () => setGroups(new Set()), children: t('exercise.group.all') }), PICKER_GROUP_DEFS.map((g) => _jsx(Chip, { tone: "workout", active: groups.has(g.key), onClick: () => toggleGroup(g.key), children: t(g.labelKey) }, g.key))] }), _jsxs("div", { className: "list", children: [list.map((e) => (_jsxs(Row, { onClick: () => onPick(e), right: _jsx(IconPlus, { className: "c-workout" }), children: [_jsx(ExerciseVisual, { exercise: e, animated: false }), _jsxs("div", { className: "row-main", children: [_jsx("div", { className: "row-title", children: localizedExerciseName(e.id, e.name, lang) }), _jsxs("div", { className: "row-sub", children: [e.kind === 'time' ? `${e.defaultAmount} ${t('unit.s')}` : `${e.defaultAmount} ${t('unit.reps')}`, " \u00B7 ", e.muscles.join(', ')] })] })] }, e.id))), list.length === 0 && _jsx("div", { className: "empty", children: _jsx("div", { className: "empty-text", children: t('workouts.noExercisesMatch') }) })] }), _jsx(Button, { variant: "secondary", full: true, className: "mt", icon: _jsx(IconPlus, { size: 18 }), onClick: () => { onClose(); navigate('/workouts/exercise/new'); }, children: t('workouts.createCustomExercise') })] }));
 }

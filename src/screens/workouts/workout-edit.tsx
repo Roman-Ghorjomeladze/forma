@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useState } from 'react';
 import { get, put } from '../../lib/db.js';
 import { fmtDuration } from '../../lib/dates.js';
 import { blockSeconds, estimateWorkout, kcalFor } from '../../lib/calories.js';
+import { EXERCISE_GROUP_DEFS } from '../../data/exercise-groups.js';
 import { localizedExerciseName } from '../../data/seed-i18n.js';
 import { useProfile } from '../../lib/hooks.js';
 import { uid } from '../../lib/ids.js';
@@ -9,7 +10,7 @@ import { useLang, useT } from '../../lib/i18n.js';
 import type { Block, Exercise, Workout } from '../../lib/models.js';
 import { useExerciseMap, useExercises } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
-import { Button, Field, IconButton, Row, Screen, Segmented, Sheet, Stepper, TextArea, TextInput, TopBar } from '../../ui/components.js';
+import { Button, Chip, Field, IconButton, Row, Screen, Segmented, Sheet, Stepper, TextArea, TextInput, TopBar } from '../../ui/components.js';
 import { confirmDialog, toast } from '../../ui/dialogs.js';
 import { IconChevronDown, IconCopy, IconHourglass, IconPlus, IconRepeat, IconSearch, IconTrash } from '../../ui/icons.js';
 import { ExerciseVisual } from './exercise-visual.js';
@@ -223,17 +224,42 @@ function BlockEditor({ block, exercise, onChange }: { block: Block; exercise?: E
   );
 }
 
+// Group defs for the picker's category badges, plus a 'custom' badge for the user's own exercises
+// (not part of the shared muscle-group list since it's not a muscle group at all).
+const PICKER_GROUP_DEFS = [...EXERCISE_GROUP_DEFS.filter((g) => g.key !== 'all'), { key: 'custom', labelKey: 'exercise.group.custom', match: [] as string[] }];
+
 export function ExercisePicker({ open, onClose, exercises, onPick }: { open: boolean; onClose: () => void; exercises: Exercise[]; onPick: (e: Exercise) => void }) {
   const t = useT();
   const lang = useLang();
   const [q, setQ] = useState('');
-  const ql = q.trim().toLowerCase();
-  const list = exercises.filter((e) => !ql || localizedExerciseName(e.id, e.name, lang).toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)));
+  // Multiple badges can be active at once (e.g. Cardio + Legs) - an exercise matching ANY
+  // selected category shows, per the user's "select cardio and leg, see only those two" ask.
+  const [groups, setGroups] = useState<Set<string>>(() => new Set());
+  const dq = useDeferredValue(q);
+  const toggleGroup = (key: string) => setGroups((prev) => {
+    const next = new Set(prev);
+    if (next.has(key)) next.delete(key); else next.add(key);
+    return next;
+  });
+  const ql = dq.trim().toLowerCase();
+  const list = exercises
+    .filter((e) => {
+      if (groups.size === 0) return true;
+      for (const key of groups) {
+        if (key === 'custom' ? e.isCustom : PICKER_GROUP_DEFS.find((g) => g.key === key)?.match.some((m) => e.muscles.includes(m))) return true;
+      }
+      return false;
+    })
+    .filter((e) => !ql || localizedExerciseName(e.id, e.name, lang).toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)));
   return (
     <Sheet open={open} onClose={onClose} title={t('workouts.addExerciseSheetTitle')} full footer={<Button variant="secondary" onClick={onClose}>{t('common.done')}</Button>}>
       <div className="searchbar">
         <IconSearch size={18} />
         <input className="input" placeholder={t('workouts.searchExercises')} value={q} onChange={(e: { target: HTMLInputElement }) => setQ(e.target.value)} />
+      </div>
+      <div className="chips" style={{ margin: '0 0 10px', padding: 0 }}>
+        <Chip tone="workout" active={groups.size === 0} onClick={() => setGroups(new Set())}>{t('exercise.group.all')}</Chip>
+        {PICKER_GROUP_DEFS.map((g) => <Chip key={g.key} tone="workout" active={groups.has(g.key)} onClick={() => toggleGroup(g.key)}>{t(g.labelKey)}</Chip>)}
       </div>
       <div className="list">
         {list.map((e) => (
