@@ -10,6 +10,9 @@ No Apple developer account, no App Store, no Xcode.
 - **Workouts** — exercise library with animated demos (or your own GIFs), a workout builder with exercises,
   rests and repeating rounds, a guided full-screen timer with voice + sound cues, MET-based calorie estimates,
   history and a weekly schedule.
+  Workouts can be **shared**: *Share* on a workout (or *Select → Share* for several) sends a `.forma-workouts.json`
+  file through the system share sheet (AirDrop, Messages, WhatsApp…); the recipient taps *Import* on their Workouts
+  screen. The file carries the referenced exercises and custom demo GIFs, so it works on any Forma install.
 - **Settings** — profile and targets (with suggestions), light/dark theme, player cues, JSON backup/restore.
 
 ## Zero dependencies
@@ -23,7 +26,7 @@ specifically so GitHub Pages can serve it directly via its `/docs` folder option
 ```
 public/        static shell: index.html, styles.css, manifest, icons, vendored React
 src/           TypeScript sources (compiled by tsc to docs/app)
-  lib/         db (IndexedDB), hooks, router, dates, calories, nutrition, audio, wake lock, backup
+  lib/         db (IndexedDB), hooks, router, dates, calories, nutrition, audio, wake lock, backup, workout-share
   data/        starter exercises, dishes, sample workouts + week plan
   ui/          components, icons, animated exercise demos, dialogs
   screens/     today, meals/*, workouts/*, settings

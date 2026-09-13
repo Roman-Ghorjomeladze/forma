@@ -8,9 +8,10 @@ import { useLang, useT } from '../../lib/i18n.js';
 import type { Block } from '../../lib/models.js';
 import { useExerciseMap, useWorkout } from '../../lib/queries.js';
 import { navigate } from '../../lib/router.js';
+import { shareWorkouts } from '../../lib/workout-share.js';
 import { Button, Empty, IconButton, Screen, TopBar } from '../../ui/components.js';
 import { confirmDialog, toast } from '../../ui/dialogs.js';
-import { IconCopy, IconEdit, IconHourglass, IconPlay, IconTrash } from '../../ui/icons.js';
+import { IconCopy, IconEdit, IconHourglass, IconPlay, IconShare, IconTrash } from '../../ui/icons.js';
 import { ExerciseVisual } from './exercise-visual.js';
 
 function reId(blocks: Block[]): Block[] {
@@ -37,6 +38,13 @@ export function WorkoutDetailScreen({ id }: { id: string }) {
       navigate('/workouts', { replace: true });
     }
   };
+  const share = async () => {
+    try {
+      const how = await shareWorkouts([workout], t('workouts.shareTitleOne', { name }));
+      if (how === 'shared') toast(t('workouts.shareReady'));
+      else if (how === 'downloaded') toast(t('workouts.shareDownloaded'));
+    } catch (e) { toast(t('workouts.shareFailed')); console.error(e); }
+  };
   const duplicate = async () => {
     const copy = { ...workout, id: uid('wo'), name: `${workout.name} copy`, blocks: reId(workout.blocks), createdAt: Date.now(), updatedAt: Date.now() };
     await put('workouts', copy);
@@ -47,6 +55,7 @@ export function WorkoutDetailScreen({ id }: { id: string }) {
   return (
     <Screen className="screen-no-tabs">
       <TopBar backTo="/workouts" title={name} right={<>
+        <IconButton label={t('workouts.share')} onClick={share}><IconShare size={20} /></IconButton>
         <IconButton label={t('common.duplicate')} onClick={duplicate}><IconCopy size={20} /></IconButton>
         <IconButton label={t('common.edit')} onClick={() => navigate(`/workouts/${workout.id}/edit`)}><IconEdit size={20} /></IconButton>
         <IconButton label={t('common.delete')} onClick={del}><IconTrash size={20} /></IconButton>

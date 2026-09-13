@@ -118,6 +118,7 @@ h1, h2, h3, p { margin: 0; }
 .card { display: block; width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
 .card-tappable:active { transform: scale(0.99); background: var(--surface-2); }
 .card-dark { background: var(--inverse-bg); color: var(--inverse-text); border-color: transparent; }
+.card-selected { border-color: var(--workout); background: var(--workout-soft); }
 .card-dark .muted { color: var(--inverse-muted); }
 .card-flush { padding: 0; overflow: hidden; }
 
@@ -312,6 +313,7 @@ h1, h2, h3, p { margin: 0; }
 .step-n { width: 26px; height: 26px; border-radius: 999px; background: var(--inverse-bg); color: var(--inverse-text); font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .step-text { font-size: 15px; line-height: 1.45; padding-top: 3px; }
 .sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; padding: 12px 18px calc(var(--safe-bottom) + 16px); background: linear-gradient(180deg, transparent 0%, var(--bg) 35%); z-index: 15; }
+.sticky-cta-above-tabs { bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 10px); padding-bottom: 6px; }
 
 .ingredient-editor { display: grid; grid-template-columns: 1fr 70px 70px; gap: 8px; align-items: center; }
 .ingredient-nutri { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 6px; }
