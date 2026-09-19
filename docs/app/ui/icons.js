@@ -82,3 +82,7 @@ export function CategoryGlyph({ name, size = 20 }) {
         default: return _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M3 8l9-4 9 4v9l-9 4-9-4z" }), _jsx("path", { d: "M3 8l9 4 9-4M12 12v9" })] });
     }
 }
+export const IconFlag = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M5 21V4" }), _jsx("path", { d: "M5 4h12l-2 4 2 4H5" })] });
+export const IconPin = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z" }), _jsx("circle", { cx: "12", cy: "10", r: "2.2" })] });
+export const IconShuffle = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M16 3h5v5" }), _jsx("path", { d: "M4 20L21 3" }), _jsx("path", { d: "M21 16v5h-5" }), _jsx("path", { d: "M15 15l6 6" }), _jsx("path", { d: "M4 4l5 5" })] });
+export const IconGlobe = (p) => _jsxs(Icon, { ...p, children: [_jsx("circle", { cx: "12", cy: "12", r: "9" }), _jsx("path", { d: "M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" })] });

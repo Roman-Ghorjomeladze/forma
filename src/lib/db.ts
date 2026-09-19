@@ -1,11 +1,11 @@
 // A tiny promise-based IndexedDB layer with change notifications (no dependencies).
-import type { Category, Dish, Exercise, Expense, MealSlot, MusicTrack, Person, Project, ScheduleEntry, Session, StoredBlob, Tree, Union, Workout } from './models.js';
+import type { Category, Dish, Exercise, Expense, MealSlot, MusicTrack, Person, Project, QuizResult, ScheduleEntry, Session, StoredBlob, Tree, Union, Workout } from './models.js';
 
 export const DB_NAME = 'forma';
-export const DB_VERSION = 3;
+export const DB_VERSION = 4;
 
 export type TableName = 'exercises' | 'workouts' | 'sessions' | 'dishes' | 'mealSlots' | 'schedule' | 'blobs' | 'musicTracks' | 'settings'
-  | 'projects' | 'categories' | 'expenses' | 'trees' | 'persons' | 'unions';
+  | 'projects' | 'categories' | 'expenses' | 'trees' | 'persons' | 'unions' | 'quizResults';
 
 interface SettingRow { key: string; value: unknown }
 
@@ -24,11 +24,12 @@ type RowOf<T extends TableName> =
   T extends 'trees' ? Tree :
   T extends 'persons' ? Person :
   T extends 'unions' ? Union :
+  T extends 'quizResults' ? QuizResult :
   SettingRow;
 
 const KEY_PATH: Record<TableName, string> = {
   exercises: 'id', workouts: 'id', sessions: 'id', dishes: 'id', mealSlots: 'id', schedule: 'weekday', blobs: 'id', musicTracks: 'id', settings: 'key',
-  projects: 'id', categories: 'id', expenses: 'id', trees: 'id', persons: 'id', unions: 'id',
+  projects: 'id', categories: 'id', expenses: 'id', trees: 'id', persons: 'id', unions: 'id', quizResults: 'id',
 };
 
 let dbPromise: Promise<IDBDatabase> | null = null;
@@ -163,7 +164,7 @@ export async function count(table: TableName): Promise<number> {
   return reqToPromise(db.transaction(table, 'readonly').objectStore(table).count());
 }
 
-export const ALL_TABLES: TableName[] = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings', 'projects', 'categories', 'expenses', 'trees', 'persons', 'unions'];
+export const ALL_TABLES: TableName[] = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings', 'projects', 'categories', 'expenses', 'trees', 'persons', 'unions', 'quizResults'];
 
 // ---- settings helpers ---------------------------------------------------------------------
 export async function getSetting<T>(key: string, fallback: T): Promise<T> {

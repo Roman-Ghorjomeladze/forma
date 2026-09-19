@@ -91,3 +91,7 @@ export function CategoryGlyph({ name, size = 20 }: { name: string; size?: number
     default: return <Icon {...p}><path d="M3 8l9-4 9 4v9l-9 4-9-4z" /><path d="M3 8l9 4 9-4M12 12v9" /></Icon>;
   }
 }
+export const IconFlag = (p: IconProps) => <Icon {...p}><path d="M5 21V4" /><path d="M5 4h12l-2 4 2 4H5" /></Icon>;
+export const IconPin = (p: IconProps) => <Icon {...p}><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z" /><circle cx="12" cy="10" r="2.2" /></Icon>;
+export const IconShuffle = (p: IconProps) => <Icon {...p}><path d="M16 3h5v5" /><path d="M4 20L21 3" /><path d="M21 16v5h-5" /><path d="M15 15l6 6" /><path d="M4 4l5 5" /></Icon>;
+export const IconGlobe = (p: IconProps) => <Icon {...p}><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></Icon>;

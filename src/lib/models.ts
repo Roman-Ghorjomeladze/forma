@@ -273,3 +273,25 @@ export interface Union {
   createdAt: number;
   updatedAt: number;
 }
+
+// ============================================================================================
+// Flags — the country list lives in src/data/countries.ts; only quiz results are stored.
+// ============================================================================================
+export type Continent = 'Africa' | 'Asia' | 'Europe' | 'North America' | 'South America' | 'Oceania';
+export const CONTINENTS: Continent[] = ['Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania'];
+export type ContinentFilter = Continent | 'all';
+
+export type QuizMode = 'flag' | 'country' | 'capital';
+export const QUIZ_MODES: QuizMode[] = ['flag', 'country', 'capital'];
+export const QUIZ_LENGTH = 10;
+
+export interface QuizResult {
+  id: string;
+  mode: QuizMode;
+  continent: ContinentFilter;
+  score: number;
+  total: number;
+  /** country codes answered wrong (asked again first next time) */
+  missed: string[];
+  playedAt: number;
+}

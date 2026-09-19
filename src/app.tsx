@@ -31,6 +31,10 @@ import { TreesScreen } from './screens/tree/trees.js';
 import { TreeCanvasScreen } from './screens/tree/canvas.js';
 import { PersonScreen } from './screens/tree/person.js';
 import { seedCategoriesIfEmpty } from './lib/pocket.js';
+import { FlagsSliderScreen } from './screens/flags/slider.js';
+import { FlagsGridScreen } from './screens/flags/grid.js';
+import { FlagsQuizSetupScreen } from './screens/flags/quiz-setup.js';
+import { FlagsQuizPlayScreen } from './screens/flags/quiz-play.js';
 
 function useTheme() {
   const [prefs] = usePrefs();
@@ -145,6 +149,11 @@ export function App() {
     if (seg[1] && seg[2] === 'person' && seg[3]) screen = <PersonScreen treeId={seg[1]} personId={seg[3]} />;
     else if (seg[1]) screen = <TreeCanvasScreen treeId={seg[1]} />;
     else screen = <TreesScreen />;
+  } else if (top === 'flags') {
+    if (seg[1] === 'all') screen = <FlagsGridScreen />;
+    else if (seg[1] === 'quiz' && seg[2] === 'play') screen = <FlagsQuizPlayScreen />;
+    else if (seg[1] === 'quiz') screen = <FlagsQuizSetupScreen />;
+    else screen = <FlagsSliderScreen />;
   } else if (top === 'settings') screen = <SettingsScreen />;
   // Old bookmarks / home-screen icons from before the launcher existed
   else if (top === 'meals' || top === 'workouts') { navigate('/forma/' + seg.join('/'), { replace: true }); screen = <HomeScreen />; }

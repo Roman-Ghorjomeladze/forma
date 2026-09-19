@@ -1,6 +1,6 @@
 import { get, getAll, getByIndex } from './db.js';
 import { useLiveQuery } from './hooks.js';
-import type { Category, Dish, Exercise, Expense, MealSlot, MusicTrack, Person, Project, ScheduleEntry, Session, Tree, Union, Workout } from './models.js';
+import type { Category, Dish, Exercise, Expense, MealSlot, MusicTrack, Person, Project, QuizResult, ScheduleEntry, Session, Tree, Union, Workout } from './models.js';
 
 export function useExercises(): Exercise[] | undefined {
   return useLiveQuery(async () => (await getAll('exercises')).sort((a, b) => a.name.localeCompare(b.name)), ['exercises']);
@@ -112,4 +112,8 @@ export function usePerson(id: string | undefined): Person | null | undefined {
 
 export function useAllUnions(): Union[] | undefined {
   return useLiveQuery(async () => getAll('unions'), ['unions']);
+}
+
+export function useQuizResults(): QuizResult[] | undefined {
+  return useLiveQuery(async () => (await getAll('quizResults')).sort((a, b) => b.playedAt - a.playedAt), ['quizResults']);
 }

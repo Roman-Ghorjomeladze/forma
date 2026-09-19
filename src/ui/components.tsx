@@ -63,7 +63,7 @@ export function Empty({ icon, title, text, action }: { icon?: ReactNode; title: 
 }
 
 // ---- controls ------------------------------------------------------------------------------
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'meals' | 'dark' | 'pocket' | 'tree';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'meals' | 'dark' | 'pocket' | 'tree' | 'flags';
 export function Button({ children, onClick, variant = 'primary', size = 'md', full = false, disabled, type = 'button', className = '', icon }: {
   children?: ReactNode; onClick?: () => void; variant?: Variant; size?: 'sm' | 'md' | 'lg'; full?: boolean; disabled?: boolean; type?: 'button' | 'submit'; className?: string; icon?: ReactNode;
 }) {
@@ -74,11 +74,11 @@ export function Button({ children, onClick, variant = 'primary', size = 'md', fu
   );
 }
 
-export function IconButton({ children, onClick, label, className = '', tone = 'default' }: { children: ReactNode; onClick?: () => void; label: string; className?: string; tone?: 'default' | 'accent' | 'meals' | 'danger' | 'pocket' | 'tree' }) {
+export function IconButton({ children, onClick, label, className = '', tone = 'default' }: { children: ReactNode; onClick?: () => void; label: string; className?: string; tone?: 'default' | 'accent' | 'meals' | 'danger' | 'pocket' | 'tree' | 'flags' }) {
   return <button type="button" className={`iconbtn iconbtn-${tone} ${className}`} aria-label={label} title={label} onClick={onClick}>{children}</button>;
 }
 
-export function Chip({ children, active = false, onClick, tone = 'default' }: { children: ReactNode; active?: boolean; onClick?: () => void; tone?: 'default' | 'meals' | 'workout' | 'pocket' | 'tree' }) {
+export function Chip({ children, active = false, onClick, tone = 'default' }: { children: ReactNode; active?: boolean; onClick?: () => void; tone?: 'default' | 'meals' | 'workout' | 'pocket' | 'tree' | 'flags' }) {
   return <button type="button" className={`chip chip-${tone} ${active ? 'chip-active' : ''}`} onClick={onClick}>{children}</button>;
 }
 

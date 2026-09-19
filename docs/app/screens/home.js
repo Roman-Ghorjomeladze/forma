@@ -8,9 +8,10 @@ import { useLang, useT } from '../lib/i18n.js';
 import { dayNutrition } from '../lib/nutrition.js';
 import { fmtMoney, sum } from '../lib/pocket.js';
 import { navigate } from '../lib/router.js';
-import { useAllExpenses, useAllPersons, useDishMap, useMealSlots, useProjects, useSchedule, useSessions, useTrees, useWorkouts } from '../lib/queries.js';
+import { useAllExpenses, useAllPersons, useDishMap, useMealSlots, useProjects, useQuizResults, useSchedule, useSessions, useTrees, useWorkouts } from '../lib/queries.js';
+import { accuracy } from '../lib/flags.js';
 import { Screen } from '../ui/components.js';
-import { IconChevron, IconDumbbell, IconPlus, IconSettings, IconTree, IconWallet } from '../ui/icons.js';
+import { IconChevron, IconDumbbell, IconFlag, IconPlay, IconPlus, IconSettings, IconTree, IconWallet } from '../ui/icons.js';
 export function HomeScreen() {
     const t = useT();
     const lang = useLang();
@@ -25,6 +26,7 @@ export function HomeScreen() {
     const expenses = useAllExpenses();
     const trees = useTrees();
     const persons = useAllPersons();
+    const quiz = useQuizResults();
     const hour = new Date().getHours();
     const slot = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
     const name = profile.name?.trim();
@@ -57,7 +59,15 @@ export function HomeScreen() {
             return t('home.treeLine.tree', { tree: trees[0].name, n: persons.filter((p) => p.treeId === trees[0].id).length });
         return t('home.treeLine.trees', { n: trees.length, people: persons.length });
     }, [trees, persons, t]);
-    return (_jsxs(Screen, { className: "screen-no-tabs home", children: [_jsxs("header", { className: "topbar topbar-large", children: [_jsxs("div", { className: "topbar-titles", children: [_jsx("div", { className: "eyebrow", children: formatLong(today) }), _jsx("h1", { className: "title-large", children: greeting })] }), _jsx("button", { type: "button", className: "iconbtn", "aria-label": t('settings.title'), onClick: () => navigate('/settings'), children: _jsx(IconSettings, { size: 20 }) })] }), _jsxs("div", { className: "stack", style: { gap: 12 }, children: [_jsx(AppCard, { name: t('home.forma'), sub: t('home.formaSub'), line: formaLine, icon: _jsx(IconDumbbell, { size: 28, strokeWidth: 2.2 }), tone: "forma", onClick: () => navigate('/forma') }), _jsx(AppCard, { name: t('home.pocket'), sub: t('home.pocketSub'), line: pocketLine, icon: _jsx(IconWallet, { size: 28, strokeWidth: 2.2 }), tone: "pocket", onClick: () => navigate('/pocket') }), _jsx(AppCard, { name: t('home.tree'), sub: t('home.treeSub'), line: treeLine, icon: _jsx(IconTree, { size: 28, strokeWidth: 2.2 }), tone: "tree", onClick: () => navigate('/tree') })] }), _jsxs("div", { className: "mt-lg", children: [_jsx("div", { className: "section-label", children: t('home.quickAdd') }), _jsxs("div", { className: "quick-row", children: [_jsxs("button", { type: "button", className: "quick", onClick: () => navigate('/pocket/expense/new'), children: [_jsx("span", { className: "c-pocket", children: _jsx(IconPlus, { size: 18 }) }), t('home.expense')] }), _jsxs("button", { type: "button", className: "quick", onClick: () => navigate(trees && trees.length === 1 ? `/tree/${trees[0].id}` : '/tree'), children: [_jsx("span", { className: "c-tree", children: _jsx(IconPlus, { size: 18 }) }), t('home.person')] }), _jsxs("button", { type: "button", className: "quick", onClick: () => navigate('/forma/workouts'), children: [_jsx("span", { className: "c-workout", children: _jsx(IconPlus, { size: 18 }) }), t('home.workout')] })] })] }), _jsx("div", { className: "home-footer small muted", children: t('home.footer') })] }));
+    const flagsLine = useMemo(() => {
+        if (!quiz)
+            return '';
+        if (quiz.length === 0)
+            return t('home.flagsLine.empty');
+        const best = quiz.reduce((b, r) => (r.score / r.total > b.score / b.total ? r : b), quiz[0]);
+        return t('home.flagsLine.best', { score: best.score, total: best.total, n: quiz.length, acc: accuracy(quiz) });
+    }, [quiz, t]);
+    return (_jsxs(Screen, { className: "screen-no-tabs home", children: [_jsxs("header", { className: "topbar topbar-large", children: [_jsxs("div", { className: "topbar-titles", children: [_jsx("div", { className: "eyebrow", children: formatLong(today) }), _jsx("h1", { className: "title-large", children: greeting })] }), _jsx("button", { type: "button", className: "iconbtn", "aria-label": t('settings.title'), onClick: () => navigate('/settings'), children: _jsx(IconSettings, { size: 20 }) })] }), _jsxs("div", { className: "stack", style: { gap: 12 }, children: [_jsx(AppCard, { name: t('home.forma'), sub: t('home.formaSub'), line: formaLine, icon: _jsx(IconDumbbell, { size: 28, strokeWidth: 2.2 }), tone: "forma", onClick: () => navigate('/forma') }), _jsx(AppCard, { name: t('home.pocket'), sub: t('home.pocketSub'), line: pocketLine, icon: _jsx(IconWallet, { size: 28, strokeWidth: 2.2 }), tone: "pocket", onClick: () => navigate('/pocket') }), _jsx(AppCard, { name: t('home.tree'), sub: t('home.treeSub'), line: treeLine, icon: _jsx(IconTree, { size: 28, strokeWidth: 2.2 }), tone: "tree", onClick: () => navigate('/tree') }), _jsx(AppCard, { name: t('home.flags'), sub: t('home.flagsSub'), line: flagsLine, icon: _jsx(IconFlag, { size: 28, strokeWidth: 2.2 }), tone: "flags", onClick: () => navigate('/flags') })] }), _jsxs("div", { className: "mt-lg", children: [_jsx("div", { className: "section-label", children: t('home.quickAdd') }), _jsxs("div", { className: "quick-row", children: [_jsxs("button", { type: "button", className: "quick", onClick: () => navigate('/pocket/expense/new'), children: [_jsx("span", { className: "c-pocket", children: _jsx(IconPlus, { size: 18 }) }), t('home.expense')] }), _jsxs("button", { type: "button", className: "quick", onClick: () => navigate(trees && trees.length === 1 ? `/tree/${trees[0].id}` : '/tree'), children: [_jsx("span", { className: "c-tree", children: _jsx(IconPlus, { size: 18 }) }), t('home.person')] }), _jsxs("button", { type: "button", className: "quick", onClick: () => navigate('/flags/quiz'), children: [_jsx("span", { className: "c-flags", children: _jsx(IconPlay, { size: 16 }) }), t('home.quiz')] })] })] }), _jsx("div", { className: "home-footer small muted", children: t('home.footer') })] }));
 }
 function AppCard({ name, sub, line, icon, tone, onClick }) {
     return (_jsxs("button", { type: "button", className: `app-card app-${tone}`, onClick: onClick, children: [_jsx("span", { className: "app-icon", children: icon }), _jsxs("span", { className: "app-text", children: [_jsx("span", { className: "app-name title-large", style: { fontSize: 22 }, children: name }), _jsx("span", { className: "app-sub small muted bold", children: sub }), line && _jsx("span", { className: "app-line small", children: line })] }), _jsx(IconChevron, { size: 20, className: "muted" })] }));

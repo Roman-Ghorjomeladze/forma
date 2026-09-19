@@ -34,3 +34,6 @@ export const DEFAULT_PREFS = {
 export const CATEGORY_ICONS = ['box', 'wrench', 'sofa', 'hammer', 'tag', 'truck', 'bolt', 'drop', 'paint', 'home', 'doc', 'cart', 'heart', 'gift', 'car', 'plane'];
 export const CATEGORY_COLORS = ['#E39A1C', '#4C8BF5', '#B76DE0', '#2FAF6E', '#F0532D', '#E9B52A', '#1FA8A8', '#D9488A', '#7A6A52', '#9A978F'];
 export const UNION_STATUSES = ['married', 'partners', 'divorced', 'separated', 'widowed', 'unknown'];
+export const CONTINENTS = ['Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania'];
+export const QUIZ_MODES = ['flag', 'country', 'capital'];
+export const QUIZ_LENGTH = 10;

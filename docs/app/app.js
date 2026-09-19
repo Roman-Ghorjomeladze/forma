@@ -32,6 +32,10 @@ import { TreesScreen } from './screens/tree/trees.js';
 import { TreeCanvasScreen } from './screens/tree/canvas.js';
 import { PersonScreen } from './screens/tree/person.js';
 import { seedCategoriesIfEmpty } from './lib/pocket.js';
+import { FlagsSliderScreen } from './screens/flags/slider.js';
+import { FlagsGridScreen } from './screens/flags/grid.js';
+import { FlagsQuizSetupScreen } from './screens/flags/quiz-setup.js';
+import { FlagsQuizPlayScreen } from './screens/flags/quiz-play.js';
 function useTheme() {
     const [prefs] = usePrefs();
     useEffect(() => {
@@ -207,6 +211,16 @@ export function App() {
             screen = _jsx(TreeCanvasScreen, { treeId: seg[1] });
         else
             screen = _jsx(TreesScreen, {});
+    }
+    else if (top === 'flags') {
+        if (seg[1] === 'all')
+            screen = _jsx(FlagsGridScreen, {});
+        else if (seg[1] === 'quiz' && seg[2] === 'play')
+            screen = _jsx(FlagsQuizPlayScreen, {});
+        else if (seg[1] === 'quiz')
+            screen = _jsx(FlagsQuizSetupScreen, {});
+        else
+            screen = _jsx(FlagsSliderScreen, {});
     }
     else if (top === 'settings')
         screen = _jsx(SettingsScreen, {});

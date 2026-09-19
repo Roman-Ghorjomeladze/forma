@@ -7,9 +7,10 @@ import { useLang, useT } from '../lib/i18n.js';
 import { dayNutrition } from '../lib/nutrition.js';
 import { fmtMoney, sum } from '../lib/pocket.js';
 import { navigate } from '../lib/router.js';
-import { useAllExpenses, useAllPersons, useDishMap, useMealSlots, useProjects, useSchedule, useSessions, useTrees, useWorkouts } from '../lib/queries.js';
+import { useAllExpenses, useAllPersons, useDishMap, useMealSlots, useProjects, useQuizResults, useSchedule, useSessions, useTrees, useWorkouts } from '../lib/queries.js';
+import { accuracy } from '../lib/flags.js';
 import { Screen } from '../ui/components.js';
-import { IconChevron, IconDumbbell, IconPlus, IconSettings, IconTree, IconWallet } from '../ui/icons.js';
+import { IconChevron, IconDumbbell, IconFlag, IconPlay, IconPlus, IconSettings, IconTree, IconWallet } from '../ui/icons.js';
 
 export function HomeScreen() {
   const t = useT();
@@ -25,6 +26,7 @@ export function HomeScreen() {
   const expenses = useAllExpenses();
   const trees = useTrees();
   const persons = useAllPersons();
+  const quiz = useQuizResults();
 
   const hour = new Date().getHours();
   const slot = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
@@ -55,6 +57,13 @@ export function HomeScreen() {
     return t('home.treeLine.trees', { n: trees.length, people: persons.length });
   }, [trees, persons, t]);
 
+  const flagsLine = useMemo(() => {
+    if (!quiz) return '';
+    if (quiz.length === 0) return t('home.flagsLine.empty');
+    const best = quiz.reduce((b, r) => (r.score / r.total > b.score / b.total ? r : b), quiz[0]);
+    return t('home.flagsLine.best', { score: best.score, total: best.total, n: quiz.length, acc: accuracy(quiz) });
+  }, [quiz, t]);
+
   return (
     <Screen className="screen-no-tabs home">
       <header className="topbar topbar-large">
@@ -69,6 +78,7 @@ export function HomeScreen() {
         <AppCard name={t('home.forma')} sub={t('home.formaSub')} line={formaLine} icon={<IconDumbbell size={28} strokeWidth={2.2} />} tone="forma" onClick={() => navigate('/forma')} />
         <AppCard name={t('home.pocket')} sub={t('home.pocketSub')} line={pocketLine} icon={<IconWallet size={28} strokeWidth={2.2} />} tone="pocket" onClick={() => navigate('/pocket')} />
         <AppCard name={t('home.tree')} sub={t('home.treeSub')} line={treeLine} icon={<IconTree size={28} strokeWidth={2.2} />} tone="tree" onClick={() => navigate('/tree')} />
+        <AppCard name={t('home.flags')} sub={t('home.flagsSub')} line={flagsLine} icon={<IconFlag size={28} strokeWidth={2.2} />} tone="flags" onClick={() => navigate('/flags')} />
       </div>
 
       <div className="mt-lg">
@@ -76,7 +86,7 @@ export function HomeScreen() {
         <div className="quick-row">
           <button type="button" className="quick" onClick={() => navigate('/pocket/expense/new')}><span className="c-pocket"><IconPlus size={18} /></span>{t('home.expense')}</button>
           <button type="button" className="quick" onClick={() => navigate(trees && trees.length === 1 ? `/tree/${trees[0].id}` : '/tree')}><span className="c-tree"><IconPlus size={18} /></span>{t('home.person')}</button>
-          <button type="button" className="quick" onClick={() => navigate('/forma/workouts')}><span className="c-workout"><IconPlus size={18} /></span>{t('home.workout')}</button>
+          <button type="button" className="quick" onClick={() => navigate('/flags/quiz')}><span className="c-flags"><IconPlay size={16} /></span>{t('home.quiz')}</button>
         </div>
       </div>
 
@@ -85,7 +95,7 @@ export function HomeScreen() {
   );
 }
 
-function AppCard({ name, sub, line, icon, tone, onClick }: { name: string; sub: string; line: string; icon: ReactNode; tone: 'forma' | 'pocket' | 'tree'; onClick: () => void }) {
+function AppCard({ name, sub, line, icon, tone, onClick }: { name: string; sub: string; line: string; icon: ReactNode; tone: 'forma' | 'pocket' | 'tree' | 'flags'; onClick: () => void }) {
   return (
     <button type="button" className={`app-card app-${tone}`} onClick={onClick}>
       <span className="app-icon">{icon}</span>

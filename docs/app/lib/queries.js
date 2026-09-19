@@ -87,3 +87,6 @@ export function usePerson(id) {
 export function useAllUnions() {
     return useLiveQuery(async () => getAll('unions'), ['unions']);
 }
+export function useQuizResults() {
+    return useLiveQuery(async () => (await getAll('quizResults')).sort((a, b) => b.playedAt - a.playedAt), ['quizResults']);
+}
