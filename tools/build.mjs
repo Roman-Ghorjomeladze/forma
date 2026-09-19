@@ -64,7 +64,10 @@ export function writeServiceWorker() {
   const sw = fs.readFileSync(path.join(root, 'tools', 'sw.template.js'), 'utf8')
     .replace('__VERSION__', version)
     .replace('__PRECACHE__', JSON.stringify(files.concat(['./']), null, 0));
-  fs.writeFileSync(path.join(dist, 'sw.js'), sw);
+  const swPath = path.join(dist, 'sw.js');
+  // Skip the write when nothing changed (keeps file watchers quiet in dev mode).
+  if (fs.existsSync(swPath) && fs.readFileSync(swPath, 'utf8') === sw) return;
+  fs.writeFileSync(swPath, sw);
   console.log(`build ok — ${files.length} files, version ${version} -> docs/`);
 }
 

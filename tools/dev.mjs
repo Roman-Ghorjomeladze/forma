@@ -26,5 +26,7 @@ fs.watch(pub, { recursive: true }, (_e, name) => {
   try { if (fs.statSync(src).isFile()) { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst); } } catch {}
   schedule();
 });
-fs.watch(path.join(dist), { recursive: true }, schedule);
+// Rebuild the service worker when tsc writes into docs/app — but not when the SW itself is written,
+// otherwise writing sw.js triggers the watcher, which writes sw.js again, forever.
+fs.watch(dist, { recursive: true }, (_e, name) => { if (name && path.basename(name) === 'sw.js') return; schedule(); });
 serve(dist, Number(process.env.PORT ?? 5173));
