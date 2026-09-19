@@ -3,6 +3,7 @@
 // changes (it rides on the existing prefs store, so no separate subscription machinery).
 import { prefsStore, usePrefs } from './hooks.js';
 import type { Lang } from './models.js';
+import { EN_APPS, KA_APPS } from './i18n-apps.js';
 
 export type { Lang };
 
@@ -1027,6 +1028,8 @@ const KA: Dict = {
   'step.roundShort': ' · რაუნდი {n}/{of}',
 };
 
+Object.assign(EN, EN_APPS);
+Object.assign(KA, KA_APPS);
 const DICTS: Record<Lang, Dict> = { en: EN, ka: KA };
 
 function interpolate(s: string, vars?: Vars): string {

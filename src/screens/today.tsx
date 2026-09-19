@@ -12,6 +12,7 @@ import { MEAL_CATEGORIES, type MealSlot } from '../lib/models.js';
 import { Button, Card, Empty, MacroBar, Row, Screen, Section, TopBar } from '../ui/components.js';
 import { IconCheck, IconChevron, IconDumbbell, IconFlame, IconPlus } from '../ui/icons.js';
 import { DishThumb } from './meals/dish-thumb.js';
+import { AppsButton } from './pocket/pocket-ui.js';
 import { AddDishSheet } from './meals/add-dish-sheet.js';
 
 export function TodayScreen() {
@@ -66,7 +67,7 @@ export function TodayScreen() {
 
   return (
     <Screen>
-      <TopBar large eyebrow={formatLong(today)} title={t('today.title')} right={streak > 0 ? <span className="streak"><IconFlame size={16} strokeWidth={2.2} />{t('today.streak', { n: streak })}</span> : undefined} />
+      <TopBar large eyebrow={formatLong(today)} title={t('today.title')} right={<>{streak > 0 && <span className="streak"><IconFlame size={16} strokeWidth={2.2} />{t('today.streak', { n: streak })}</span>}<AppsButton /></>} />
 
       <Card dark className="energy mb">
         <div className="energy-top">
@@ -101,11 +102,11 @@ export function TodayScreen() {
                 <div className="row-title">{localizedWorkoutName(scheduled.id, scheduled.name, lang)}</div>
                 <div className="row-sub">{est ? `${fmtDuration(est.seconds)} · ${est.exercises} ${t('unit.exercises')} · ~${Math.round(est.kcal)} ${t('unit.kcal')}` : ''}</div>
               </div>
-              <Button size="sm" onClick={() => navigate(`/workouts/${scheduled.id}/play`)}>{doneToday ? t('today.again') : t('today.start')}</Button>
+              <Button size="sm" onClick={() => navigate(`/forma/workouts/${scheduled.id}/play`)}>{doneToday ? t('today.again') : t('today.start')}</Button>
             </div>
           </Card>
         ) : (
-          <Card onClick={() => navigate('/workouts')}>
+          <Card onClick={() => navigate('/forma/workouts')}>
             <div className="workout-card">
               <div className="thumb thumb-workout"><IconDumbbell strokeWidth={2.2} /></div>
               <div className="row-main">
@@ -118,7 +119,7 @@ export function TodayScreen() {
         )}
       </Section>
 
-      <Section title={t('today.meals')} right={<button className="c-meals" onClick={() => navigate('/meals')}>{t('today.planWeek')}</button>}>
+      <Section title={t('today.meals')} right={<button className="c-meals" onClick={() => navigate('/forma/meals')}>{t('today.planWeek')}</button>}>
         {slots && dishes && slots.length > 0 ? (
           <div className="list">
             {MEAL_CATEGORIES.flatMap((cat) => slots.filter((s) => s.slot === cat)).map((slot) => {
@@ -126,7 +127,7 @@ export function TodayScreen() {
               if (!dish) return null;
               const n = perServing(dish);
               return (
-                <Row key={slot.id} className={slot.eaten ? 'row-done' : ''} onClick={() => navigate(`/meals/dish/${dish.id}`)} right={<span className="num">{Math.round(n.kcal * slot.servings)}</span>}>
+                <Row key={slot.id} className={slot.eaten ? 'row-done' : ''} onClick={() => navigate(`/forma/meals/dish/${dish.id}`)} right={<span className="num">{Math.round(n.kcal * slot.servings)}</span>}>
                   <button className={`check ${slot.eaten ? 'on' : ''}`} aria-label={slot.eaten ? t('today.markNotEaten') : t('today.markEaten')} onClick={(e: { stopPropagation: () => void }) => { e.stopPropagation(); toggleEaten(slot); }}>
                     {slot.eaten && <IconCheck size={14} strokeWidth={3} />}
                   </button>

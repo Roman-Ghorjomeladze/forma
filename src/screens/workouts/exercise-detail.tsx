@@ -16,7 +16,7 @@ export function ExerciseDetailScreen({ id }: { id: string }) {
   const ex = useExercise(id);
   const [profile] = useProfile();
   if (ex === undefined) return <Screen className="screen-no-tabs" />;
-  if (ex === null) return <Screen className="screen-no-tabs"><Empty title={t('exercise.notFound')} action={<Button variant="secondary" onClick={() => navigate('/workouts/exercises')}>{t('common.back')}</Button>} /></Screen>;
+  if (ex === null) return <Screen className="screen-no-tabs"><Empty title={t('exercise.notFound')} action={<Button variant="secondary" onClick={() => navigate('/forma/workouts/exercises')}>{t('common.back')}</Button>} /></Screen>;
 
   const name = localizedExerciseName(ex.id, ex.name, lang);
   const perMin = kcalFor(ex.met, profile.weightKg, 60);
@@ -24,13 +24,13 @@ export function ExerciseDetailScreen({ id }: { id: string }) {
     const workouts = await getAll('workouts');
     const used = workouts.filter((w) => JSON.stringify(w.blocks).includes(`"${ex.id}"`)).map((w) => localizedWorkoutName(w.id, w.name, lang));
     const ok = await confirmDialog({ title: t('exercise.deleteTitle', { name }), message: used.length ? t('exercise.deleteUsedIn', { list: used.join(', ') }) : undefined, confirmLabel: t('common.delete'), danger: true });
-    if (ok) { await remove('exercises', ex.id); toast(t('common.deleted')); navigate('/workouts/exercises', { replace: true }); }
+    if (ok) { await remove('exercises', ex.id); toast(t('common.deleted')); navigate('/forma/workouts/exercises', { replace: true }); }
   };
 
   return (
     <Screen className="screen-no-tabs">
-      <TopBar backTo="/workouts/exercises" title={name} right={<>
-        <IconButton label={t('common.edit')} onClick={() => navigate(`/workouts/exercise/${ex.id}/edit`)}><IconEdit size={20} /></IconButton>
+      <TopBar backTo="/forma/workouts/exercises" title={name} right={<>
+        <IconButton label={t('common.edit')} onClick={() => navigate(`/forma/workouts/exercise/${ex.id}/edit`)}><IconEdit size={20} /></IconButton>
         <IconButton label={t('common.delete')} onClick={del}><IconTrash size={20} /></IconButton>
       </>} />
       <ExerciseVisual exercise={ex} size="large" />

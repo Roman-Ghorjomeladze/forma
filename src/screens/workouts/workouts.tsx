@@ -93,9 +93,9 @@ export function WorkoutsScreen() {
     <Screen>
       <TopBar large title={t('workouts.title')} eyebrow={weekKcal > 0 ? t('workouts.kcalBurnedThisWeek', { n: weekKcal }) : t('workouts.countWorkouts', { n: workouts?.length ?? 0 })}
         right={<>
-          <IconButton label={t('workouts.history')} onClick={() => navigate('/workouts/history')}><IconHistory size={20} /></IconButton>
-          <IconButton label={t('workouts.exerciseLibrary')} onClick={() => navigate('/workouts/exercises')}><IconStar size={20} /></IconButton>
-          <IconButton label={t('workouts.newWorkout')} tone="accent" onClick={() => navigate('/workouts/new')}><IconPlus /></IconButton>
+          <IconButton label={t('workouts.history')} onClick={() => navigate('/forma/workouts/history')}><IconHistory size={20} /></IconButton>
+          <IconButton label={t('workouts.exerciseLibrary')} onClick={() => navigate('/forma/workouts/exercises')}><IconStar size={20} /></IconButton>
+          <IconButton label={t('workouts.newWorkout')} tone="accent" onClick={() => navigate('/forma/workouts/new')}><IconPlus /></IconButton>
         </>} />
 
       <Section title={t('workouts.weeklySchedule')} right={<span>{t('workouts.tapDayToAssign')}</span>}>
@@ -129,7 +129,7 @@ export function WorkoutsScreen() {
         {workouts && workouts.length === 0 ? (
           <Empty icon={<IconDumbbell size={40} />} title={t('workouts.noWorkoutsYet')} text={t('workouts.noWorkoutsHint')} action={
             <div className="hstack wrap" style={{ justifyContent: 'center' }}>
-              <Button icon={<IconPlus size={18} />} onClick={() => navigate('/workouts/new')}>{t('workouts.newWorkout')}</Button>
+              <Button icon={<IconPlus size={18} />} onClick={() => navigate('/forma/workouts/new')}>{t('workouts.newWorkout')}</Button>
               <Button variant="secondary" icon={<IconUpload size={18} />} onClick={() => fileRef.current?.click()}>{t('workouts.import')}</Button>
             </div>
           } />
@@ -139,14 +139,14 @@ export function WorkoutsScreen() {
               const est = estimateOf(w);
               const on = selected.has(w.id);
               return (
-                <Card key={w.id} onClick={() => (selecting ? toggle(w.id) : navigate(`/workouts/${w.id}`))} className={selecting && on ? 'card-selected' : ''}>
+                <Card key={w.id} onClick={() => (selecting ? toggle(w.id) : navigate(`/forma/workouts/${w.id}`))} className={selecting && on ? 'card-selected' : ''}>
                   <div className="workout-card">
                     {selecting ? <span className={`check ${on ? 'on' : ''}`} style={on ? { background: 'var(--workout)', borderColor: 'var(--workout)' } : undefined}>{on && <IconCheck size={14} strokeWidth={3} />}</span> : <span className="workout-color" style={{ background: w.color }} />}
                     <div className="row-main">
                       <div className="row-title">{localizedWorkoutName(w.id, w.name, lang)}</div>
                       <div className="row-sub">{est ? `${fmtDuration(est.seconds)} · ${est.exercises} ${t('unit.exercises')} · ~${Math.round(est.kcal)} ${t('unit.kcal')}` : ''}</div>
                     </div>
-                    {!selecting && <Button size="sm" onClick={() => navigate(`/workouts/${w.id}/play`)}>{t('today.start')}</Button>}
+                    {!selecting && <Button size="sm" onClick={() => navigate(`/forma/workouts/${w.id}/play`)}>{t('today.start')}</Button>}
                     {!selecting && <IconChevron className="muted" />}
                   </div>
                 </Card>

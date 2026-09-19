@@ -94,3 +94,14 @@ export function fmtDuration(totalSeconds) {
         return `${h} ${hUnit} ${String(m).padStart(2, '0')} ${minUnit}`;
     return `${m} ${minUnit}`;
 }
+/** "Sep 2026" / "სექ 2026" */
+export function formatMonthYear(key) {
+    const d = fromKey(key);
+    return `${MONTH_SHORT[getLang()][d.getMonth()]} ${d.getFullYear()}`;
+}
+/** "12 Sep 2026" */
+export function formatShortYear(key) {
+    const d = fromKey(key);
+    return `${d.getDate()} ${MONTH_SHORT[getLang()][d.getMonth()]} ${d.getFullYear()}`;
+}
+export function monthShortName(monthIndex) { return MONTH_SHORT[getLang()][monthIndex]; }

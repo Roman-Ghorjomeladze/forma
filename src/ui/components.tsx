@@ -9,10 +9,11 @@ export function Screen({ children, className = '', padded = true }: { children?:
   return <div className={`screen ${padded ? 'screen-padded' : ''} ${className}`}>{children}</div>;
 }
 
-export function TopBar({ title, eyebrow, backTo, right, large = false, onBack }: { title: ReactNode; eyebrow?: ReactNode; backTo?: string; right?: ReactNode; large?: boolean; onBack?: () => void }) {
+export function TopBar({ title, eyebrow, backTo, right, large = false, onBack, left, className = '' }: { title: ReactNode; eyebrow?: ReactNode; backTo?: string; right?: ReactNode; large?: boolean; onBack?: () => void; left?: ReactNode; className?: string }) {
   const t = useT();
   return (
-    <header className={`topbar ${large ? 'topbar-large' : ''}`}>
+    <header className={`topbar ${large ? 'topbar-large' : ''} ${className}`}>
+      {left}
       {(backTo || onBack) && (
         <button className="iconbtn" aria-label={t('common.back')} onClick={() => (onBack ? onBack() : back(backTo!))}><IconBack /></button>
       )}
@@ -62,7 +63,7 @@ export function Empty({ icon, title, text, action }: { icon?: ReactNode; title: 
 }
 
 // ---- controls ------------------------------------------------------------------------------
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'meals' | 'dark';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'meals' | 'dark' | 'pocket' | 'tree';
 export function Button({ children, onClick, variant = 'primary', size = 'md', full = false, disabled, type = 'button', className = '', icon }: {
   children?: ReactNode; onClick?: () => void; variant?: Variant; size?: 'sm' | 'md' | 'lg'; full?: boolean; disabled?: boolean; type?: 'button' | 'submit'; className?: string; icon?: ReactNode;
 }) {
@@ -73,11 +74,11 @@ export function Button({ children, onClick, variant = 'primary', size = 'md', fu
   );
 }
 
-export function IconButton({ children, onClick, label, className = '', tone = 'default' }: { children: ReactNode; onClick?: () => void; label: string; className?: string; tone?: 'default' | 'accent' | 'meals' | 'danger' }) {
+export function IconButton({ children, onClick, label, className = '', tone = 'default' }: { children: ReactNode; onClick?: () => void; label: string; className?: string; tone?: 'default' | 'accent' | 'meals' | 'danger' | 'pocket' | 'tree' }) {
   return <button type="button" className={`iconbtn iconbtn-${tone} ${className}`} aria-label={label} title={label} onClick={onClick}>{children}</button>;
 }
 
-export function Chip({ children, active = false, onClick, tone = 'default' }: { children: ReactNode; active?: boolean; onClick?: () => void; tone?: 'default' | 'meals' | 'workout' }) {
+export function Chip({ children, active = false, onClick, tone = 'default' }: { children: ReactNode; active?: boolean; onClick?: () => void; tone?: 'default' | 'meals' | 'workout' | 'pocket' | 'tree' }) {
   return <button type="button" className={`chip chip-${tone} ${active ? 'chip-active' : ''}`} onClick={onClick}>{children}</button>;
 }
 
@@ -134,7 +135,7 @@ export function NumberInput({ value, onChange, min = 0, max = 100000, step = 1, 
           const n = Number(t);
           if (t !== '' && !Number.isNaN(n)) onChange(Math.min(max, Math.max(min, n)));
         }}
-        onBlur={() => { if (text === '' || Number.isNaN(Number(text))) { setText(String(value || 0)); } }}
+        onBlur={() => { if (text === '' || Number.isNaN(Number(text))) { setText(value === '' ? '' : String(value || 0)); } }}
       />
       {suffix && <span className="numsuffix">{suffix}</span>}
       <span className="sr-only">{step}</span>

@@ -2,6 +2,7 @@
 // {placeholder} interpolation, and a useT() hook that re-renders when the language preference
 // changes (it rides on the existing prefs store, so no separate subscription machinery).
 import { prefsStore, usePrefs } from './hooks.js';
+import { EN_APPS, KA_APPS } from './i18n-apps.js';
 /** Plain (non-hook) read of the current language — for use in non-component modules like dates.ts. */
 export function getLang() {
     return prefsStore.get().language ?? 'en';
@@ -987,6 +988,8 @@ const KA = {
     'step.exercise': 'ვარჯიში',
     'step.roundShort': ' · რაუნდი {n}/{of}',
 };
+Object.assign(EN, EN_APPS);
+Object.assign(KA, KA_APPS);
 const DICTS = { en: EN, ka: KA };
 function interpolate(s, vars) {
     if (!vars)

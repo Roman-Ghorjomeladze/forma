@@ -26,7 +26,7 @@ export function DishListScreen() {
 
   return (
     <Screen>
-      <TopBar large backTo="/meals" title={t('dish.titleList')} eyebrow={t('dish.recipesCount', { n: dishes?.length ?? 0 })} right={<IconButton label={t('dish.newDish')} tone="meals" onClick={() => navigate('/meals/dish/new')}><IconPlus /></IconButton>} />
+      <TopBar large backTo="/forma/meals" title={t('dish.titleList')} eyebrow={t('dish.recipesCount', { n: dishes?.length ?? 0 })} right={<IconButton label={t('dish.newDish')} tone="meals" onClick={() => navigate('/forma/meals/dish/new')}><IconPlus /></IconButton>} />
       <div className="searchbar">
         <IconSearch size={18} />
         <input className="input" placeholder={t('dish.searchPlaceholder')} value={q} onChange={(e: { target: HTMLInputElement }) => setQ(e.target.value)} />
@@ -37,13 +37,13 @@ export function DishListScreen() {
         {MEAL_CATEGORIES.map((c) => <Chip key={c} tone="meals" active={cat === c} onClick={() => setCat(c)}>{LABEL[c]}</Chip>)}
       </div>
       {dishes && dishes.length === 0 ? (
-        <Empty icon={<IconBowl size={40} />} title={t('dish.noDishesYet')} text={t('dish.noDishesHint')} action={<Button variant="meals" icon={<IconPlus size={18} />} onClick={() => navigate('/meals/dish/new')}>{t('dish.newDish')}</Button>} />
+        <Empty icon={<IconBowl size={40} />} title={t('dish.noDishesYet')} text={t('dish.noDishesHint')} action={<Button variant="meals" icon={<IconPlus size={18} />} onClick={() => navigate('/forma/meals/dish/new')}>{t('dish.newDish')}</Button>} />
       ) : (
         <div className="list mt">
           {filtered.map((d) => {
             const n = perServing(d);
             return (
-              <Row key={d.id} onClick={() => navigate(`/meals/dish/${d.id}`)} right={<div style={{ textAlign: 'right' }}><div className="num">{Math.round(n.kcal)} {t('unit.kcal')}</div><div className="small muted num">{Math.round(n.protein)} g P</div></div>}>
+              <Row key={d.id} onClick={() => navigate(`/forma/meals/dish/${d.id}`)} right={<div style={{ textAlign: 'right' }}><div className="num">{Math.round(n.kcal)} {t('unit.kcal')}</div><div className="small muted num">{Math.round(n.protein)} g P</div></div>}>
                 <DishThumb dish={d} />
                 <div className="row-main">
                   <div className="row-title">{d.favorite ? '★ ' : ''}{localizedDishName(d.id, d.name, lang)}</div>

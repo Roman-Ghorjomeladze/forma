@@ -19,7 +19,7 @@ export function HistoryScreen() {
 
   return (
     <Screen>
-      <TopBar large backTo="/workouts" title={t('history.title')} eyebrow={t('history.sessionsCount', { n: totals.count })} />
+      <TopBar large backTo="/forma/workouts" title={t('history.title')} eyebrow={t('history.sessionsCount', { n: totals.count })} />
       <div className="stats stats-3 mb">
         <Stat value={totals.weekCount} label={t('history.thisWeek')} />
         <Stat value={totals.weekMin} label={t('history.activeMin')} />

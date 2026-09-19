@@ -8,9 +8,9 @@ import { useT } from '../lib/i18n.js';
 export function Screen({ children, className = '', padded = true }) {
     return _jsx("div", { className: `screen ${padded ? 'screen-padded' : ''} ${className}`, children: children });
 }
-export function TopBar({ title, eyebrow, backTo, right, large = false, onBack }) {
+export function TopBar({ title, eyebrow, backTo, right, large = false, onBack, left, className = '' }) {
     const t = useT();
-    return (_jsxs("header", { className: `topbar ${large ? 'topbar-large' : ''}`, children: [(backTo || onBack) && (_jsx("button", { className: "iconbtn", "aria-label": t('common.back'), onClick: () => (onBack ? onBack() : back(backTo)), children: _jsx(IconBack, {}) })), _jsxs("div", { className: "topbar-titles", children: [eyebrow && _jsx("div", { className: "eyebrow", children: eyebrow }), _jsx("h1", { className: large ? 'title-large' : 'title', children: title })] }), right && _jsx("div", { className: "topbar-right", children: right })] }));
+    return (_jsxs("header", { className: `topbar ${large ? 'topbar-large' : ''} ${className}`, children: [left, (backTo || onBack) && (_jsx("button", { className: "iconbtn", "aria-label": t('common.back'), onClick: () => (onBack ? onBack() : back(backTo)), children: _jsx(IconBack, {}) })), _jsxs("div", { className: "topbar-titles", children: [eyebrow && _jsx("div", { className: "eyebrow", children: eyebrow }), _jsx("h1", { className: large ? 'title-large' : 'title', children: title })] }), right && _jsx("div", { className: "topbar-right", children: right })] }));
 }
 export function Section({ title, right, children, className = '' }) {
     return (_jsxs("section", { className: `section ${className}`, children: [(title || right) && (_jsxs("div", { className: "section-head", children: [title && _jsx("h2", { className: "section-title", children: title }), right && _jsx("div", { className: "section-right", children: right })] })), children] }));
@@ -62,7 +62,7 @@ export function NumberInput({ value, onChange, min = 0, max = 100000, step = 1, 
                     if (t !== '' && !Number.isNaN(n))
                         onChange(Math.min(max, Math.max(min, n)));
                 }, onBlur: () => { if (text === '' || Number.isNaN(Number(text))) {
-                    setText(String(value || 0));
+                    setText(value === '' ? '' : String(value || 0));
                 } } }), suffix && _jsx("span", { className: "numsuffix", children: suffix }), _jsx("span", { className: "sr-only", children: step })] }));
 }
 export function Stepper({ value, onChange, min = 0, max = 999, step = 1, format }) {

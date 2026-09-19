@@ -43,3 +43,47 @@ export function useSchedule() {
 export function useMusicTracks() {
     return useLiveQuery(async () => (await getAll('musicTracks')).sort((a, b) => a.addedAt - b.addedAt), ['musicTracks']);
 }
+// ---- Pocket ---------------------------------------------------------------------------------
+export function useProjects() {
+    return useLiveQuery(async () => (await getAll('projects')).sort((a, b) => (a.status === b.status ? b.updatedAt - a.updatedAt : a.status === 'active' ? -1 : 1)), ['projects']);
+}
+export function useProject(id) {
+    return useLiveQuery(async () => (id ? (await get('projects', id)) ?? null : null), ['projects'], [id]);
+}
+export function useCategories() {
+    return useLiveQuery(async () => (await getAll('categories')).sort((a, b) => a.order - b.order || a.name.localeCompare(b.name)), ['categories']);
+}
+export function useCategoryMap() {
+    return useLiveQuery(async () => new Map((await getAll('categories')).map((c) => [c.id, c])), ['categories']);
+}
+export function useExpenses(projectId) {
+    return useLiveQuery(async () => (projectId ? (await getByIndex('expenses', 'projectId', projectId)).sort((a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt) : []), ['expenses'], [projectId]);
+}
+export function useAllExpenses() {
+    return useLiveQuery(async () => (await getAll('expenses')).sort((a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt), ['expenses']);
+}
+export function useExpense(id) {
+    return useLiveQuery(async () => (id ? (await get('expenses', id)) ?? null : null), ['expenses'], [id]);
+}
+// ---- Family tree ----------------------------------------------------------------------------
+export function useTrees() {
+    return useLiveQuery(async () => (await getAll('trees')).sort((a, b) => b.updatedAt - a.updatedAt), ['trees']);
+}
+export function useTree(id) {
+    return useLiveQuery(async () => (id ? (await get('trees', id)) ?? null : null), ['trees'], [id]);
+}
+export function usePersons(treeId) {
+    return useLiveQuery(async () => (treeId ? getByIndex('persons', 'treeId', treeId) : []), ['persons'], [treeId]);
+}
+export function useAllPersons() {
+    return useLiveQuery(async () => getAll('persons'), ['persons']);
+}
+export function useUnions(treeId) {
+    return useLiveQuery(async () => (treeId ? getByIndex('unions', 'treeId', treeId) : []), ['unions'], [treeId]);
+}
+export function usePerson(id) {
+    return useLiveQuery(async () => (id ? (await get('persons', id)) ?? null : null), ['persons'], [id]);
+}
+export function useAllUnions() {
+    return useLiveQuery(async () => getAll('unions'), ['unions']);
+}

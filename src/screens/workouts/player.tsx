@@ -211,7 +211,7 @@ export function PlayerScreen({ id }: { id: string }) {
     tm.index -= 1; tm.stepStartedAt = Date.now(); tm.cuedSecond = -1; announce(tm.index); rerender();
   };
   const quit = async () => {
-    if (phase === 'ready' || phase === 'done') { navigate(`/workouts/${id}`, { replace: true }); return; }
+    if (phase === 'ready' || phase === 'done') { navigate(`/forma/workouts/${id}`, { replace: true }); return; }
     const wasRunning = phase === 'running';
     if (wasRunning) pause();
     const ok = await confirmDialog({ title: t('player.endWorkoutTitle'), message: t('player.endWorkoutMsg'), confirmLabel: t('player.end'), cancelLabel: t('player.keepGoing'), danger: true });
@@ -220,7 +220,7 @@ export function PlayerScreen({ id }: { id: string }) {
   };
 
   if (workout === undefined || !exMap) return <div className="player" />;
-  if (workout === null || steps.length === 0) return <div className="player"><Empty title={t('player.nothingToPlay')} text={t('player.noExercisesYet')} action={<Button variant="secondary" onClick={() => navigate('/workouts')}>{t('common.back')}</Button>} /></div>;
+  if (workout === null || steps.length === 0) return <div className="player"><Empty title={t('player.nothingToPlay')} text={t('player.noExercisesYet')} action={<Button variant="secondary" onClick={() => navigate('/forma/workouts')}>{t('common.back')}</Button>} /></div>;
 
   const tm = t2.current;
   const idx = tm.index;
@@ -240,7 +240,7 @@ export function PlayerScreen({ id }: { id: string }) {
     const pct = Math.round((session.completedSteps / Math.max(1, session.totalSteps)) * 100);
     return (
       <div className="player">
-        <div className="player-head"><span /><div className="player-head-mid"><span className="t">{workoutName}</span></div><button className="iconbtn" aria-label={t('player.close')} onClick={() => navigate('/workouts', { replace: true })}><IconClose size={18} /></button></div>
+        <div className="player-head"><span /><div className="player-head-mid"><span className="t">{workoutName}</span></div><button className="iconbtn" aria-label={t('player.close')} onClick={() => navigate('/forma/workouts', { replace: true })}><IconClose size={18} /></button></div>
         <div className="player-done">
           <div>
             <div className="player-phase">{pct >= 100 ? t('player.complete') : t('player.pctDone', { pct })}</div>
@@ -252,8 +252,8 @@ export function PlayerScreen({ id }: { id: string }) {
             <Stat value={`${session.completedSteps}/${session.totalSteps}`} label={t('player.stepsLabel')} />
           </div>
           <div className="small" style={{ color: '#9A978F' }}>{t('player.activeOfWork', { d: fmtDuration(session.activeSeconds), kg: weight })}</div>
-          <Button size="lg" full onClick={() => navigate('/', { replace: true })}>{t('common.done')}</Button>
-          <Button variant="ghost" full onClick={() => navigate(`/workouts/${id}`, { replace: true })}>{t('player.backToWorkout')}</Button>
+          <Button size="lg" full onClick={() => navigate('/forma', { replace: true })}>{t('common.done')}</Button>
+          <Button variant="ghost" full onClick={() => navigate(`/forma/workouts/${id}`, { replace: true })}>{t('player.backToWorkout')}</Button>
         </div>
       </div>
     );

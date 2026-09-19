@@ -121,6 +121,8 @@ export type Theme = 'system' | 'light' | 'dark';
 export type Lang = 'en' | 'ka';
 
 export interface Profile {
+  /** Shown in the launcher greeting. */
+  name: string;
   weightKg: number;
   heightCm: number;
   age: number;
@@ -152,6 +154,7 @@ function detectLanguage(): Lang {
 }
 
 export const DEFAULT_PROFILE: Profile = {
+  name: '',
   weightKg: 90,
   heightCm: 178,
   age: 30,
@@ -172,3 +175,101 @@ export const DEFAULT_PREFS: Prefs = {
   keepAwake: true,
   language: detectLanguage(),
 };
+
+// ============================================================================================
+// Pocket — big expenses grouped by project, each expense in one category. Single currency (₾).
+// ============================================================================================
+export type ProjectStatus = 'active' | 'done';
+
+export interface Project {
+  id: string;
+  name: string;
+  notes: string;
+  /** Planned total, in ₾. Undefined = no budget set. */
+  budget?: number;
+  /** Optional per-category limits, keyed by category id. */
+  categoryBudgets: Record<string, number>;
+  status: ProjectStatus;
+  startDate: string; // YYYY-MM-DD
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  color: string; // hex
+  icon: CategoryIcon;
+  order: number;
+  createdAt: number;
+}
+
+export type CategoryIcon = 'box' | 'wrench' | 'sofa' | 'hammer' | 'tag' | 'truck' | 'bolt' | 'drop' | 'paint' | 'home' | 'doc' | 'cart' | 'heart' | 'gift' | 'car' | 'plane';
+export const CATEGORY_ICONS: CategoryIcon[] = ['box', 'wrench', 'sofa', 'hammer', 'tag', 'truck', 'bolt', 'drop', 'paint', 'home', 'doc', 'cart', 'heart', 'gift', 'car', 'plane'];
+export const CATEGORY_COLORS = ['#E39A1C', '#4C8BF5', '#B76DE0', '#2FAF6E', '#F0532D', '#E9B52A', '#1FA8A8', '#D9488A', '#7A6A52', '#9A978F'];
+
+export interface Expense {
+  id: string;
+  projectId: string;
+  categoryId: string;
+  title: string;
+  amount: number; // ₾
+  date: string; // YYYY-MM-DD
+  note: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+// ============================================================================================
+// Family Tree — several trees; each tree has persons and "unions" (a couple, or a single parent)
+// that own the children. Parent/child links always go through a union so layout is simple.
+// ============================================================================================
+export interface Tree {
+  id: string;
+  name: string;
+  notes: string;
+  /** Person the canvas centres on when opened (defaults to the first person). */
+  rootPersonId?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type Sex = 'm' | 'f' | 'u';
+
+export interface Person {
+  id: string;
+  treeId: string;
+  firstName: string;
+  lastName: string;
+  maidenName: string;
+  sex: Sex;
+  /** Partial ISO dates allowed: "1958", "1958-04" or "1958-04-12". Empty = unknown. */
+  birthDate: string;
+  deathDate: string;
+  /** True when the person has died but the date is unknown. */
+  deceased: boolean;
+  birthPlace: string;
+  notes: string;
+  photoBlobId?: string;
+  /** Manual canvas position; when unset the auto-layout decides. */
+  pos?: { x: number; y: number };
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type UnionStatus = 'married' | 'partners' | 'divorced' | 'separated' | 'widowed' | 'unknown';
+export const UNION_STATUSES: UnionStatus[] = ['married', 'partners', 'divorced', 'separated', 'widowed', 'unknown'];
+
+export interface Union {
+  id: string;
+  treeId: string;
+  /** 0, 1 or 2 partner ids. 1 = single/unknown other parent, 0 = "unknown parents" placeholder. */
+  partnerIds: string[];
+  status: UnionStatus;
+  startYear: string;
+  endYear: string;
+  /** Children in display order. */
+  childIds: string[];
+  createdAt: number;
+  updatedAt: number;
+}

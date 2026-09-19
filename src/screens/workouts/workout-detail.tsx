@@ -26,7 +26,7 @@ export function WorkoutDetailScreen({ id }: { id: string }) {
   const exercises = useExerciseMap();
 
   if (workout === undefined || !exercises) return <Screen className="screen-no-tabs" />;
-  if (workout === null) return <Screen className="screen-no-tabs"><Empty title={t('workouts.notFound')} action={<Button variant="secondary" onClick={() => navigate('/workouts')}>{t('common.back')}</Button>} /></Screen>;
+  if (workout === null) return <Screen className="screen-no-tabs"><Empty title={t('workouts.notFound')} action={<Button variant="secondary" onClick={() => navigate('/forma/workouts')}>{t('common.back')}</Button>} /></Screen>;
 
   const name = localizedWorkoutName(workout.id, workout.name, lang);
   const est = estimateWorkout(workout, exercises, profile.weightKg);
@@ -35,7 +35,7 @@ export function WorkoutDetailScreen({ id }: { id: string }) {
   const del = async () => {
     if (await confirmDialog({ title: t('workouts.deleteTitle', { name }), message: t('workouts.deleteMsg'), confirmLabel: t('common.delete'), danger: true })) {
       await remove('workouts', workout.id);
-      navigate('/workouts', { replace: true });
+      navigate('/forma/workouts', { replace: true });
     }
   };
   const share = async () => {
@@ -49,15 +49,15 @@ export function WorkoutDetailScreen({ id }: { id: string }) {
     const copy = { ...workout, id: uid('wo'), name: `${workout.name} copy`, blocks: reId(workout.blocks), createdAt: Date.now(), updatedAt: Date.now() };
     await put('workouts', copy);
     toast(t('common.duplicated'));
-    navigate(`/workouts/${copy.id}/edit`, { replace: true });
+    navigate(`/forma/workouts/${copy.id}/edit`, { replace: true });
   };
 
   return (
     <Screen className="screen-no-tabs">
-      <TopBar backTo="/workouts" title={name} right={<>
+      <TopBar backTo="/forma/workouts" title={name} right={<>
         <IconButton label={t('workouts.share')} onClick={share}><IconShare size={20} /></IconButton>
         <IconButton label={t('common.duplicate')} onClick={duplicate}><IconCopy size={20} /></IconButton>
-        <IconButton label={t('common.edit')} onClick={() => navigate(`/workouts/${workout.id}/edit`)}><IconEdit size={20} /></IconButton>
+        <IconButton label={t('common.edit')} onClick={() => navigate(`/forma/workouts/${workout.id}/edit`)}><IconEdit size={20} /></IconButton>
         <IconButton label={t('common.delete')} onClick={del}><IconTrash size={20} /></IconButton>
       </>} />
       {workout.description && <p className="muted mb">{workout.description}</p>}
@@ -78,12 +78,12 @@ export function WorkoutDetailScreen({ id }: { id: string }) {
             {s.type === 'rest' && <span className="row-right muted small">{s.seconds} {t('unit.s')}</span>}
           </div>
         ))}
-        {steps.length === 0 && <Empty title={t('workouts.emptyWorkout')} text={t('workouts.addExercisesInEditor')} action={<Button variant="secondary" onClick={() => navigate(`/workouts/${workout.id}/edit`)}>{t('common.edit')}</Button>} />}
+        {steps.length === 0 && <Empty title={t('workouts.emptyWorkout')} text={t('workouts.addExercisesInEditor')} action={<Button variant="secondary" onClick={() => navigate(`/forma/workouts/${workout.id}/edit`)}>{t('common.edit')}</Button>} />}
       </div>
 
       {steps.length > 0 && (
         <div className="sticky-cta">
-          <Button size="lg" full icon={<IconPlay size={20} />} onClick={() => navigate(`/workouts/${workout.id}/play`)}>{t('workouts.startWorkout')}</Button>
+          <Button size="lg" full icon={<IconPlay size={20} />} onClick={() => navigate(`/forma/workouts/${workout.id}/play`)}>{t('workouts.startWorkout')}</Button>
         </div>
       )}
     </Screen>

@@ -26,14 +26,14 @@ export function DishDetailScreen({ id }: { id: string }) {
   const [adding, setAdding] = useState(false);
 
   if (dish === undefined) return <Screen />;
-  if (dish === null) return <Screen className="screen-no-tabs"><Empty title={t('dish.notFound')} action={<Button variant="secondary" onClick={() => navigate('/meals/dishes')}>{t('dish.backToDishes')}</Button>} /></Screen>;
+  if (dish === null) return <Screen className="screen-no-tabs"><Empty title={t('dish.notFound')} action={<Button variant="secondary" onClick={() => navigate('/forma/meals/dishes')}>{t('dish.backToDishes')}</Button>} /></Screen>;
 
   const name = localizedDishName(dish.id, dish.name, lang);
   const n = perServing(dish);
   const total = dishTotal(dish);
   const del = async () => {
     const ok = await confirmDialog({ title: t('dish.deleteTitle', { name }), message: t('dish.deleteMsg'), confirmLabel: t('common.delete'), danger: true });
-    if (ok) { await remove('dishes', dish.id); navigate('/meals/dishes', { replace: true }); }
+    if (ok) { await remove('dishes', dish.id); navigate('/forma/meals/dishes', { replace: true }); }
   };
 
   return (
@@ -42,10 +42,10 @@ export function DishDetailScreen({ id }: { id: string }) {
         {url && <img src={url} alt="" />}
         {!url && <svg className="hero-deco" width="220" height="220" viewBox="0 0 220 220" fill="none" stroke="currentColor"><circle cx="110" cy="110" r="90" strokeWidth="10" /><circle cx="110" cy="110" r="55" strokeWidth="6" /></svg>}
         <div className="hero-actions">
-          <div><IconButton label={t('common.back')} onClick={() => history.length > 1 ? history.back() : navigate('/meals/dishes')}><IconBack /></IconButton></div>
+          <div><IconButton label={t('common.back')} onClick={() => history.length > 1 ? history.back() : navigate('/forma/meals/dishes')}><IconBack /></IconButton></div>
           <div>
             <IconButton label={dish.favorite ? t('dish.unfavorite') : t('dish.favorite')} onClick={() => put('dishes', { ...dish, favorite: !dish.favorite })}><IconHeart filled={dish.favorite} /></IconButton>
-            <IconButton label={t('common.edit')} onClick={() => navigate(`/meals/dish/${dish.id}/edit`)}><IconEdit /></IconButton>
+            <IconButton label={t('common.edit')} onClick={() => navigate(`/forma/meals/dish/${dish.id}/edit`)}><IconEdit /></IconButton>
             <IconButton label={t('common.delete')} onClick={del}><IconTrash /></IconButton>
           </div>
         </div>

@@ -1,10 +1,11 @@
 // A tiny promise-based IndexedDB layer with change notifications (no dependencies).
-import type { Dish, Exercise, MealSlot, MusicTrack, ScheduleEntry, Session, StoredBlob, Workout } from './models.js';
+import type { Category, Dish, Exercise, Expense, MealSlot, MusicTrack, Person, Project, ScheduleEntry, Session, StoredBlob, Tree, Union, Workout } from './models.js';
 
 export const DB_NAME = 'forma';
-export const DB_VERSION = 2;
+export const DB_VERSION = 3;
 
-export type TableName = 'exercises' | 'workouts' | 'sessions' | 'dishes' | 'mealSlots' | 'schedule' | 'blobs' | 'musicTracks' | 'settings';
+export type TableName = 'exercises' | 'workouts' | 'sessions' | 'dishes' | 'mealSlots' | 'schedule' | 'blobs' | 'musicTracks' | 'settings'
+  | 'projects' | 'categories' | 'expenses' | 'trees' | 'persons' | 'unions';
 
 interface SettingRow { key: string; value: unknown }
 
@@ -17,10 +18,17 @@ type RowOf<T extends TableName> =
   T extends 'schedule' ? ScheduleEntry :
   T extends 'blobs' ? StoredBlob :
   T extends 'musicTracks' ? MusicTrack :
+  T extends 'projects' ? Project :
+  T extends 'categories' ? Category :
+  T extends 'expenses' ? Expense :
+  T extends 'trees' ? Tree :
+  T extends 'persons' ? Person :
+  T extends 'unions' ? Union :
   SettingRow;
 
 const KEY_PATH: Record<TableName, string> = {
   exercises: 'id', workouts: 'id', sessions: 'id', dishes: 'id', mealSlots: 'id', schedule: 'weekday', blobs: 'id', musicTracks: 'id', settings: 'key',
+  projects: 'id', categories: 'id', expenses: 'id', trees: 'id', persons: 'id', unions: 'id',
 };
 
 let dbPromise: Promise<IDBDatabase> | null = null;
@@ -36,6 +44,8 @@ export function openDb(): Promise<IDBDatabase> {
           const store = db.createObjectStore(name, { keyPath: KEY_PATH[name] });
           if (name === 'mealSlots') store.createIndex('date', 'date');
           if (name === 'sessions') store.createIndex('startedAt', 'startedAt');
+          if (name === 'expenses') store.createIndex('projectId', 'projectId');
+          if (name === 'persons' || name === 'unions') store.createIndex('treeId', 'treeId');
         }
       }
     };
@@ -153,7 +163,7 @@ export async function count(table: TableName): Promise<number> {
   return reqToPromise(db.transaction(table, 'readonly').objectStore(table).count());
 }
 
-export const ALL_TABLES: TableName[] = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings'];
+export const ALL_TABLES: TableName[] = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings', 'projects', 'categories', 'expenses', 'trees', 'persons', 'unions'];
 
 // ---- settings helpers ---------------------------------------------------------------------
 export async function getSetting<T>(key: string, fallback: T): Promise<T> {

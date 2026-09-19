@@ -102,3 +102,17 @@ export function fmtDuration(totalSeconds: number): string {
   if (h > 0) return `${h} ${hUnit} ${String(m).padStart(2, '0')} ${minUnit}`;
   return `${m} ${minUnit}`;
 }
+
+/** "Sep 2026" / "სექ 2026" */
+export function formatMonthYear(key: string): string {
+  const d = fromKey(key);
+  return `${MONTH_SHORT[getLang()][d.getMonth()]} ${d.getFullYear()}`;
+}
+
+/** "12 Sep 2026" */
+export function formatShortYear(key: string): string {
+  const d = fromKey(key);
+  return `${d.getDate()} ${MONTH_SHORT[getLang()][d.getMonth()]} ${d.getFullYear()}`;
+}
+
+export function monthShortName(monthIndex: number): string { return MONTH_SHORT[getLang()][monthIndex]; }

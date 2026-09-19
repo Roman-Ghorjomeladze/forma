@@ -9,7 +9,7 @@ import { useT } from '../lib/i18n.js';
 import { canPromptInstall, isInstalled, promptInstall, subscribeInstall } from '../lib/install-prompt.js';
 import type { Lang, Theme } from '../lib/models.js';
 import { useMusicTracks } from '../lib/queries.js';
-import { Button, Field, NumberInput, Row, Screen, Segmented, Select, Toggle, TopBar } from '../ui/components.js';
+import { Button, Field, NumberInput, Row, Screen, Segmented, Select, TextInput, Toggle, TopBar } from '../ui/components.js';
 import { confirmDialog, toast } from '../ui/dialogs.js';
 import { IconDownload, IconMusic, IconTrash, IconUpload } from '../ui/icons.js';
 
@@ -98,7 +98,13 @@ export function SettingsScreen() {
 
   return (
     <Screen>
-      <TopBar large title={t('settings.title')} eyebrow="Forma" />
+      <TopBar large backTo="/" title={t('settings.title')} eyebrow={t('settings.home')} />
+      <div className="settings-group">
+        <div className="section-label">{t('settings.home')}</div>
+        <div className="list">
+          <div className="settings-row"><div className="l">{t('home.yourName')}<small>{t('home.yourNameHint')}</small></div><TextInput value={profile.name ?? ''} onChange={(v) => setProfile({ name: v })} placeholder="Roma" className="input-short" /></div>
+        </div>
+      </div>
 
       <div className="settings-group">
         <div className="section-label">{t('settings.profile')}</div>

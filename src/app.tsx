@@ -21,6 +21,16 @@ import { ExerciseDetailScreen } from './screens/workouts/exercise-detail.js';
 import { ExerciseEditScreen } from './screens/workouts/exercise-edit.js';
 import { HistoryScreen } from './screens/workouts/history.js';
 import { SettingsScreen } from './screens/settings.js';
+import { HomeScreen } from './screens/home.js';
+import { PocketProjectsScreen } from './screens/pocket/projects.js';
+import { PocketProjectScreen } from './screens/pocket/project-detail.js';
+import { PocketProjectEditScreen } from './screens/pocket/project-edit.js';
+import { PocketExpenseEditScreen } from './screens/pocket/expense-edit.js';
+import { PocketCategoriesScreen } from './screens/pocket/categories.js';
+import { TreesScreen } from './screens/tree/trees.js';
+import { TreeCanvasScreen } from './screens/tree/canvas.js';
+import { PersonScreen } from './screens/tree/person.js';
+import { seedCategoriesIfEmpty } from './lib/pocket.js';
 
 function useTheme() {
   const [prefs] = usePrefs();
@@ -80,6 +90,7 @@ export function App() {
       try {
         await Promise.all([profileStore.loading, prefsStore.loading]);
         await seedIfEmpty();
+        await seedCategoriesIfEmpty();
         if (navigator.storage?.persist) navigator.storage.persist().catch(() => {});
       } catch (e) {
         console.error('startup failed', e);
@@ -94,34 +105,55 @@ export function App() {
   const seg = route.segments;
   const top = seg[0] ?? '';
   let screen: unknown;
-  let showTabs = true;
+  let showTabs = false;
 
-  if (top === '') screen = <TodayScreen />;
-  else if (top === 'meals') {
-    if (seg[1] === 'dishes') screen = <DishListScreen />;
-    else if (seg[1] === 'shopping') screen = <ShoppingScreen />;
-    else if (seg[1] === 'dish' && seg[2] === 'new') { screen = <DishEditScreen />; showTabs = false; }
-    else if (seg[1] === 'dish' && seg[3] === 'edit') { screen = <DishEditScreen id={seg[2]} />; showTabs = false; }
-    else if (seg[1] === 'dish' && seg[2]) { screen = <DishDetailScreen id={seg[2]} />; showTabs = false; }
-    else screen = <MealsScreen />;
-  } else if (top === 'workouts') {
-    if (seg[1] === 'exercises') screen = <ExerciseListScreen />;
-    else if (seg[1] === 'history') screen = <HistoryScreen />;
-    else if (seg[1] === 'exercise' && seg[2] === 'new') { screen = <ExerciseEditScreen />; showTabs = false; }
-    else if (seg[1] === 'exercise' && seg[3] === 'edit') { screen = <ExerciseEditScreen id={seg[2]} />; showTabs = false; }
-    else if (seg[1] === 'exercise' && seg[2]) { screen = <ExerciseDetailScreen id={seg[2]} />; showTabs = false; }
-    else if (seg[1] === 'new') { screen = <WorkoutEditScreen />; showTabs = false; }
-    else if (seg[1] && seg[2] === 'edit') { screen = <WorkoutEditScreen id={seg[1]} />; showTabs = false; }
-    else if (seg[1] && seg[2] === 'play') { screen = <PlayerScreen id={seg[1]} />; showTabs = false; }
-    else if (seg[1]) { screen = <WorkoutDetailScreen id={seg[1]} />; showTabs = false; }
-    else screen = <WorkoutsScreen />;
+  if (top === '') screen = <HomeScreen />;
+  else if (top === 'forma') {
+    // Forma keeps its own tab bar; its routes live under /forma/*
+    const f = seg.slice(1);
+    const sub = f[0] ?? '';
+    showTabs = true;
+    if (sub === '') screen = <TodayScreen />;
+    else if (sub === 'meals') {
+      if (f[1] === 'dishes') screen = <DishListScreen />;
+      else if (f[1] === 'shopping') screen = <ShoppingScreen />;
+      else if (f[1] === 'dish' && f[2] === 'new') { screen = <DishEditScreen />; showTabs = false; }
+      else if (f[1] === 'dish' && f[3] === 'edit') { screen = <DishEditScreen id={f[2]} />; showTabs = false; }
+      else if (f[1] === 'dish' && f[2]) { screen = <DishDetailScreen id={f[2]} />; showTabs = false; }
+      else screen = <MealsScreen />;
+    } else if (sub === 'workouts') {
+      if (f[1] === 'exercises') screen = <ExerciseListScreen />;
+      else if (f[1] === 'history') screen = <HistoryScreen />;
+      else if (f[1] === 'exercise' && f[2] === 'new') { screen = <ExerciseEditScreen />; showTabs = false; }
+      else if (f[1] === 'exercise' && f[3] === 'edit') { screen = <ExerciseEditScreen id={f[2]} />; showTabs = false; }
+      else if (f[1] === 'exercise' && f[2]) { screen = <ExerciseDetailScreen id={f[2]} />; showTabs = false; }
+      else if (f[1] === 'new') { screen = <WorkoutEditScreen />; showTabs = false; }
+      else if (f[1] && f[2] === 'edit') { screen = <WorkoutEditScreen id={f[1]} />; showTabs = false; }
+      else if (f[1] && f[2] === 'play') { screen = <PlayerScreen id={f[1]} />; showTabs = false; }
+      else if (f[1]) { screen = <WorkoutDetailScreen id={f[1]} />; showTabs = false; }
+      else screen = <WorkoutsScreen />;
+    } else screen = <TodayScreen />;
+  } else if (top === 'pocket') {
+    if (seg[1] === 'categories') screen = <PocketCategoriesScreen />;
+    else if (seg[1] === 'project' && seg[2] === 'new') screen = <PocketProjectEditScreen />;
+    else if (seg[1] === 'project' && seg[3] === 'edit') screen = <PocketProjectEditScreen id={seg[2]} />;
+    else if (seg[1] === 'project' && seg[2]) screen = <PocketProjectScreen id={seg[2]} />;
+    else if (seg[1] === 'expense' && seg[2] === 'new') screen = <PocketExpenseEditScreen />;
+    else if (seg[1] === 'expense' && seg[3] === 'edit') screen = <PocketExpenseEditScreen id={seg[2]} />;
+    else screen = <PocketProjectsScreen />;
+  } else if (top === 'tree') {
+    if (seg[1] && seg[2] === 'person' && seg[3]) screen = <PersonScreen treeId={seg[1]} personId={seg[3]} />;
+    else if (seg[1]) screen = <TreeCanvasScreen treeId={seg[1]} />;
+    else screen = <TreesScreen />;
   } else if (top === 'settings') screen = <SettingsScreen />;
-  else screen = <TodayScreen />;
+  // Old bookmarks / home-screen icons from before the launcher existed
+  else if (top === 'meals' || top === 'workouts') { navigate('/forma/' + seg.join('/'), { replace: true }); screen = <HomeScreen />; }
+  else screen = <HomeScreen />;
 
   return (
     <div className="app">
       {screen as any}
-      {showTabs && <TabBar active={top} />}
+      {showTabs && <TabBar active={seg[1] ?? ''} />}
       {sw.waiting && (
         <div className="update-banner">
           <span>{t('app.updateReady')}</span>
@@ -136,16 +168,16 @@ export function App() {
 function TabBar({ active }: { active: string }) {
   const t = useT();
   const tabs = [
-    { key: '', label: t('tab.today'), icon: <IconHome />, cls: '' },
-    { key: 'meals', label: t('tab.meals'), icon: <IconMeals />, cls: 'tab-meals' },
-    { key: 'workouts', label: t('tab.workouts'), icon: <IconDumbbell />, cls: 'tab-workouts' },
-    { key: 'settings', label: t('tab.settings'), icon: <IconSettings />, cls: '' },
+    { key: '', label: t('tab.today'), icon: <IconHome />, cls: '', to: '/forma' },
+    { key: 'meals', label: t('tab.meals'), icon: <IconMeals />, cls: 'tab-meals', to: '/forma/meals' },
+    { key: 'workouts', label: t('tab.workouts'), icon: <IconDumbbell />, cls: 'tab-workouts', to: '/forma/workouts' },
+    { key: 'settings', label: t('tab.settings'), icon: <IconSettings />, cls: '', to: '/settings' },
   ];
   return (
     <nav className="tabbar-wrap">
       <div className="tabbar">
         {tabs.map((t) => (
-          <button key={t.key} className={`tab ${t.cls} ${active === t.key ? 'active' : ''}`} onClick={() => navigate('/' + t.key)} aria-current={active === t.key ? 'page' : undefined}>
+          <button key={t.key} className={`tab ${t.cls} ${active === t.key ? 'active' : ''}`} onClick={() => navigate(t.to)} aria-current={active === t.key ? 'page' : undefined}>
             {t.icon}
             <span>{t.label}</span>
           </button>

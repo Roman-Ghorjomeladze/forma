@@ -99,7 +99,7 @@ export function ExerciseEditScreen({ id }: { id?: string }) {
   useEffect(() => {
     if (!id) return;
     get('exercises', id).then((e) => {
-      if (!e) { navigate('/workouts/exercises', { replace: true }); return; }
+      if (!e) { navigate('/forma/workouts/exercises', { replace: true }); return; }
       setEx(e); setMuscles(e.muscles.join(', ')); setEquipment(e.equipment.join(', ')); setCues(e.cues.join('\n'));
     });
   }, [id]);
@@ -141,11 +141,11 @@ export function ExerciseEditScreen({ id }: { id?: string }) {
     const final: Exercise = { ...ex, name: ex.name.trim(), muscles: split(muscles), equipment: split(equipment), cues: cues.split('\n').map((c) => c.trim()).filter(Boolean), demo, updatedAt: Date.now() };
     await put('exercises', final);
     toast(t('common.saved'));
-    navigate(`/workouts/exercise/${final.id}`, { replace: true });
+    navigate(`/forma/workouts/exercise/${final.id}`, { replace: true });
   };
   const cancel = async () => {
     if (!id && (ex.name || pending) && !(await confirmDialog({ title: t('exercise.discardTitle'), confirmLabel: t('common.discard'), danger: true }))) return;
-    navigate(id ? `/workouts/exercise/${id}` : '/workouts/exercises', { replace: true });
+    navigate(id ? `/forma/workouts/exercise/${id}` : '/forma/workouts/exercises', { replace: true });
   };
 
   const demoUrl = preview ?? existing;

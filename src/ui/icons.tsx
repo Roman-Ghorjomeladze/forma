@@ -53,3 +53,41 @@ export const IconStar = (p: IconProps) => <Icon {...p}><path d="M12 3l2.8 5.7 6.
 export const IconCamera = (p: IconProps) => <Icon {...p}><path d="M4 8h3l2-3h6l2 3h3v12H4z" /><circle cx="12" cy="13" r="3.5" /></Icon>;
 export const IconMusic = (p: IconProps & { off?: boolean }) => <Icon {...p}><path d="M9 18V5l11-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="17" cy="16" r="3" />{p.off && <path d="M3 3l18 18" />}</Icon>;
 export const IconMic = (p: IconProps & { off?: boolean }) => <Icon {...p}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0" /><path d="M12 18v3" />{p.off && <path d="M3 3l18 18" />}</Icon>;
+
+// ---- launcher / Pocket / Family Tree ----
+export const IconApps = (p: IconProps) => <Icon {...p}><rect x="3" y="3" width="7" height="7" rx="2" /><rect x="14" y="3" width="7" height="7" rx="2" /><rect x="3" y="14" width="7" height="7" rx="2" /><rect x="14" y="14" width="7" height="7" rx="2" /></Icon>;
+export const IconWallet = (p: IconProps) => <Icon {...p}><path d="M3 7a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2v3H3z" /><path d="M3 10v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8z" /><circle cx="16.5" cy="15" r="1.4" fill="currentColor" stroke="none" /></Icon>;
+export const IconTree = (p: IconProps) => <Icon {...p}><circle cx="12" cy="5" r="2.5" /><circle cx="6" cy="18" r="2.5" /><circle cx="18" cy="18" r="2.5" /><path d="M12 7.5V12M12 12H6v3.5M12 12h6v3.5" /></Icon>;
+export const IconTag = (p: IconProps) => <Icon {...p}><path d="M3 12V4h8l9 9-8 8z" /><circle cx="7.5" cy="8.5" r="1.4" fill="currentColor" stroke="none" /></Icon>;
+export const IconFit = (p: IconProps) => <Icon {...p}><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></Icon>;
+export const IconLayers = (p: IconProps) => <Icon {...p}><path d="M12 3l9 5-9 5-9-5z" /><path d="M3 13l9 5 9-5" /></Icon>;
+export const IconArrowUp = (p: IconProps) => <Icon {...p}><path d="M12 19V5M5 12l7-7 7 7" /></Icon>;
+export const IconArrowDown = (p: IconProps) => <Icon {...p}><path d="M12 5v14M5 12l7 7 7-7" /></Icon>;
+export const IconSiblings = (p: IconProps) => <Icon {...p}><circle cx="7" cy="9" r="3" /><circle cx="17" cy="9" r="3" /><path d="M2 20a5 5 0 0 1 10 0M12 20a5 5 0 0 1 10 0" /></Icon>;
+export const IconUsers = (p: IconProps) => <Icon {...p}><circle cx="9" cy="8" r="3.5" /><path d="M2 20a7 7 0 0 1 14 0" /><path d="M16 4a3.5 3.5 0 0 1 0 7M22 20a7 7 0 0 0-5-6.7" /></Icon>;
+export const IconFilter = (p: IconProps) => <Icon {...p}><path d="M4 5h16l-6 8v6l-4-2v-4z" /></Icon>;
+export const IconFile = (p: IconProps) => <Icon {...p}><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></Icon>;
+export const IconLink = (p: IconProps) => <Icon {...p}><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" /><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" /></Icon>;
+
+/** Icons available for Pocket categories, drawn by key. */
+export function CategoryGlyph({ name, size = 20 }: { name: string; size?: number }) {
+  const p = { size };
+  switch (name) {
+    case 'wrench': return <Icon {...p}><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.4 2.4-2.1-.5-.5-2.1z" /></Icon>;
+    case 'sofa': return <Icon {...p}><path d="M4 12V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4" /><path d="M2 12h20v6H2z" /><path d="M6 18v2M18 18v2" /></Icon>;
+    case 'hammer': return <Icon {...p}><path d="M14 4l6 6-2 2-6-6z" /><path d="M12 6L4 14l6 6 8-8" /></Icon>;
+    case 'tag': return <IconTag {...p} />;
+    case 'truck': return <Icon {...p}><path d="M2 6h12v10H2z" /><path d="M14 10h4l3 3v3h-7z" /><circle cx="6" cy="18" r="2" /><circle cx="17" cy="18" r="2" /></Icon>;
+    case 'bolt': return <Icon {...p}><path d="M13 2L4 14h7l-1 8 9-12h-7z" /></Icon>;
+    case 'drop': return <Icon {...p}><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z" /></Icon>;
+    case 'paint': return <Icon {...p}><path d="M4 4h12v5H4z" /><path d="M16 6h3v5H9v3" /><path d="M8 14h2v6H8z" /></Icon>;
+    case 'home': return <IconHome {...p} />;
+    case 'doc': return <IconFile {...p} />;
+    case 'cart': return <IconCart {...p} />;
+    case 'heart': return <IconHeart {...p} />;
+    case 'gift': return <Icon {...p}><rect x="3" y="8" width="18" height="4" /><path d="M5 12v9h14v-9M12 8v13" /><path d="M12 8c-2-4-6-4-6-1s4 1 6 1zM12 8c2-4 6-4 6-1s-4 1-6 1z" /></Icon>;
+    case 'car': return <Icon {...p}><path d="M4 16l1.5-6h13L20 16" /><path d="M3 16h18v4h-2l-1-2H6l-1 2H3z" /></Icon>;
+    case 'plane': return <Icon {...p}><path d="M2 14l8-2 4-8 2 1-2 8 7 2-1 2-7-1-3 5H8l1-6-7 1z" /></Icon>;
+    default: return <Icon {...p}><path d="M3 8l9-4 9 4v9l-9 4-9-4z" /><path d="M3 8l9 4 9-4M12 12v9" /></Icon>;
+  }
+}

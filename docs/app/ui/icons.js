@@ -46,3 +46,39 @@ export const IconStar = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M
 export const IconCamera = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M4 8h3l2-3h6l2 3h3v12H4z" }), _jsx("circle", { cx: "12", cy: "13", r: "3.5" })] });
 export const IconMusic = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M9 18V5l11-2v13" }), _jsx("circle", { cx: "6", cy: "18", r: "3" }), _jsx("circle", { cx: "17", cy: "16", r: "3" }), p.off && _jsx("path", { d: "M3 3l18 18" })] });
 export const IconMic = (p) => _jsxs(Icon, { ...p, children: [_jsx("rect", { x: "9", y: "3", width: "6", height: "11", rx: "3" }), _jsx("path", { d: "M5 11a7 7 0 0 0 14 0" }), _jsx("path", { d: "M12 18v3" }), p.off && _jsx("path", { d: "M3 3l18 18" })] });
+// ---- launcher / Pocket / Family Tree ----
+export const IconApps = (p) => _jsxs(Icon, { ...p, children: [_jsx("rect", { x: "3", y: "3", width: "7", height: "7", rx: "2" }), _jsx("rect", { x: "14", y: "3", width: "7", height: "7", rx: "2" }), _jsx("rect", { x: "3", y: "14", width: "7", height: "7", rx: "2" }), _jsx("rect", { x: "14", y: "14", width: "7", height: "7", rx: "2" })] });
+export const IconWallet = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M3 7a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2v3H3z" }), _jsx("path", { d: "M3 10v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8z" }), _jsx("circle", { cx: "16.5", cy: "15", r: "1.4", fill: "currentColor", stroke: "none" })] });
+export const IconTree = (p) => _jsxs(Icon, { ...p, children: [_jsx("circle", { cx: "12", cy: "5", r: "2.5" }), _jsx("circle", { cx: "6", cy: "18", r: "2.5" }), _jsx("circle", { cx: "18", cy: "18", r: "2.5" }), _jsx("path", { d: "M12 7.5V12M12 12H6v3.5M12 12h6v3.5" })] });
+export const IconTag = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M3 12V4h8l9 9-8 8z" }), _jsx("circle", { cx: "7.5", cy: "8.5", r: "1.4", fill: "currentColor", stroke: "none" })] });
+export const IconFit = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" }) });
+export const IconLayers = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M12 3l9 5-9 5-9-5z" }), _jsx("path", { d: "M3 13l9 5 9-5" })] });
+export const IconArrowUp = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M12 19V5M5 12l7-7 7 7" }) });
+export const IconArrowDown = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M12 5v14M5 12l7 7 7-7" }) });
+export const IconSiblings = (p) => _jsxs(Icon, { ...p, children: [_jsx("circle", { cx: "7", cy: "9", r: "3" }), _jsx("circle", { cx: "17", cy: "9", r: "3" }), _jsx("path", { d: "M2 20a5 5 0 0 1 10 0M12 20a5 5 0 0 1 10 0" })] });
+export const IconUsers = (p) => _jsxs(Icon, { ...p, children: [_jsx("circle", { cx: "9", cy: "8", r: "3.5" }), _jsx("path", { d: "M2 20a7 7 0 0 1 14 0" }), _jsx("path", { d: "M16 4a3.5 3.5 0 0 1 0 7M22 20a7 7 0 0 0-5-6.7" })] });
+export const IconFilter = (p) => _jsx(Icon, { ...p, children: _jsx("path", { d: "M4 5h16l-6 8v6l-4-2v-4z" }) });
+export const IconFile = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M6 3h8l4 4v14H6z" }), _jsx("path", { d: "M14 3v4h4" })] });
+export const IconLink = (p) => _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" }), _jsx("path", { d: "M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" })] });
+/** Icons available for Pocket categories, drawn by key. */
+export function CategoryGlyph({ name, size = 20 }) {
+    const p = { size };
+    switch (name) {
+        case 'wrench': return _jsx(Icon, { ...p, children: _jsx("path", { d: "M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.4 2.4-2.1-.5-.5-2.1z" }) });
+        case 'sofa': return _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M4 12V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4" }), _jsx("path", { d: "M2 12h20v6H2z" }), _jsx("path", { d: "M6 18v2M18 18v2" })] });
+        case 'hammer': return _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M14 4l6 6-2 2-6-6z" }), _jsx("path", { d: "M12 6L4 14l6 6 8-8" })] });
+        case 'tag': return _jsx(IconTag, { ...p });
+        case 'truck': return _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M2 6h12v10H2z" }), _jsx("path", { d: "M14 10h4l3 3v3h-7z" }), _jsx("circle", { cx: "6", cy: "18", r: "2" }), _jsx("circle", { cx: "17", cy: "18", r: "2" })] });
+        case 'bolt': return _jsx(Icon, { ...p, children: _jsx("path", { d: "M13 2L4 14h7l-1 8 9-12h-7z" }) });
+        case 'drop': return _jsx(Icon, { ...p, children: _jsx("path", { d: "M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z" }) });
+        case 'paint': return _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M4 4h12v5H4z" }), _jsx("path", { d: "M16 6h3v5H9v3" }), _jsx("path", { d: "M8 14h2v6H8z" })] });
+        case 'home': return _jsx(IconHome, { ...p });
+        case 'doc': return _jsx(IconFile, { ...p });
+        case 'cart': return _jsx(IconCart, { ...p });
+        case 'heart': return _jsx(IconHeart, { ...p });
+        case 'gift': return _jsxs(Icon, { ...p, children: [_jsx("rect", { x: "3", y: "8", width: "18", height: "4" }), _jsx("path", { d: "M5 12v9h14v-9M12 8v13" }), _jsx("path", { d: "M12 8c-2-4-6-4-6-1s4 1 6 1zM12 8c2-4 6-4 6-1s-4 1-6 1z" })] });
+        case 'car': return _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M4 16l1.5-6h13L20 16" }), _jsx("path", { d: "M3 16h18v4h-2l-1-2H6l-1 2H3z" })] });
+        case 'plane': return _jsx(Icon, { ...p, children: _jsx("path", { d: "M2 14l8-2 4-8 2 1-2 8 7 2-1 2-7-1-3 5H8l1-6-7 1z" }) });
+        default: return _jsxs(Icon, { ...p, children: [_jsx("path", { d: "M3 8l9-4 9 4v9l-9 4-9-4z" }), _jsx("path", { d: "M3 8l9 4 9-4M12 12v9" })] });
+    }
+}

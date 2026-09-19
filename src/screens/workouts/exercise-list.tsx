@@ -45,7 +45,7 @@ export function ExerciseListScreen() {
 
   return (
     <Screen>
-      <TopBar large backTo="/workouts" title={t('exercise.titleList')} eyebrow={t('exercise.countInLibrary', { n: exercises?.length ?? 0 })} right={<IconButton label={t('exercise.newExercise')} tone="accent" onClick={() => navigate('/workouts/exercise/new')}><IconPlus /></IconButton>} />
+      <TopBar large backTo="/forma/workouts" title={t('exercise.titleList')} eyebrow={t('exercise.countInLibrary', { n: exercises?.length ?? 0 })} right={<IconButton label={t('exercise.newExercise')} tone="accent" onClick={() => navigate('/forma/workouts/exercise/new')}><IconPlus /></IconButton>} />
       <div className="searchbar">
         <IconSearch size={18} />
         <input className="input" placeholder={t('exercise.searchPlaceholder')} value={q} onChange={(e: { target: HTMLInputElement }) => setQ(e.target.value)} />
@@ -58,7 +58,7 @@ export function ExerciseListScreen() {
       </div>
       <div className="exercise-grid mt">
         {list.map((e) => (
-          <button key={e.id} className="exercise-tile" onClick={() => navigate(`/workouts/exercise/${e.id}`)}>
+          <button key={e.id} className="exercise-tile" onClick={() => navigate(`/forma/workouts/exercise/${e.id}`)}>
             <ExerciseVisual exercise={e} size="box" animated={false} />
             <div className="exercise-name">{localizedExerciseName(e.id, e.name, lang)}</div>
             <div className="exercise-sub">{e.kind === 'time' ? t('exercise.timed') : t('unit.reps')} · MET {e.met} · {equipmentLabel(e.equipment, t)}</div>

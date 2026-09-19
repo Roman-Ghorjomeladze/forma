@@ -60,7 +60,7 @@ export function DishEditScreen({ id }: { id?: string }) {
   useEffect(() => {
     if (!id) return;
     get('dishes', id).then((d) => {
-      if (!d) { navigate('/meals/dishes', { replace: true }); return; }
+      if (!d) { navigate('/forma/meals/dishes', { replace: true }); return; }
       setDish({ ...d, steps: d.steps.length ? d.steps : [''] });
       setTagsText(d.tags.join(', '));
       setUseOverride(!!d.nutritionOverride);
@@ -114,10 +114,10 @@ export function DishEditScreen({ id }: { id?: string }) {
       if (!id && date && slot) {
         await put('mealSlots', { id: uid('slot'), date, slot, dishId: final.id, servings: 1, eaten: false, order: Date.now() });
         toast(t('common.savedAndAddedTo', { meal: LABEL[slot].toLowerCase() }));
-        navigate('/meals', { replace: true });
+        navigate('/forma/meals', { replace: true });
       } else {
         toast(t('common.saved'));
-        navigate(`/meals/dish/${final.id}`, { replace: true });
+        navigate(`/forma/meals/dish/${final.id}`, { replace: true });
       }
     } finally {
       setSaving(false);
@@ -125,9 +125,9 @@ export function DishEditScreen({ id }: { id?: string }) {
   };
 
   const cancel = async () => {
-    if (id) navigate(`/meals/dish/${id}`, { replace: true });
-    else if (dish.name || dish.ingredients.length) { if (await confirmDialog({ title: t('dish.discardTitle'), confirmLabel: t('common.discard'), danger: true })) navigate('/meals/dishes', { replace: true }); }
-    else navigate('/meals/dishes', { replace: true });
+    if (id) navigate(`/forma/meals/dish/${id}`, { replace: true });
+    else if (dish.name || dish.ingredients.length) { if (await confirmDialog({ title: t('dish.discardTitle'), confirmLabel: t('common.discard'), danger: true })) navigate('/forma/meals/dishes', { replace: true }); }
+    else navigate('/forma/meals/dishes', { replace: true });
   };
 
   const override = dish.nutritionOverride ?? computed ?? { kcal: 0, protein: 0, carbs: 0, fat: 0 };

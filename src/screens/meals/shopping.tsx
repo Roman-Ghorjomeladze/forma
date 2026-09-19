@@ -45,7 +45,7 @@ export function ShoppingScreen() {
 
   return (
     <Screen>
-      <TopBar large backTo="/meals" title={t('shopping.title')} eyebrow={formatRange(days[0], days[6])} right={items.length > 0 ? <Button size="sm" variant="secondary" icon={<IconCopy size={16} />} onClick={copy}>{t('common.share')}</Button> : undefined} />
+      <TopBar large backTo="/forma/meals" title={t('shopping.title')} eyebrow={formatRange(days[0], days[6])} right={items.length > 0 ? <Button size="sm" variant="secondary" icon={<IconCopy size={16} />} onClick={copy}>{t('common.share')}</Button> : undefined} />
       {items.length === 0 ? (
         <Empty icon={<IconCart size={40} />} title={t('shopping.nothingToBuy')} text={t('shopping.nothingToBuyHint')} />
       ) : (

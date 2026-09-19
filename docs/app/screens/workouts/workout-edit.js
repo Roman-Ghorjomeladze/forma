@@ -52,7 +52,7 @@ export function WorkoutEditScreen({ id }) {
         get('workouts', id).then((x) => { if (x)
             setW(x);
         else
-            navigate('/workouts', { replace: true }); });
+            navigate('/forma/workouts', { replace: true }); });
     }, [id]);
     const est = useMemo(() => (w && exMap ? estimateWorkout(w, exMap, profile.weightKg) : null), [w, exMap, profile.weightKg]);
     if (!w || !exMap)
@@ -91,12 +91,12 @@ export function WorkoutEditScreen({ id }) {
         }
         await put('workouts', { ...w, name: w.name.trim(), updatedAt: Date.now() });
         toast(t('common.saved'));
-        navigate(`/workouts/${w.id}`, { replace: true });
+        navigate(`/forma/workouts/${w.id}`, { replace: true });
     };
     const cancel = async () => {
         if (dirty && !(await confirmDialog({ title: t('workouts.discardChangesTitle'), confirmLabel: t('common.discard'), danger: true })))
             return;
-        navigate(id ? `/workouts/${id}` : '/workouts', { replace: true });
+        navigate(id ? `/forma/workouts/${id}` : '/forma/workouts', { replace: true });
     };
     const renderBlock = (b, path) => {
         if (b.type === 'group') {
@@ -152,5 +152,5 @@ export function ExercisePicker({ open, onClose, exercises, onPick }) {
         return false;
     })
         .filter((e) => !ql || localizedExerciseName(e.id, e.name, lang).toLowerCase().includes(ql) || e.muscles.some((m) => m.includes(ql)));
-    return (_jsxs(Sheet, { open: open, onClose: onClose, title: t('workouts.addExerciseSheetTitle'), full: true, footer: _jsx(Button, { variant: "secondary", onClick: onClose, children: t('common.done') }), children: [_jsxs("div", { className: "searchbar", children: [_jsx(IconSearch, { size: 18 }), _jsx("input", { className: "input", placeholder: t('workouts.searchExercises'), value: q, onChange: (e) => setQ(e.target.value) })] }), _jsxs("div", { className: "chips", style: { margin: '0 0 10px', padding: 0 }, children: [_jsx(Chip, { tone: "workout", active: groups.size === 0, onClick: () => setGroups(new Set()), children: t('exercise.group.all') }), PICKER_GROUP_DEFS.map((g) => _jsx(Chip, { tone: "workout", active: groups.has(g.key), onClick: () => toggleGroup(g.key), children: t(g.labelKey) }, g.key))] }), _jsxs("div", { className: "list", children: [list.map((e) => (_jsxs(Row, { onClick: () => onPick(e), right: _jsx(IconPlus, { className: "c-workout" }), children: [_jsx(ExerciseVisual, { exercise: e, animated: false }), _jsxs("div", { className: "row-main", children: [_jsx("div", { className: "row-title", children: localizedExerciseName(e.id, e.name, lang) }), _jsxs("div", { className: "row-sub", children: [e.kind === 'time' ? `${e.defaultAmount} ${t('unit.s')}` : `${e.defaultAmount} ${t('unit.reps')}`, " \u00B7 ", e.muscles.join(', ')] })] })] }, e.id))), list.length === 0 && _jsx("div", { className: "empty", children: _jsx("div", { className: "empty-text", children: t('workouts.noExercisesMatch') }) })] }), _jsx(Button, { variant: "secondary", full: true, className: "mt", icon: _jsx(IconPlus, { size: 18 }), onClick: () => { onClose(); navigate('/workouts/exercise/new'); }, children: t('workouts.createCustomExercise') })] }));
+    return (_jsxs(Sheet, { open: open, onClose: onClose, title: t('workouts.addExerciseSheetTitle'), full: true, footer: _jsx(Button, { variant: "secondary", onClick: onClose, children: t('common.done') }), children: [_jsxs("div", { className: "searchbar", children: [_jsx(IconSearch, { size: 18 }), _jsx("input", { className: "input", placeholder: t('workouts.searchExercises'), value: q, onChange: (e) => setQ(e.target.value) })] }), _jsxs("div", { className: "chips", style: { margin: '0 0 10px', padding: 0 }, children: [_jsx(Chip, { tone: "workout", active: groups.size === 0, onClick: () => setGroups(new Set()), children: t('exercise.group.all') }), PICKER_GROUP_DEFS.map((g) => _jsx(Chip, { tone: "workout", active: groups.has(g.key), onClick: () => toggleGroup(g.key), children: t(g.labelKey) }, g.key))] }), _jsxs("div", { className: "list", children: [list.map((e) => (_jsxs(Row, { onClick: () => onPick(e), right: _jsx(IconPlus, { className: "c-workout" }), children: [_jsx(ExerciseVisual, { exercise: e, animated: false }), _jsxs("div", { className: "row-main", children: [_jsx("div", { className: "row-title", children: localizedExerciseName(e.id, e.name, lang) }), _jsxs("div", { className: "row-sub", children: [e.kind === 'time' ? `${e.defaultAmount} ${t('unit.s')}` : `${e.defaultAmount} ${t('unit.reps')}`, " \u00B7 ", e.muscles.join(', ')] })] })] }, e.id))), list.length === 0 && _jsx("div", { className: "empty", children: _jsx("div", { className: "empty-text", children: t('workouts.noExercisesMatch') }) })] }), _jsx(Button, { variant: "secondary", full: true, className: "mt", icon: _jsx(IconPlus, { size: 18 }), onClick: () => { onClose(); navigate('/forma/workouts/exercise/new'); }, children: t('workouts.createCustomExercise') })] }));
 }

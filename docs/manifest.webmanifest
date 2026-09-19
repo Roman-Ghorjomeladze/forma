@@ -1,7 +1,7 @@
 {
   "name": "Forma",
   "short_name": "Forma",
-  "description": "Workouts and meal planning, offline, on your phone.",
+  "description": "Forma (workouts & meals), Pocket (big expenses by project) and Family Tree — offline, on your phone.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

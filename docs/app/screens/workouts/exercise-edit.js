@@ -68,7 +68,7 @@ export function ExerciseEditScreen({ id }) {
             return;
         get('exercises', id).then((e) => {
             if (!e) {
-                navigate('/workouts/exercises', { replace: true });
+                navigate('/forma/workouts/exercises', { replace: true });
                 return;
             }
             setEx(e);
@@ -123,12 +123,12 @@ export function ExerciseEditScreen({ id }) {
         const final = { ...ex, name: ex.name.trim(), muscles: split(muscles), equipment: split(equipment), cues: cues.split('\n').map((c) => c.trim()).filter(Boolean), demo, updatedAt: Date.now() };
         await put('exercises', final);
         toast(t('common.saved'));
-        navigate(`/workouts/exercise/${final.id}`, { replace: true });
+        navigate(`/forma/workouts/exercise/${final.id}`, { replace: true });
     };
     const cancel = async () => {
         if (!id && (ex.name || pending) && !(await confirmDialog({ title: t('exercise.discardTitle'), confirmLabel: t('common.discard'), danger: true })))
             return;
-        navigate(id ? `/workouts/exercise/${id}` : '/workouts/exercises', { replace: true });
+        navigate(id ? `/forma/workouts/exercise/${id}` : '/forma/workouts/exercises', { replace: true });
     };
     const demoUrl = preview ?? existing;
     return (_jsxs(Screen, { className: "screen-no-tabs", children: [_jsx(TopBar, { title: id ? t('exercise.editTitle') : t('exercise.newTitle'), onBack: cancel, right: _jsx(Button, { size: "sm", onClick: save, children: t('common.save') }) }), _jsx(Field, { label: t('exercise.name'), children: _jsx(TextInput, { value: ex.name, onChange: (v) => patch({ name: v }), placeholder: t('exercise.namePlaceholder'), autoFocus: !id }) }), _jsx(Field, { label: t('exercise.muscles'), hint: t('exercise.musclesHint'), children: _jsx(TextInput, { value: muscles, onChange: setMuscles, placeholder: t('exercise.musclesPlaceholder') }) }), _jsx(Field, { label: t('exercise.equipment'), hint: t('exercise.equipmentHint'), children: _jsx(TextInput, { value: equipment, onChange: setEquipment, placeholder: t('exercise.equipmentPlaceholder') }) }), _jsx("div", { className: "section-label mt", children: t('exercise.measuredBy') }), _jsx(Segmented, { value: ex.kind, onChange: (k) => patch({ kind: k, defaultAmount: k === 'time' ? 30 : 12 }), options: [{ value: 'reps', label: t('exercise.reps') }, { value: 'time', label: t('exercise.time') }] }), _jsx("div", { className: "mt" }), _jsx(Field, { label: ex.kind === 'time' ? t('exercise.defaultDuration') : t('exercise.defaultRepsField'), inline: true, children: _jsx(NumberInput, { value: ex.defaultAmount, min: 1, max: 3600, suffix: ex.kind === 'time' ? t('unit.s') : t('unit.reps'), onChange: (v) => patch({ defaultAmount: v }) }) }), ex.kind === 'reps' && _jsx(Field, { label: t('exercise.secPerRep'), inline: true, hint: t('exercise.secPerRepHint'), children: _jsx(NumberInput, { value: ex.secPerRep, min: 0.5, max: 30, suffix: t('unit.s'), onChange: (v) => patch({ secPerRep: v }) }) }), _jsx("div", { className: "section-label mt", children: t('exercise.intensity') }), _jsx("div", { className: "small muted mb", children: t('exercise.intensityHint') }), _jsx(Field, { label: "MET", inline: true, children: _jsx(NumberInput, { value: ex.met, min: 1, max: 20, onChange: (v) => patch({ met: v }) }) }), _jsx("div", { className: "hstack wrap mb", children: MET_PRESETS.map((p) => _jsxs("button", { className: `chip ${ex.met === p.met ? 'chip-active' : ''}`, onClick: () => patch({ met: p.met }), children: [p.label, " \u00B7 ", p.met] }, p.met)) }), _jsx("div", { className: "section-label mt", children: t('exercise.demo') }), _jsx("div", { className: "small muted mb", children: t('exercise.demoHint') }), _jsx("div", { className: "demo-box demo-box-lg mb", onClick: () => (demoUrl || ex.demo.type === 'video' || ex.demo.type === 'builtin') ? setPickingVideo(true) : fileRef.current?.click(), role: "button", children: demoUrl ? _jsx("img", { src: demoUrl, alt: "" })

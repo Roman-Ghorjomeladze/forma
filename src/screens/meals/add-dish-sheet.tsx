@@ -96,7 +96,7 @@ export function AddDishSheet({ open, onClose, date, slot }: { open: boolean; onC
             })}
             {filtered.length === 0 && <div className="empty"><div className="empty-title">{t('dish.noDishesMatch')}</div></div>}
           </div>
-          <Button variant="secondary" full className="mt" icon={<IconPlus size={18} />} onClick={() => { close(); navigate(`/meals/dish/new?date=${date}&slot=${targetSlot}`); }}>{t('dish.createNewDish')}</Button>
+          <Button variant="secondary" full className="mt" icon={<IconPlus size={18} />} onClick={() => { close(); navigate(`/forma/meals/dish/new?date=${date}&slot=${targetSlot}`); }}>{t('dish.createNewDish')}</Button>
         </>
       )}
     </Sheet>

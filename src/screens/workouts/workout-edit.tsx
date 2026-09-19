@@ -50,7 +50,7 @@ export function WorkoutEditScreen({ id }: { id?: string }) {
 
   useEffect(() => {
     if (!id) return;
-    get('workouts', id).then((x) => { if (x) setW(x); else navigate('/workouts', { replace: true }); });
+    get('workouts', id).then((x) => { if (x) setW(x); else navigate('/forma/workouts', { replace: true }); });
   }, [id]);
 
   const est = useMemo(() => (w && exMap ? estimateWorkout(w, exMap, profile.weightKg) : null), [w, exMap, profile.weightKg]);
@@ -88,11 +88,11 @@ export function WorkoutEditScreen({ id }: { id?: string }) {
     if (!w.name.trim()) { toast(t('workouts.giveItAName')); return; }
     await put('workouts', { ...w, name: w.name.trim(), updatedAt: Date.now() });
     toast(t('common.saved'));
-    navigate(`/workouts/${w.id}`, { replace: true });
+    navigate(`/forma/workouts/${w.id}`, { replace: true });
   };
   const cancel = async () => {
     if (dirty && !(await confirmDialog({ title: t('workouts.discardChangesTitle'), confirmLabel: t('common.discard'), danger: true }))) return;
-    navigate(id ? `/workouts/${id}` : '/workouts', { replace: true });
+    navigate(id ? `/forma/workouts/${id}` : '/forma/workouts', { replace: true });
   };
 
   const renderBlock = (b: Block, path: Path) => {
@@ -273,7 +273,7 @@ export function ExercisePicker({ open, onClose, exercises, onPick }: { open: boo
         ))}
         {list.length === 0 && <div className="empty"><div className="empty-text">{t('workouts.noExercisesMatch')}</div></div>}
       </div>
-      <Button variant="secondary" full className="mt" icon={<IconPlus size={18} />} onClick={() => { onClose(); navigate('/workouts/exercise/new'); }}>{t('workouts.createCustomExercise')}</Button>
+      <Button variant="secondary" full className="mt" icon={<IconPlus size={18} />} onClick={() => { onClose(); navigate('/forma/workouts/exercise/new'); }}>{t('workouts.createCustomExercise')}</Button>
     </Sheet>
   );
 }

@@ -71,8 +71,8 @@ export function MealsScreen() {
     <Screen>
       <TopBar large eyebrow={<button onClick={goToday}>{formatRange(days[0], days[6])}{weekStart !== startOfWeek(today, profile.weekStartsOn) ? t('meals.backToToday') : ''}</button>} title={t('meals.title')}
         right={<>
-          <IconButton label={t('meals.shoppingList')} onClick={() => navigate('/meals/shopping?week=' + weekStart)}><IconCart size={20} /></IconButton>
-          <IconButton label={t('meals.dishes')} onClick={() => navigate('/meals/dishes')}><IconBowl size={20} /></IconButton>
+          <IconButton label={t('meals.shoppingList')} onClick={() => navigate('/forma/meals/shopping?week=' + weekStart)}><IconCart size={20} /></IconButton>
+          <IconButton label={t('meals.dishes')} onClick={() => navigate('/forma/meals/dishes')}><IconBowl size={20} /></IconButton>
           <IconButton label={t('meals.more')} onClick={() => setMenu(true)}><IconMore size={20} /></IconButton>
         </>} />
 
@@ -159,7 +159,7 @@ export function MealsScreen() {
               </div>
             </div>
             <div className="divider" />
-            <Button variant="secondary" full onClick={() => { navigate(`/meals/dish/${editing.dishId}`); setEditing(null); }}>{t('meals.viewRecipe')}</Button>
+            <Button variant="secondary" full onClick={() => { navigate(`/forma/meals/dish/${editing.dishId}`); setEditing(null); }}>{t('meals.viewRecipe')}</Button>
             <Button variant="secondary" full icon={<IconCopy size={18} />} onClick={async () => { await put('mealSlots', { ...editing, id: uid('slot'), date: addDays(editing.date, 1), eaten: false }); toast(t('meals.copiedToNextDay')); setEditing(null); }}>{t('meals.copyToNextDay')}</Button>
             <Button variant="danger" full icon={<IconTrash size={18} />} onClick={async () => { await remove('mealSlots', editing.id); setEditing(null); }}>{t('meals.removeFromPlan')}</Button>
           </div>
@@ -176,7 +176,7 @@ export function MealsScreen() {
             if (!ok) return;
             for (const d of days) if (d !== selected) await copyDayTo(d);
           }}>{t('meals.repeatDayForWeek', { day: relativeDay(selected).toLowerCase() })}</Button>
-          <Button variant="secondary" full icon={<IconCart size={18} />} onClick={() => { setMenu(false); navigate('/meals/shopping?week=' + weekStart); }}>{t('meals.shoppingListForWeek')}</Button>
+          <Button variant="secondary" full icon={<IconCart size={18} />} onClick={() => { setMenu(false); navigate('/forma/meals/shopping?week=' + weekStart); }}>{t('meals.shoppingListForWeek')}</Button>
           <Button variant="danger" full icon={<IconTrash size={18} />} disabled={!slots || slots.length === 0} onClick={async () => {
             setMenu(false);
             const ok = await confirmDialog({ title: t('meals.clearWholeWeekTitle'), confirmLabel: t('meals.clearWeek'), danger: true });

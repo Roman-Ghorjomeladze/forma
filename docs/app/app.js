@@ -22,6 +22,16 @@ import { ExerciseDetailScreen } from './screens/workouts/exercise-detail.js';
 import { ExerciseEditScreen } from './screens/workouts/exercise-edit.js';
 import { HistoryScreen } from './screens/workouts/history.js';
 import { SettingsScreen } from './screens/settings.js';
+import { HomeScreen } from './screens/home.js';
+import { PocketProjectsScreen } from './screens/pocket/projects.js';
+import { PocketProjectScreen } from './screens/pocket/project-detail.js';
+import { PocketProjectEditScreen } from './screens/pocket/project-edit.js';
+import { PocketExpenseEditScreen } from './screens/pocket/expense-edit.js';
+import { PocketCategoriesScreen } from './screens/pocket/categories.js';
+import { TreesScreen } from './screens/tree/trees.js';
+import { TreeCanvasScreen } from './screens/tree/canvas.js';
+import { PersonScreen } from './screens/tree/person.js';
+import { seedCategoriesIfEmpty } from './lib/pocket.js';
 function useTheme() {
     const [prefs] = usePrefs();
     useEffect(() => {
@@ -88,6 +98,7 @@ export function App() {
             try {
                 await Promise.all([profileStore.loading, prefsStore.loading]);
                 await seedIfEmpty();
+                await seedCategoriesIfEmpty();
                 if (navigator.storage?.persist)
                     navigator.storage.persist().catch(() => { });
             }
@@ -104,78 +115,117 @@ export function App() {
     const seg = route.segments;
     const top = seg[0] ?? '';
     let screen;
-    let showTabs = true;
+    let showTabs = false;
     if (top === '')
-        screen = _jsx(TodayScreen, {});
-    else if (top === 'meals') {
-        if (seg[1] === 'dishes')
-            screen = _jsx(DishListScreen, {});
-        else if (seg[1] === 'shopping')
-            screen = _jsx(ShoppingScreen, {});
-        else if (seg[1] === 'dish' && seg[2] === 'new') {
-            screen = _jsx(DishEditScreen, {});
-            showTabs = false;
+        screen = _jsx(HomeScreen, {});
+    else if (top === 'forma') {
+        // Forma keeps its own tab bar; its routes live under /forma/*
+        const f = seg.slice(1);
+        const sub = f[0] ?? '';
+        showTabs = true;
+        if (sub === '')
+            screen = _jsx(TodayScreen, {});
+        else if (sub === 'meals') {
+            if (f[1] === 'dishes')
+                screen = _jsx(DishListScreen, {});
+            else if (f[1] === 'shopping')
+                screen = _jsx(ShoppingScreen, {});
+            else if (f[1] === 'dish' && f[2] === 'new') {
+                screen = _jsx(DishEditScreen, {});
+                showTabs = false;
+            }
+            else if (f[1] === 'dish' && f[3] === 'edit') {
+                screen = _jsx(DishEditScreen, { id: f[2] });
+                showTabs = false;
+            }
+            else if (f[1] === 'dish' && f[2]) {
+                screen = _jsx(DishDetailScreen, { id: f[2] });
+                showTabs = false;
+            }
+            else
+                screen = _jsx(MealsScreen, {});
         }
-        else if (seg[1] === 'dish' && seg[3] === 'edit') {
-            screen = _jsx(DishEditScreen, { id: seg[2] });
-            showTabs = false;
-        }
-        else if (seg[1] === 'dish' && seg[2]) {
-            screen = _jsx(DishDetailScreen, { id: seg[2] });
-            showTabs = false;
+        else if (sub === 'workouts') {
+            if (f[1] === 'exercises')
+                screen = _jsx(ExerciseListScreen, {});
+            else if (f[1] === 'history')
+                screen = _jsx(HistoryScreen, {});
+            else if (f[1] === 'exercise' && f[2] === 'new') {
+                screen = _jsx(ExerciseEditScreen, {});
+                showTabs = false;
+            }
+            else if (f[1] === 'exercise' && f[3] === 'edit') {
+                screen = _jsx(ExerciseEditScreen, { id: f[2] });
+                showTabs = false;
+            }
+            else if (f[1] === 'exercise' && f[2]) {
+                screen = _jsx(ExerciseDetailScreen, { id: f[2] });
+                showTabs = false;
+            }
+            else if (f[1] === 'new') {
+                screen = _jsx(WorkoutEditScreen, {});
+                showTabs = false;
+            }
+            else if (f[1] && f[2] === 'edit') {
+                screen = _jsx(WorkoutEditScreen, { id: f[1] });
+                showTabs = false;
+            }
+            else if (f[1] && f[2] === 'play') {
+                screen = _jsx(PlayerScreen, { id: f[1] });
+                showTabs = false;
+            }
+            else if (f[1]) {
+                screen = _jsx(WorkoutDetailScreen, { id: f[1] });
+                showTabs = false;
+            }
+            else
+                screen = _jsx(WorkoutsScreen, {});
         }
         else
-            screen = _jsx(MealsScreen, {});
+            screen = _jsx(TodayScreen, {});
     }
-    else if (top === 'workouts') {
-        if (seg[1] === 'exercises')
-            screen = _jsx(ExerciseListScreen, {});
-        else if (seg[1] === 'history')
-            screen = _jsx(HistoryScreen, {});
-        else if (seg[1] === 'exercise' && seg[2] === 'new') {
-            screen = _jsx(ExerciseEditScreen, {});
-            showTabs = false;
-        }
-        else if (seg[1] === 'exercise' && seg[3] === 'edit') {
-            screen = _jsx(ExerciseEditScreen, { id: seg[2] });
-            showTabs = false;
-        }
-        else if (seg[1] === 'exercise' && seg[2]) {
-            screen = _jsx(ExerciseDetailScreen, { id: seg[2] });
-            showTabs = false;
-        }
-        else if (seg[1] === 'new') {
-            screen = _jsx(WorkoutEditScreen, {});
-            showTabs = false;
-        }
-        else if (seg[1] && seg[2] === 'edit') {
-            screen = _jsx(WorkoutEditScreen, { id: seg[1] });
-            showTabs = false;
-        }
-        else if (seg[1] && seg[2] === 'play') {
-            screen = _jsx(PlayerScreen, { id: seg[1] });
-            showTabs = false;
-        }
-        else if (seg[1]) {
-            screen = _jsx(WorkoutDetailScreen, { id: seg[1] });
-            showTabs = false;
-        }
+    else if (top === 'pocket') {
+        if (seg[1] === 'categories')
+            screen = _jsx(PocketCategoriesScreen, {});
+        else if (seg[1] === 'project' && seg[2] === 'new')
+            screen = _jsx(PocketProjectEditScreen, {});
+        else if (seg[1] === 'project' && seg[3] === 'edit')
+            screen = _jsx(PocketProjectEditScreen, { id: seg[2] });
+        else if (seg[1] === 'project' && seg[2])
+            screen = _jsx(PocketProjectScreen, { id: seg[2] });
+        else if (seg[1] === 'expense' && seg[2] === 'new')
+            screen = _jsx(PocketExpenseEditScreen, {});
+        else if (seg[1] === 'expense' && seg[3] === 'edit')
+            screen = _jsx(PocketExpenseEditScreen, { id: seg[2] });
         else
-            screen = _jsx(WorkoutsScreen, {});
+            screen = _jsx(PocketProjectsScreen, {});
+    }
+    else if (top === 'tree') {
+        if (seg[1] && seg[2] === 'person' && seg[3])
+            screen = _jsx(PersonScreen, { treeId: seg[1], personId: seg[3] });
+        else if (seg[1])
+            screen = _jsx(TreeCanvasScreen, { treeId: seg[1] });
+        else
+            screen = _jsx(TreesScreen, {});
     }
     else if (top === 'settings')
         screen = _jsx(SettingsScreen, {});
+    // Old bookmarks / home-screen icons from before the launcher existed
+    else if (top === 'meals' || top === 'workouts') {
+        navigate('/forma/' + seg.join('/'), { replace: true });
+        screen = _jsx(HomeScreen, {});
+    }
     else
-        screen = _jsx(TodayScreen, {});
-    return (_jsxs("div", { className: "app", children: [screen, showTabs && _jsx(TabBar, { active: top }), sw.waiting && (_jsxs("div", { className: "update-banner", children: [_jsx("span", { children: t('app.updateReady') }), _jsx("button", { className: "btn", onClick: sw.update, children: t('app.update') })] })), _jsx(DialogHost, {})] }));
+        screen = _jsx(HomeScreen, {});
+    return (_jsxs("div", { className: "app", children: [screen, showTabs && _jsx(TabBar, { active: seg[1] ?? '' }), sw.waiting && (_jsxs("div", { className: "update-banner", children: [_jsx("span", { children: t('app.updateReady') }), _jsx("button", { className: "btn", onClick: sw.update, children: t('app.update') })] })), _jsx(DialogHost, {})] }));
 }
 function TabBar({ active }) {
     const t = useT();
     const tabs = [
-        { key: '', label: t('tab.today'), icon: _jsx(IconHome, {}), cls: '' },
-        { key: 'meals', label: t('tab.meals'), icon: _jsx(IconMeals, {}), cls: 'tab-meals' },
-        { key: 'workouts', label: t('tab.workouts'), icon: _jsx(IconDumbbell, {}), cls: 'tab-workouts' },
-        { key: 'settings', label: t('tab.settings'), icon: _jsx(IconSettings, {}), cls: '' },
+        { key: '', label: t('tab.today'), icon: _jsx(IconHome, {}), cls: '', to: '/forma' },
+        { key: 'meals', label: t('tab.meals'), icon: _jsx(IconMeals, {}), cls: 'tab-meals', to: '/forma/meals' },
+        { key: 'workouts', label: t('tab.workouts'), icon: _jsx(IconDumbbell, {}), cls: 'tab-workouts', to: '/forma/workouts' },
+        { key: 'settings', label: t('tab.settings'), icon: _jsx(IconSettings, {}), cls: '', to: '/settings' },
     ];
-    return (_jsx("nav", { className: "tabbar-wrap", children: _jsx("div", { className: "tabbar", children: tabs.map((t) => (_jsxs("button", { className: `tab ${t.cls} ${active === t.key ? 'active' : ''}`, onClick: () => navigate('/' + t.key), "aria-current": active === t.key ? 'page' : undefined, children: [t.icon, _jsx("span", { children: t.label })] }, t.key))) }) }));
+    return (_jsx("nav", { className: "tabbar-wrap", children: _jsx("div", { className: "tabbar", children: tabs.map((t) => (_jsxs("button", { className: `tab ${t.cls} ${active === t.key ? 'active' : ''}`, onClick: () => navigate(t.to), "aria-current": active === t.key ? 'page' : undefined, children: [t.icon, _jsx("span", { children: t.label })] }, t.key))) }) }));
 }
