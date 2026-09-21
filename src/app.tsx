@@ -40,6 +40,9 @@ import { NoteGroupScreen } from './screens/notes/group.js';
 import { NoteViewScreen } from './screens/notes/note-view.js';
 import { NoteEditScreen } from './screens/notes/note-edit.js';
 import { seedNoteGroupsIfEmpty } from './lib/notes.js';
+import { MedsHomeScreen } from './screens/meds/meds.js';
+import { MedEditScreen } from './screens/meds/med-edit.js';
+import { MedDetailScreen } from './screens/meds/med-detail.js';
 
 function useTheme() {
   const [prefs] = usePrefs();
@@ -166,6 +169,11 @@ export function App() {
     else if (seg[1] === 'note' && seg[3] === 'edit') screen = <NoteEditScreen id={seg[2]} />;
     else if (seg[1] === 'note' && seg[2]) screen = <NoteViewScreen id={seg[2]} />;
     else screen = <NotesHomeScreen />;
+  } else if (top === 'meds') {
+    if (seg[1] === 'new') screen = <MedEditScreen />;
+    else if (seg[1] && seg[2] === 'edit') screen = <MedEditScreen id={seg[1]} />;
+    else if (seg[1]) screen = <MedDetailScreen id={seg[1]} />;
+    else screen = <MedsHomeScreen />;
   } else if (top === 'settings') screen = <SettingsScreen />;
   // Old bookmarks / home-screen icons from before the launcher existed
   else if (top === 'meals' || top === 'workouts') { navigate('/forma/' + seg.join('/'), { replace: true }); screen = <HomeScreen />; }

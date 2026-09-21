@@ -110,3 +110,20 @@ export function useNotesInGroup(groupId) {
 export function useNote(id) {
     return useLiveQuery(async () => (id ? (await get('notes', id)) ?? null : null), ['notes'], [id]);
 }
+// ---- Meds -----------------------------------------------------------------------------------
+const STATUS_ORDER = { active: 0, paused: 1, done: 2 };
+export function useMedications() {
+    return useLiveQuery(async () => (await getAll('medications')).sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || a.createdAt - b.createdAt), ['medications']);
+}
+export function useMedication(id) {
+    return useLiveQuery(async () => (id ? (await get('medications', id)) ?? null : null), ['medications'], [id]);
+}
+export function useDoseLogs(date) {
+    return useLiveQuery(async () => getByIndex('doseLogs', 'date', date), ['doseLogs'], [date]);
+}
+export function useDoseLogsInRange(from, to) {
+    return useLiveQuery(async () => getByIndex('doseLogs', 'date', IDBKeyRange.bound(from, to)), ['doseLogs'], [from, to]);
+}
+export function useMedLogs(medId) {
+    return useLiveQuery(async () => (medId ? (await getByIndex('doseLogs', 'medId', medId)).sort((a, b) => b.at - a.at) : []), ['doseLogs'], [medId]);
+}

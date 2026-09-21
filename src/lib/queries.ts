@@ -1,6 +1,6 @@
 import { get, getAll, getByIndex } from './db.js';
 import { useLiveQuery } from './hooks.js';
-import type { Category, Dish, Exercise, Expense, MealSlot, MusicTrack, Note, NoteGroup, Person, Project, QuizResult, ScheduleEntry, Session, Tree, Union, Workout } from './models.js';
+import type { Category, Dish, DoseLog, Exercise, Expense, MealSlot, Medication, MusicTrack, Note, NoteGroup, Person, Project, QuizResult, ScheduleEntry, Session, Tree, Union, Workout } from './models.js';
 
 export function useExercises(): Exercise[] | undefined {
   return useLiveQuery(async () => (await getAll('exercises')).sort((a, b) => a.name.localeCompare(b.name)), ['exercises']);
@@ -142,4 +142,26 @@ export function useNotesInGroup(groupId: string | undefined): Note[] | undefined
 
 export function useNote(id: string | undefined): Note | null | undefined {
   return useLiveQuery(async () => (id ? (await get('notes', id)) ?? null : null), ['notes'], [id]);
+}
+
+// ---- Meds -----------------------------------------------------------------------------------
+const STATUS_ORDER = { active: 0, paused: 1, done: 2 };
+export function useMedications(): Medication[] | undefined {
+  return useLiveQuery(async () => (await getAll('medications')).sort((a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || a.createdAt - b.createdAt), ['medications']);
+}
+
+export function useMedication(id: string | undefined): Medication | null | undefined {
+  return useLiveQuery(async () => (id ? (await get('medications', id)) ?? null : null), ['medications'], [id]);
+}
+
+export function useDoseLogs(date: string): DoseLog[] | undefined {
+  return useLiveQuery(async () => getByIndex('doseLogs', 'date', date), ['doseLogs'], [date]);
+}
+
+export function useDoseLogsInRange(from: string, to: string): DoseLog[] | undefined {
+  return useLiveQuery(async () => getByIndex('doseLogs', 'date', IDBKeyRange.bound(from, to)), ['doseLogs'], [from, to]);
+}
+
+export function useMedLogs(medId: string | undefined): DoseLog[] | undefined {
+  return useLiveQuery(async () => (medId ? (await getByIndex('doseLogs', 'medId', medId)).sort((a, b) => b.at - a.at) : []), ['doseLogs'], [medId]);
 }

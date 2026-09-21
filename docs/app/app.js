@@ -41,6 +41,9 @@ import { NoteGroupScreen } from './screens/notes/group.js';
 import { NoteViewScreen } from './screens/notes/note-view.js';
 import { NoteEditScreen } from './screens/notes/note-edit.js';
 import { seedNoteGroupsIfEmpty } from './lib/notes.js';
+import { MedsHomeScreen } from './screens/meds/meds.js';
+import { MedEditScreen } from './screens/meds/med-edit.js';
+import { MedDetailScreen } from './screens/meds/med-detail.js';
 function useTheme() {
     const [prefs] = usePrefs();
     useEffect(() => {
@@ -239,6 +242,16 @@ export function App() {
             screen = _jsx(NoteViewScreen, { id: seg[2] });
         else
             screen = _jsx(NotesHomeScreen, {});
+    }
+    else if (top === 'meds') {
+        if (seg[1] === 'new')
+            screen = _jsx(MedEditScreen, {});
+        else if (seg[1] && seg[2] === 'edit')
+            screen = _jsx(MedEditScreen, { id: seg[1] });
+        else if (seg[1])
+            screen = _jsx(MedDetailScreen, { id: seg[1] });
+        else
+            screen = _jsx(MedsHomeScreen, {});
     }
     else if (top === 'settings')
         screen = _jsx(SettingsScreen, {});

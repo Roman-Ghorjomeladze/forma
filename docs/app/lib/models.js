@@ -37,3 +37,6 @@ export const UNION_STATUSES = ['married', 'partners', 'divorced', 'separated', '
 export const CONTINENTS = ['Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania'];
 export const QUIZ_MODES = ['flag', 'country', 'capital'];
 export const QUIZ_LENGTH = 10;
+export const MED_KINDS = ['medicine', 'supplement'];
+export const MED_FORMS = ['tablet', 'capsule', 'drops', 'ml', 'sachet', 'injection', 'puff', 'other'];
+export const DOSE_HINTS = ['none', 'beforeMeal', 'afterMeal', 'withFood', 'emptyStomach', 'beforeSleep', 'onWaking', 'plentyWater', 'noDairy', 'noAlcohol', 'stayUpright'];

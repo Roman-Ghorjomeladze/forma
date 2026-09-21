@@ -1,13 +1,13 @@
 # Forma — and friends
 
-A single personal iPhone **Progressive Web App** that hosts five apps behind one launcher: you open it in Safari
+A single personal iPhone **Progressive Web App** that hosts six apps behind one launcher: you open it in Safari
 once, tap *Add to Home Screen*, and from then on it runs full-screen, offline, with your data stored on the phone.
 No Apple developer account, no App Store, no Xcode. Everything is in English and Georgian (ქართული).
 
 ## Home (launcher)
 
 The root screen lists the apps with a live one-liner each (today's workout & planned kcal, the active project's
-spend vs budget, how many people are in your tree, your best flag quiz, the last note you touched), quick-add
+spend vs budget, how many people are in your tree, your best flag quiz, the last note you touched, the next medicine dose), quick-add
 shortcuts, and the shared Settings (name shown in the greeting, theme, language, backup/restore of *all* apps' data).
 
 ## Forma — workouts & meals (`#/forma`)
@@ -60,12 +60,31 @@ shortcuts, and the shared Settings (name shown in the greeting, theme, language,
   the URL so *back* returns to the same results. Tag chips on the home and inside a group filter by tag.
 - Notes are two tables in the same IndexedDB (`noteGroups`, `notes`) — so the Settings backup includes them.
 
+## Meds — medicine courses, dose by dose (`#/meds`)
+
+- A **medication** (medicine or supplement) has a name, strength, form (tablets, drops, ml…), colour, who it's
+  for, start date, optional weekday filter, optional stock counter and notes.
+- Its **schedule is a sequence of phases**: each phase lasts N days (the last one may be open-ended) and has its
+  own dose times — amount, a hint (before/after meal, with food, empty stomach, before sleep, on waking, plenty
+  of water, not with dairy, no alcohol, stay upright), a free note, and optionally *"N minutes after <another
+  medication>"* so the Today list shows the chain. *Add next phase* copies the previous phase; *Every N hours…*
+  fills a phase from a start/end time.
+- **Today** shows the next dose (countdown, *Taken* / *Skip*), then the day's doses grouped by time with
+  due / late / taken / skipped states; tapping the circle marks taken (again to undo). Stock counts down on each
+  taken dose and warns before it runs out. While the app is open a chime + banner fires at dose time.
+- **Detail**: progress through the course, the full phase schedule, 30-day adherence (percent, taken, missed,
+  streak) with a 14-day strip, pause / resume / finish, and a dose history.
+- **Alerts on the phone**: a web app can't ring in the background, so *Add to Calendar* exports the whole course
+  as an `.ics` file — one repeating event per phase × time with an alarm — that the iPhone Calendar imports with
+  *Add All*. *Share* sends the schedule as plain text (for a doctor or family).
+- Tables `medications` and `doseLogs` are part of the Settings backup.
+
 ## Backup & restore
 
-*Settings → Export backup* writes one JSON file with **every** table (Forma, Pocket, Family Tree, Flags, Notes,
+*Settings → Export backup* writes one JSON file with **every** table (Forma, Pocket, Family Tree, Flags, Notes, Meds,
 your profile and preferences, dish/person photos and music as base64). *Restore from backup* reads it back —
 *Replace all* wipes first, *Merge* upserts by id — and a backup made by an older version simply restores the
-tables it has. `tools/verify-notes.mjs` runs an export → erase → import round-trip in headless Chromium and
+tables it has. `tools/verify-notes.mjs` and `tools/verify-meds.mjs` run an export → erase → import round-trip in headless Chromium and
 checks every table is identical.
 
 ## Zero dependencies
@@ -80,11 +99,11 @@ specifically so GitHub Pages can serve it directly via its `/docs` folder option
 public/        static shell: index.html, styles.css, manifest, icons, vendored React
 src/           TypeScript sources (compiled by tsc to docs/app)
   lib/         db (IndexedDB), hooks, router, dates, i18n, calories, nutrition, audio, backup, workout-share,
-               pocket (totals/CSV), tree (relationships), tree-layout (generation layout), flags (quiz), notes (search)
+               pocket (totals/CSV), tree (relationships), tree-layout (generation layout), flags (quiz), notes (search), meds (phase engine, .ics)
   data/        starter exercises, dishes, sample workouts + week plan
   ui/          components, icons, animated exercise demos, dialogs
-  screens/     home (launcher), today, meals/*, workouts/*, pocket/*, tree/*, flags/*, notes/*, settings
-tools/         build.mjs, dev.mjs, serve.mjs, bundle-react.mjs, icons.mjs, sw.template.js, verify-notes.mjs
+  screens/     home (launcher), today, meals/*, workouts/*, pocket/*, tree/*, flags/*, notes/*, meds/*, settings
+tools/         build.mjs, dev.mjs, serve.mjs, bundle-react.mjs, icons.mjs, sw.template.js, verify-notes.mjs, verify-meds.mjs
 docs/          the deployable app (generated by `npm run build`)
 ```
 

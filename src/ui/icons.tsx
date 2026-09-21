@@ -99,3 +99,7 @@ export const IconNotes = (p: IconProps) => <Icon {...p}><path d="M6 3h12a1 1 0 0
 export const IconCheckSquare = (p: IconProps) => <Icon {...p}><rect x="4" y="4" width="16" height="16" rx="4" /><path d="M8.5 12.5l2.5 2.5 4.5-5" /></Icon>;
 export const IconPinFilled = (p: IconProps) => <Icon {...p}><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z" fill="currentColor" /><circle cx="12" cy="10" r="2.2" fill="var(--bg)" stroke="none" /></Icon>;
 export const IconExternal = (p: IconProps) => <Icon {...p}><path d="M14 4h6v6" /><path d="M20 4l-9 9" /><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" /></Icon>;
+export const IconPill = (p: IconProps) => <Icon {...p}><rect x="3" y="8.5" width="18" height="7" rx="3.5" transform="rotate(-45 12 12)" /><path d="M8.5 15.5l7-7" /></Icon>;
+export const IconCalendarPlus = (p: IconProps) => <Icon {...p}><rect x="3" y="5" width="18" height="16" rx="3" /><path d="M3 10h18M8 3v4M16 3v4" /><path d="M12 13v5M9.5 15.5h5" /></Icon>;
+export const IconSkip = (p: IconProps) => <Icon {...p}><circle cx="12" cy="12" r="9" /><path d="M8 8l8 8M16 8l-8 8" /></Icon>;
+export const IconBell = (p: IconProps) => <Icon {...p}><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" /><path d="M10 20a2 2 0 0 0 4 0" /></Icon>;

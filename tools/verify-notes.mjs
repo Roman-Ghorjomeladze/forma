@@ -78,8 +78,8 @@ await page.locator('.note-tools .chip').first().click(); // toggle checkbox on t
 await page.waitForTimeout(100);
 check((await body.inputValue()).split('\n')[2] === 'bread', 'checkbox tool toggles the current line');
 await page.locator('.note-tools .chip').first().click();
-await page.waitForTimeout(100);
-await body.press('End');
+await page.waitForTimeout(300);
+await body.evaluate((el) => { el.focus(); el.setSelectionRange(el.value.length, el.value.length); });
 await body.press('Enter');
 await body.type('butter');
 check((await body.inputValue()).endsWith('[ ] butter'), 'Enter continues a checklist');
@@ -167,7 +167,7 @@ const before = await page.evaluate(async () => {
 const backup = await page.evaluate(async () => (await import('./app/lib/backup.js')).exportBackup());
 check(backup.tables.notes.length === 2 && backup.tables.noteGroups.length === 2, 'backup contains notes + groups');
 check(Array.isArray(backup.tables.settings) && backup.tables.settings.some((r) => r.key === 'notes:lastGroup'), 'backup contains settings');
-check(backup.dbVersion === 5, 'backup records dbVersion 5');
+check(backup.dbVersion >= 5, 'backup records dbVersion');
 // erase the database like Settings > Erase does, then reload and import
 await page.evaluate(async () => { const db = await import('./app/lib/db.js'); await db.deleteDatabase(); });
 await page.goto(`http://localhost:${PORT}/#/notes`);

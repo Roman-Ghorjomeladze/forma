@@ -321,3 +321,77 @@ export interface Note {
   createdAt: number;
   updatedAt: number;
 }
+
+// ============================================================================================
+// Meds — medicine courses. A course is a sequence of phases; each phase lasts N days (0 = until
+// stopped) and has dose slots at fixed times. Every taken/skipped dose is logged (one row per
+// medication × date × slot). Alerts come from the phone's Calendar via .ics export.
+// ============================================================================================
+export type MedKind = 'medicine' | 'supplement';
+export const MED_KINDS: MedKind[] = ['medicine', 'supplement'];
+
+export type MedForm = 'tablet' | 'capsule' | 'drops' | 'ml' | 'sachet' | 'injection' | 'puff' | 'other';
+export const MED_FORMS: MedForm[] = ['tablet', 'capsule', 'drops', 'ml', 'sachet', 'injection', 'puff', 'other'];
+
+export type DoseHint = 'none' | 'beforeMeal' | 'afterMeal' | 'withFood' | 'emptyStomach' | 'beforeSleep' | 'onWaking' | 'plentyWater' | 'noDairy' | 'noAlcohol' | 'stayUpright';
+export const DOSE_HINTS: DoseHint[] = ['none', 'beforeMeal', 'afterMeal', 'withFood', 'emptyStomach', 'beforeSleep', 'onWaking', 'plentyWater', 'noDairy', 'noAlcohol', 'stayUpright'];
+
+export interface DoseSlot {
+  id: string;
+  time: string; // "HH:MM" local
+  /** Number of units (tablets, ml, drops…) — free text so "1/2" or "2 puffs" work too. */
+  amount: string;
+  hint: DoseHint;
+  /** "Take N minutes after <another medication>" — the Today list annotates the chain. */
+  afterMedId?: string;
+  gapMin?: number;
+  note: string;
+}
+
+export interface Phase {
+  id: string;
+  /** Optional label ("Week 1", "Loading dose"). */
+  label: string;
+  /** Length in days; 0 = open-ended (only meaningful for the last phase). */
+  days: number;
+  slots: DoseSlot[];
+}
+
+export type MedStatus = 'active' | 'paused' | 'done';
+
+export interface Medication {
+  id: string;
+  kind: MedKind;
+  name: string;
+  /** Strength per unit, free text: "500 mg", "5 mg/ml". */
+  strength: string;
+  form: MedForm;
+  color: string;
+  /** Who takes it — free text ("me", "Nino"); empty = me. */
+  person: string;
+  /** Why / prescribed by — free text. */
+  notes: string;
+  startDate: string; // YYYY-MM-DD, first day of phase 1
+  /** 0 = Sunday … 6 = Saturday; empty = every day. */
+  weekdays: number[];
+  phases: Phase[];
+  status: MedStatus;
+  /** Optional stock (units left; decremented on every "taken"). */
+  stock?: number;
+  stockWarnAt?: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type DoseStatus = 'taken' | 'skipped';
+
+export interface DoseLog {
+  /** `${medId}_${date}_${slotId}` */
+  id: string;
+  medId: string;
+  date: string; // YYYY-MM-DD
+  slotId: string;
+  status: DoseStatus;
+  /** When it was marked. */
+  at: number;
+}
