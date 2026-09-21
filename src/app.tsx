@@ -35,6 +35,11 @@ import { FlagsSliderScreen } from './screens/flags/slider.js';
 import { FlagsGridScreen } from './screens/flags/grid.js';
 import { FlagsQuizSetupScreen } from './screens/flags/quiz-setup.js';
 import { FlagsQuizPlayScreen } from './screens/flags/quiz-play.js';
+import { NotesHomeScreen } from './screens/notes/notes.js';
+import { NoteGroupScreen } from './screens/notes/group.js';
+import { NoteViewScreen } from './screens/notes/note-view.js';
+import { NoteEditScreen } from './screens/notes/note-edit.js';
+import { seedNoteGroupsIfEmpty } from './lib/notes.js';
 
 function useTheme() {
   const [prefs] = usePrefs();
@@ -95,6 +100,7 @@ export function App() {
         await Promise.all([profileStore.loading, prefsStore.loading]);
         await seedIfEmpty();
         await seedCategoriesIfEmpty();
+        await seedNoteGroupsIfEmpty();
         if (navigator.storage?.persist) navigator.storage.persist().catch(() => {});
       } catch (e) {
         console.error('startup failed', e);
@@ -154,6 +160,12 @@ export function App() {
     else if (seg[1] === 'quiz' && seg[2] === 'play') screen = <FlagsQuizPlayScreen />;
     else if (seg[1] === 'quiz') screen = <FlagsQuizSetupScreen />;
     else screen = <FlagsSliderScreen />;
+  } else if (top === 'notes') {
+    if (seg[1] === 'group' && seg[2]) screen = <NoteGroupScreen id={seg[2]} />;
+    else if (seg[1] === 'note' && seg[2] === 'new') screen = <NoteEditScreen />;
+    else if (seg[1] === 'note' && seg[3] === 'edit') screen = <NoteEditScreen id={seg[2]} />;
+    else if (seg[1] === 'note' && seg[2]) screen = <NoteViewScreen id={seg[2]} />;
+    else screen = <NotesHomeScreen />;
   } else if (top === 'settings') screen = <SettingsScreen />;
   // Old bookmarks / home-screen icons from before the launcher existed
   else if (top === 'meals' || top === 'workouts') { navigate('/forma/' + seg.join('/'), { replace: true }); screen = <HomeScreen />; }

@@ -181,6 +181,7 @@ export function SettingsScreen() {
       <div className="settings-group">
         <div className="section-label">{t('settings.backup')}</div>
         <div className="small muted mb">{t('settings.backupHint')}</div>
+        <div className="small muted mb">{t('settings.backupIncludes')}</div>
         <div className="stack">
           <Button variant="secondary" full icon={<IconDownload size={18} />} disabled={busy} onClick={doExport}>{t('settings.exportBackup')}</Button>
           <Button variant="secondary" full icon={<IconUpload size={18} />} disabled={busy} onClick={() => fileRef.current?.click()}>{t('settings.restoreFromBackup')}</Button>

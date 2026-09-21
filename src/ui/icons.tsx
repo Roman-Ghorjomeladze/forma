@@ -95,3 +95,7 @@ export const IconFlag = (p: IconProps) => <Icon {...p}><path d="M5 21V4" /><path
 export const IconPin = (p: IconProps) => <Icon {...p}><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z" /><circle cx="12" cy="10" r="2.2" /></Icon>;
 export const IconShuffle = (p: IconProps) => <Icon {...p}><path d="M16 3h5v5" /><path d="M4 20L21 3" /><path d="M21 16v5h-5" /><path d="M15 15l6 6" /><path d="M4 4l5 5" /></Icon>;
 export const IconGlobe = (p: IconProps) => <Icon {...p}><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></Icon>;
+export const IconNotes = (p: IconProps) => <Icon {...p}><path d="M6 3h12a1 1 0 0 1 1 1v13l-4 4H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" /><path d="M15 21v-4h4" /><path d="M9 8h6M9 12h6" /></Icon>;
+export const IconCheckSquare = (p: IconProps) => <Icon {...p}><rect x="4" y="4" width="16" height="16" rx="4" /><path d="M8.5 12.5l2.5 2.5 4.5-5" /></Icon>;
+export const IconPinFilled = (p: IconProps) => <Icon {...p}><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z" fill="currentColor" /><circle cx="12" cy="10" r="2.2" fill="var(--bg)" stroke="none" /></Icon>;
+export const IconExternal = (p: IconProps) => <Icon {...p}><path d="M14 4h6v6" /><path d="M20 4l-9 9" /><path d="M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5" /></Icon>;

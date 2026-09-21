@@ -1,10 +1,12 @@
 // JSON backup / restore of the whole database (blobs are base64-encoded).
-import { ALL_TABLES, bulkPut, clear, getAll, notify, type TableName } from './db.js';
+import { ALL_TABLES, DB_VERSION, bulkPut, clear, getAll, notify, type TableName } from './db.js';
 import type { StoredBlob } from './models.js';
 
 export interface BackupFile {
   app: 'forma';
   version: 1;
+  /** Schema version of the database that wrote the file (informational; missing tables import as empty). */
+  dbVersion?: number;
   exportedAt: string;
   tables: Record<string, unknown[]>;
 }
@@ -35,7 +37,7 @@ export async function exportBackup(): Promise<BackupFile> {
       tables[t] = rows;
     }
   }
-  return { app: 'forma', version: 1, exportedAt: new Date().toISOString(), tables };
+  return { app: 'forma', version: 1, dbVersion: DB_VERSION, exportedAt: new Date().toISOString(), tables };
 }
 
 export async function importBackup(file: BackupFile, mode: 'replace' | 'merge'): Promise<void> {

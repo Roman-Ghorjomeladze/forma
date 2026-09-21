@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { getSetting, setSetting } from '../../lib/db.js';
 import { formatRange, startOfWeek, todayKey, weekDays } from '../../lib/dates.js';
-import { useProfile } from '../../lib/hooks.js';
+import { useLiveQuery, useProfile } from '../../lib/hooks.js';
 import { useT } from '../../lib/i18n.js';
 import { fmtAmount, shoppingList } from '../../lib/nutrition.js';
 import { useDishMap, useMealSlots } from '../../lib/queries.js';
@@ -17,11 +18,20 @@ export function ShoppingScreen() {
   const days = useMemo(() => weekDays(weekStart), [weekStart]);
   const slots = useMealSlots(days);
   const dishes = useDishMap();
-  const [done, setDone] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    try { const raw = localStorage.getItem('forma:shop:' + weekStart); if (raw) setDone(new Set(JSON.parse(raw))); } catch { /* ignore */ }
-  }, [weekStart]);
+  // Checked-off items live in the settings table (so they are part of the backup); older
+  // installs kept them in localStorage — migrate that once.
+  const key = 'shop:' + weekStart;
+  const doneList = useLiveQuery(async () => {
+    const stored = await getSetting<string[] | null>(key, null);
+    if (stored) return stored;
+    try {
+      const raw = localStorage.getItem('forma:shop:' + weekStart);
+      if (raw) { const list = JSON.parse(raw) as string[]; await setSetting(key, list); localStorage.removeItem('forma:shop:' + weekStart); return list; }
+    } catch { /* ignore */ }
+    return [];
+  }, ['settings'], [key]);
+  const done = useMemo(() => new Set(doneList ?? []), [doneList]);
+  const setDone = (next: Set<string>) => { setSetting(key, [...next]); };
 
   const items = useMemo(() => (slots && dishes ? shoppingList(slots, dishes) : []), [slots, dishes]);
 
@@ -29,7 +39,6 @@ export function ShoppingScreen() {
     const next = new Set(done);
     if (next.has(key)) next.delete(key); else next.add(key);
     setDone(next);
-    try { localStorage.setItem('forma:shop:' + weekStart, JSON.stringify([...next])); } catch { /* ignore */ }
   };
 
   const copy = async () => {
@@ -50,7 +59,7 @@ export function ShoppingScreen() {
         <Empty icon={<IconCart size={40} />} title={t('shopping.nothingToBuy')} text={t('shopping.nothingToBuyHint')} />
       ) : (
         <>
-          <div className="spread mb"><span className="small muted">{t('shopping.itemsLeft', { done: remaining, total: items.length })}</span>{done.size > 0 && <button className="small c-meals bold" onClick={() => { setDone(new Set()); localStorage.removeItem('forma:shop:' + weekStart); }}>{t('common.uncheckAll')}</button>}</div>
+          <div className="spread mb"><span className="small muted">{t('shopping.itemsLeft', { done: remaining, total: items.length })}</span>{done.size > 0 && <button className="small c-meals bold" onClick={() => setDone(new Set())}>{t('common.uncheckAll')}</button>}</div>
           <div className="list">
             {items.map((i) => (
               <button key={i.key} className={`shop-item ${done.has(i.key) ? 'done' : ''}`} onClick={() => toggle(i.key)}>

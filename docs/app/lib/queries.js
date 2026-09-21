@@ -90,3 +90,23 @@ export function useAllUnions() {
 export function useQuizResults() {
     return useLiveQuery(async () => (await getAll('quizResults')).sort((a, b) => b.playedAt - a.playedAt), ['quizResults']);
 }
+// ---- Notes ----------------------------------------------------------------------------------
+export function useNoteGroups() {
+    return useLiveQuery(async () => (await getAll('noteGroups')).sort((a, b) => a.order - b.order || a.createdAt - b.createdAt), ['noteGroups']);
+}
+export function useNoteGroup(id) {
+    return useLiveQuery(async () => (id ? (await get('noteGroups', id)) ?? null : null), ['noteGroups'], [id]);
+}
+/** Pinned first, then most recently edited. */
+export function sortNotes(rows) {
+    return rows.sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt - a.updatedAt);
+}
+export function useAllNotes() {
+    return useLiveQuery(async () => sortNotes(await getAll('notes')), ['notes']);
+}
+export function useNotesInGroup(groupId) {
+    return useLiveQuery(async () => (groupId ? sortNotes(await getByIndex('notes', 'groupId', groupId)) : []), ['notes'], [groupId]);
+}
+export function useNote(id) {
+    return useLiveQuery(async () => (id ? (await get('notes', id)) ?? null : null), ['notes'], [id]);
+}

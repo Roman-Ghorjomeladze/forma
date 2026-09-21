@@ -36,6 +36,11 @@ import { FlagsSliderScreen } from './screens/flags/slider.js';
 import { FlagsGridScreen } from './screens/flags/grid.js';
 import { FlagsQuizSetupScreen } from './screens/flags/quiz-setup.js';
 import { FlagsQuizPlayScreen } from './screens/flags/quiz-play.js';
+import { NotesHomeScreen } from './screens/notes/notes.js';
+import { NoteGroupScreen } from './screens/notes/group.js';
+import { NoteViewScreen } from './screens/notes/note-view.js';
+import { NoteEditScreen } from './screens/notes/note-edit.js';
+import { seedNoteGroupsIfEmpty } from './lib/notes.js';
 function useTheme() {
     const [prefs] = usePrefs();
     useEffect(() => {
@@ -103,6 +108,7 @@ export function App() {
                 await Promise.all([profileStore.loading, prefsStore.loading]);
                 await seedIfEmpty();
                 await seedCategoriesIfEmpty();
+                await seedNoteGroupsIfEmpty();
                 if (navigator.storage?.persist)
                     navigator.storage.persist().catch(() => { });
             }
@@ -221,6 +227,18 @@ export function App() {
             screen = _jsx(FlagsQuizSetupScreen, {});
         else
             screen = _jsx(FlagsSliderScreen, {});
+    }
+    else if (top === 'notes') {
+        if (seg[1] === 'group' && seg[2])
+            screen = _jsx(NoteGroupScreen, { id: seg[2] });
+        else if (seg[1] === 'note' && seg[2] === 'new')
+            screen = _jsx(NoteEditScreen, {});
+        else if (seg[1] === 'note' && seg[3] === 'edit')
+            screen = _jsx(NoteEditScreen, { id: seg[2] });
+        else if (seg[1] === 'note' && seg[2])
+            screen = _jsx(NoteViewScreen, { id: seg[2] });
+        else
+            screen = _jsx(NotesHomeScreen, {});
     }
     else if (top === 'settings')
         screen = _jsx(SettingsScreen, {});

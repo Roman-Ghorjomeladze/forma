@@ -1,6 +1,6 @@
 import { get, getAll, getByIndex } from './db.js';
 import { useLiveQuery } from './hooks.js';
-import type { Category, Dish, Exercise, Expense, MealSlot, MusicTrack, Person, Project, QuizResult, ScheduleEntry, Session, Tree, Union, Workout } from './models.js';
+import type { Category, Dish, Exercise, Expense, MealSlot, MusicTrack, Note, NoteGroup, Person, Project, QuizResult, ScheduleEntry, Session, Tree, Union, Workout } from './models.js';
 
 export function useExercises(): Exercise[] | undefined {
   return useLiveQuery(async () => (await getAll('exercises')).sort((a, b) => a.name.localeCompare(b.name)), ['exercises']);
@@ -116,4 +116,30 @@ export function useAllUnions(): Union[] | undefined {
 
 export function useQuizResults(): QuizResult[] | undefined {
   return useLiveQuery(async () => (await getAll('quizResults')).sort((a, b) => b.playedAt - a.playedAt), ['quizResults']);
+}
+
+// ---- Notes ----------------------------------------------------------------------------------
+export function useNoteGroups(): NoteGroup[] | undefined {
+  return useLiveQuery(async () => (await getAll('noteGroups')).sort((a, b) => a.order - b.order || a.createdAt - b.createdAt), ['noteGroups']);
+}
+
+export function useNoteGroup(id: string | undefined): NoteGroup | null | undefined {
+  return useLiveQuery(async () => (id ? (await get('noteGroups', id)) ?? null : null), ['noteGroups'], [id]);
+}
+
+/** Pinned first, then most recently edited. */
+export function sortNotes(rows: Note[]): Note[] {
+  return rows.sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt - a.updatedAt);
+}
+
+export function useAllNotes(): Note[] | undefined {
+  return useLiveQuery(async () => sortNotes(await getAll('notes')), ['notes']);
+}
+
+export function useNotesInGroup(groupId: string | undefined): Note[] | undefined {
+  return useLiveQuery(async () => (groupId ? sortNotes(await getByIndex('notes', 'groupId', groupId)) : []), ['notes'], [groupId]);
+}
+
+export function useNote(id: string | undefined): Note | null | undefined {
+  return useLiveQuery(async () => (id ? (await get('notes', id)) ?? null : null), ['notes'], [id]);
 }

@@ -295,3 +295,29 @@ export interface QuizResult {
   missed: string[];
   playedAt: number;
 }
+
+// ============================================================================================
+// Notes — groups of free-form notes. A note body is plain text; lines that start with "[ ]" or
+// "[x]" render as tappable checkboxes and URLs are detected at render time. Tags are free-form.
+// ============================================================================================
+export interface NoteGroup {
+  id: string;
+  name: string;
+  color: string; // hex, from CATEGORY_COLORS
+  icon: CategoryIcon;
+  order: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface Note {
+  id: string;
+  groupId: string;
+  title: string;
+  /** Plain text. Checklist lines: "[ ] buy milk" / "[x] done". */
+  body: string;
+  tags: string[];
+  pinned: boolean;
+  createdAt: number;
+  updatedAt: number;
+}

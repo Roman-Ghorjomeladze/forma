@@ -99,7 +99,7 @@ export function StatusPill({ status }: { status: 'active' | 'done' }) {
   return <span className={`tag ${status === 'active' ? 'tag-meals' : ''}`}>{status === 'active' ? t('pocket.active') : t('pocket.done')}</span>;
 }
 
-export function Fab({ children, onClick, tone = 'pocket', aboveTabs = false }: { children: ReactNode; onClick: () => void; tone?: 'pocket' | 'tree'; aboveTabs?: boolean }) {
+export function Fab({ children, onClick, tone = 'pocket', aboveTabs = false }: { children: ReactNode; onClick: () => void; tone?: 'pocket' | 'tree' | 'notes'; aboveTabs?: boolean }) {
   return (
     <div className={`fab-wrap ${aboveTabs ? 'sticky-cta-above-tabs' : ''}`}>
       <button type="button" className={`fab fab-${tone}`} onClick={onClick}>{children}</button>

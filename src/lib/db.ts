@@ -1,11 +1,11 @@
 // A tiny promise-based IndexedDB layer with change notifications (no dependencies).
-import type { Category, Dish, Exercise, Expense, MealSlot, MusicTrack, Person, Project, QuizResult, ScheduleEntry, Session, StoredBlob, Tree, Union, Workout } from './models.js';
+import type { Category, Dish, Exercise, Expense, MealSlot, MusicTrack, Note, NoteGroup, Person, Project, QuizResult, ScheduleEntry, Session, StoredBlob, Tree, Union, Workout } from './models.js';
 
 export const DB_NAME = 'forma';
-export const DB_VERSION = 4;
+export const DB_VERSION = 5;
 
 export type TableName = 'exercises' | 'workouts' | 'sessions' | 'dishes' | 'mealSlots' | 'schedule' | 'blobs' | 'musicTracks' | 'settings'
-  | 'projects' | 'categories' | 'expenses' | 'trees' | 'persons' | 'unions' | 'quizResults';
+  | 'projects' | 'categories' | 'expenses' | 'trees' | 'persons' | 'unions' | 'quizResults' | 'noteGroups' | 'notes';
 
 interface SettingRow { key: string; value: unknown }
 
@@ -25,11 +25,13 @@ type RowOf<T extends TableName> =
   T extends 'persons' ? Person :
   T extends 'unions' ? Union :
   T extends 'quizResults' ? QuizResult :
+  T extends 'noteGroups' ? NoteGroup :
+  T extends 'notes' ? Note :
   SettingRow;
 
 const KEY_PATH: Record<TableName, string> = {
   exercises: 'id', workouts: 'id', sessions: 'id', dishes: 'id', mealSlots: 'id', schedule: 'weekday', blobs: 'id', musicTracks: 'id', settings: 'key',
-  projects: 'id', categories: 'id', expenses: 'id', trees: 'id', persons: 'id', unions: 'id', quizResults: 'id',
+  projects: 'id', categories: 'id', expenses: 'id', trees: 'id', persons: 'id', unions: 'id', quizResults: 'id', noteGroups: 'id', notes: 'id',
 };
 
 let dbPromise: Promise<IDBDatabase> | null = null;
@@ -47,6 +49,7 @@ export function openDb(): Promise<IDBDatabase> {
           if (name === 'sessions') store.createIndex('startedAt', 'startedAt');
           if (name === 'expenses') store.createIndex('projectId', 'projectId');
           if (name === 'persons' || name === 'unions') store.createIndex('treeId', 'treeId');
+          if (name === 'notes') store.createIndex('groupId', 'groupId');
         }
       }
     };
@@ -164,7 +167,7 @@ export async function count(table: TableName): Promise<number> {
   return reqToPromise(db.transaction(table, 'readonly').objectStore(table).count());
 }
 
-export const ALL_TABLES: TableName[] = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings', 'projects', 'categories', 'expenses', 'trees', 'persons', 'unions', 'quizResults'];
+export const ALL_TABLES: TableName[] = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings', 'projects', 'categories', 'expenses', 'trees', 'persons', 'unions', 'quizResults', 'noteGroups', 'notes'];
 
 // ---- settings helpers ---------------------------------------------------------------------
 export async function getSetting<T>(key: string, fallback: T): Promise<T> {

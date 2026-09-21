@@ -1,5 +1,5 @@
 // JSON backup / restore of the whole database (blobs are base64-encoded).
-import { ALL_TABLES, bulkPut, clear, getAll, notify } from './db.js';
+import { ALL_TABLES, DB_VERSION, bulkPut, clear, getAll, notify } from './db.js';
 function blobToBase64(blob) {
     return new Promise((resolve, reject) => {
         const r = new FileReader();
@@ -26,7 +26,7 @@ export async function exportBackup() {
             tables[t] = rows;
         }
     }
-    return { app: 'forma', version: 1, exportedAt: new Date().toISOString(), tables };
+    return { app: 'forma', version: 1, dbVersion: DB_VERSION, exportedAt: new Date().toISOString(), tables };
 }
 export async function importBackup(file, mode) {
     if (file.app !== 'forma' || !file.tables)
