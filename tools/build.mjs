@@ -22,6 +22,7 @@ function findTsc() {
 export function copyDirSync(src, dst) {
   fs.mkdirSync(dst, { recursive: true });
   for (const e of fs.readdirSync(src, { withFileTypes: true })) {
+    if (e.name.startsWith('.')) continue; // .DS_Store & co. — never ship dotfiles
     const s = path.join(src, e.name);
     const d = path.join(dst, e.name);
     if (e.isDirectory()) copyDirSync(s, d);
@@ -51,6 +52,9 @@ export function writeServiceWorker() {
   // on downloading the whole library up front.
   const walk = (dir) => {
     for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      // Dotfiles (Finder's .DS_Store) are git-ignored, so they 404 on the host and would make the
+      // whole precache — and therefore the service-worker update — fail. Never list them.
+      if (e.name.startsWith('.')) continue;
       const p = path.join(dir, e.name);
       if (path.relative(dist, p) === 'exercise-videos') continue;
       if (e.isDirectory()) walk(p);

@@ -3,9 +3,22 @@ const VERSION = '__VERSION__';
 const CACHE = 'forma-' + VERSION;
 const PRECACHE = __PRECACHE__;
 
+// The app shell must be cached completely; flag images and icons are nice-to-have (they are fetched
+// and cached lazily anyway), so a single missing one must not block the update.
+const isExtra = (p) => p.startsWith('./flags/') || p.startsWith('./icons/');
+const fresh = (p) => new Request(p, { cache: 'reload' }); // bypass a stale HTTP cache from a previous deploy
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(PRECACHE)).then(() => self.skipWaiting())
+    caches.open(CACHE).then(async (cache) => {
+      const core = PRECACHE.filter((p) => !isExtra(p));
+      const extras = PRECACHE.filter(isExtra);
+      // core in small batches so one slow host doesn't open hundreds of connections at once
+      for (let i = 0; i < core.length; i += 12) await cache.addAll(core.slice(i, i + 12).map(fresh));
+      for (let i = 0; i < extras.length; i += 12) {
+        await Promise.allSettled(extras.slice(i, i + 12).map((p) => cache.add(fresh(p)).catch(() => {})));
+      }
+    }).then(() => self.skipWaiting())
   );
 });
 

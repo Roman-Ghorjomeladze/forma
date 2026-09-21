@@ -7,11 +7,12 @@ import { usePrefs, useProfile } from '../lib/hooks.js';
 import { uid } from '../lib/ids.js';
 import { useT } from '../lib/i18n.js';
 import { canPromptInstall, isInstalled, promptInstall, subscribeInstall } from '../lib/install-prompt.js';
+import { checkForUpdate, reinstallAppFiles } from '../lib/updates.js';
 import type { Lang, Theme } from '../lib/models.js';
 import { useMusicTracks } from '../lib/queries.js';
 import { Button, Field, NumberInput, Row, Screen, Segmented, Select, TextInput, Toggle, TopBar } from '../ui/components.js';
 import { confirmDialog, toast } from '../ui/dialogs.js';
-import { IconDownload, IconMusic, IconTrash, IconUpload } from '../ui/icons.js';
+import { IconDownload, IconMusic, IconRepeat, IconTrash, IconUpload } from '../ui/icons.js';
 
 const MAX_TRACK_BYTES = 25 * 1024 * 1024; // 25MB - generous for a full song at typical mp3 bitrates
 
@@ -86,6 +87,22 @@ export function SettingsScreen() {
       await importBackup(parsed, replace ? 'replace' : 'merge');
       toast(replace ? t('settings.backupRestored') : t('settings.backupMerged'));
     } catch (e) { toast(t('settings.couldNotReadFile')); console.error(e); } finally { setBusy(false); if (fileRef.current) fileRef.current.value = ''; }
+  };
+
+  const [updating, setUpdating] = useState(false);
+  const doUpdate = async () => {
+    setUpdating(true);
+    try {
+      const r = await checkForUpdate();
+      if (r === 'none') toast(t('settings.upToDate'));
+      else if (r === 'unsupported') toast(t('settings.updateUnsupported'));
+      // 'updated' → the new worker takes over and the page reloads on its own
+    } finally { setUpdating(false); }
+  };
+  const doReinstall = async () => {
+    const ok = await confirmDialog({ title: t('settings.reinstallTitle'), message: t('settings.reinstallMsg'), confirmLabel: t('settings.reinstall') });
+    if (!ok) return;
+    await reinstallAppFiles();
   };
 
   const reset = async () => {
@@ -188,6 +205,15 @@ export function SettingsScreen() {
           <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(e: { target: HTMLInputElement }) => { const f = e.target.files?.[0]; if (f) doImport(f); }} />
           <Button variant="ghost" full onClick={async () => { await restoreStarterContent(); toast(t('settings.starterRestored')); }}>{t('settings.readdStarter')}</Button>
           <Button variant="danger" full onClick={reset}>{t('settings.eraseAllData')}</Button>
+        </div>
+      </div>
+
+      <div className="settings-group">
+        <div className="section-label">{t('settings.app')}</div>
+        <div className="small muted mb">{t('settings.updateHint')}</div>
+        <div className="stack">
+          <Button variant="secondary" full icon={<IconRepeat size={18} />} disabled={updating} onClick={doUpdate}>{updating ? t('settings.updating') : t('settings.updateApp')}</Button>
+          <Button variant="ghost" full onClick={doReinstall}>{t('settings.reinstall')}</Button>
         </div>
       </div>
 
