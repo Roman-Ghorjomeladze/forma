@@ -44,6 +44,19 @@ import { seedNoteGroupsIfEmpty } from './lib/notes.js';
 import { MedsHomeScreen } from './screens/meds/meds.js';
 import { MedEditScreen } from './screens/meds/med-edit.js';
 import { MedDetailScreen } from './screens/meds/med-detail.js';
+import { seedLangCoursesIfEmpty } from './lib/lingua.js';
+import { LinguaHomeScreen } from './screens/lingua/home.js';
+import { LinguaCourseScreen } from './screens/lingua/course.js';
+import { LinguaCardsScreen } from './screens/lingua/cards.js';
+import { LinguaBuildScreen } from './screens/lingua/build.js';
+import { LinguaSpeakScreen } from './screens/lingua/speak.js';
+import { LinguaQuizScreen } from './screens/lingua/quiz.js';
+import { LinguaDrillScreen, LinguaGrammarListScreen, LinguaUnitScreen } from './screens/lingua/grammar.js';
+import { LinguaMistakesScreen } from './screens/lingua/mistakes.js';
+import { LinguaWordsScreen } from './screens/lingua/words.js';
+import { LinguaPlacementScreen } from './screens/lingua/placement.js';
+import { LinguaStatsScreen } from './screens/lingua/stats.js';
+import { LinguaManageScreen } from './screens/lingua/manage.js';
 function useTheme() {
     const [prefs] = usePrefs();
     useEffect(() => {
@@ -112,6 +125,7 @@ export function App() {
                 await seedIfEmpty();
                 await seedCategoriesIfEmpty();
                 await seedNoteGroupsIfEmpty();
+                await seedLangCoursesIfEmpty();
                 if (navigator.storage?.persist)
                     navigator.storage.persist().catch(() => { });
             }
@@ -252,6 +266,38 @@ export function App() {
             screen = _jsx(MedDetailScreen, { id: seg[1] });
         else
             screen = _jsx(MedsHomeScreen, {});
+    }
+    else if (top === 'lang') {
+        const cid = seg[1];
+        const sub = seg[2] ?? '';
+        if (!cid)
+            screen = _jsx(LinguaHomeScreen, {});
+        else if (sub === 'cards')
+            screen = _jsx(LinguaCardsScreen, { cid: cid });
+        else if (sub === 'build')
+            screen = _jsx(LinguaBuildScreen, { cid: cid });
+        else if (sub === 'speak')
+            screen = _jsx(LinguaSpeakScreen, { cid: cid });
+        else if (sub === 'quiz')
+            screen = _jsx(LinguaQuizScreen, { cid: cid });
+        else if (sub === 'grammar' && seg[3])
+            screen = _jsx(LinguaUnitScreen, { cid: cid, uid: seg[3] }, seg[3]);
+        else if (sub === 'grammar')
+            screen = _jsx(LinguaGrammarListScreen, { cid: cid });
+        else if (sub === 'drill' && seg[3])
+            screen = _jsx(LinguaDrillScreen, { cid: cid, uid: seg[3] }, seg[3]);
+        else if (sub === 'mistakes')
+            screen = _jsx(LinguaMistakesScreen, { cid: cid });
+        else if (sub === 'words')
+            screen = _jsx(LinguaWordsScreen, { cid: cid });
+        else if (sub === 'placement')
+            screen = _jsx(LinguaPlacementScreen, { cid: cid });
+        else if (sub === 'stats')
+            screen = _jsx(LinguaStatsScreen, { cid: cid });
+        else if (sub === 'manage')
+            screen = _jsx(LinguaManageScreen, { cid: cid });
+        else
+            screen = _jsx(LinguaCourseScreen, { cid: cid });
     }
     else if (top === 'settings')
         screen = _jsx(SettingsScreen, {});

@@ -4,6 +4,7 @@
 import { prefsStore, usePrefs } from './hooks.js';
 import type { Lang } from './models.js';
 import { EN_APPS, KA_APPS } from './i18n-apps.js';
+import { EN_LINGUA, KA_LINGUA } from './i18n-lingua.js';
 
 export type { Lang };
 
@@ -168,7 +169,7 @@ const EN: Dict = {
   'settings.reinstall': 'Reinstall app files',
   'settings.reinstallTitle': 'Reinstall app files?',
   'settings.reinstallMsg': 'The app reloads from the internet and re-downloads its files. Your dishes, workouts, notes and everything else are not touched.',
-  'settings.backupIncludes': 'One file with everything: Forma (dishes, plans, workouts, history, photos, music), Pocket, Family Tree (with photos), Flags scores, Notes, Meds (courses + dose history), and your profile & settings.',
+  'settings.backupIncludes': 'One file with everything: Forma (dishes, plans, workouts, history, photos, music), Pocket, Family Tree (with photos), Flags scores, Notes, Meds (courses + dose history), Lingua (your courses, own words/sentences/grammar and all learning progress), and your profile & settings.',
   'settings.exportBackup': 'Export backup (JSON)',
   'settings.restoreFromBackup': 'Restore from backup',
   'settings.readdStarter': 'Re-add starter exercises & dishes',
@@ -684,7 +685,7 @@ const KA: Dict = {
   'settings.reinstall': 'აპლიკაციის ფაილების ხელახლა ინსტალაცია',
   'settings.reinstallTitle': 'ხელახლა დავაინსტალიროთ აპლიკაციის ფაილები?',
   'settings.reinstallMsg': 'აპლიკაცია ინტერნეტიდან გადაიტვირთება და ფაილებს თავიდან ჩამოტვირთავს. შენი კერძები, ვარჯიშები, ჩანაწერები და ყველაფერი დანარჩენი ხელუხლებელი რჩება.',
-  'settings.backupIncludes': 'ერთი ფაილი ყველაფრით: Forma (კერძები, გეგმები, ვარჯიშები, ისტორია, ფოტოები, მუსიკა), Pocket, საგვარეულო ხე (ფოტოებით), დროშების ქულები, ჩანაწერები, წამლები (კურსები და მიღების ისტორია) და შენი პროფილი და პარამეტრები.',
+  'settings.backupIncludes': 'ერთი ფაილი ყველაფრით: Forma (კერძები, გეგმები, ვარჯიშები, ისტორია, ფოტოები, მუსიკა), Pocket, საგვარეულო ხე (ფოტოებით), დროშების ქულები, ჩანაწერები, წამლები (კურსები და მიღების ისტორია), Lingua (შენი კურსები, დამატებული სიტყვები/წინადადებები/გრამატიკა და სწავლის მთელი პროგრესი) და შენი პროფილი და პარამეტრები.',
   'settings.exportBackup': 'სარეზერვო ასლის გატანა (JSON)',
   'settings.restoreFromBackup': 'აღდგენა სარეზერვო ასლიდან',
   'settings.readdStarter': 'საწყისი ვარჯიშებისა და კერძების დამატება თავიდან',
@@ -1048,8 +1049,8 @@ const KA: Dict = {
   'step.roundShort': ' · რაუნდი {n}/{of}',
 };
 
-Object.assign(EN, EN_APPS);
-Object.assign(KA, KA_APPS);
+Object.assign(EN, EN_APPS, EN_LINGUA);
+Object.assign(KA, KA_APPS, KA_LINGUA);
 const DICTS: Record<Lang, Dict> = { en: EN, ka: KA };
 
 function interpolate(s: string, vars?: Vars): string {

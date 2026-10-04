@@ -103,3 +103,11 @@ export const IconPill = (p: IconProps) => <Icon {...p}><rect x="3" y="8.5" width
 export const IconCalendarPlus = (p: IconProps) => <Icon {...p}><rect x="3" y="5" width="18" height="16" rx="3" /><path d="M3 10h18M8 3v4M16 3v4" /><path d="M12 13v5M9.5 15.5h5" /></Icon>;
 export const IconSkip = (p: IconProps) => <Icon {...p}><circle cx="12" cy="12" r="9" /><path d="M8 8l8 8M16 8l-8 8" /></Icon>;
 export const IconBell = (p: IconProps) => <Icon {...p}><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" /><path d="M10 20a2 2 0 0 0 4 0" /></Icon>;
+export const IconLanguages = (p: IconProps) => <Icon {...p}><path d="M4 5h9M8.5 3v2M6 5c.5 3 2.5 5.5 5 6.5M11 5c-.6 3.4-3 6.4-6.5 7.5" /><path d="M13 21l3.5-9 3.5 9M14.2 18h4.6" /></Icon>;
+export const IconBook = (p: IconProps) => <Icon {...p}><path d="M4 5a2 2 0 0 1 2-2h13v15H6a2 2 0 0 0-2 2z" /><path d="M4 20a2 2 0 0 0 2 1h13v-3" /><path d="M9 7h6" /></Icon>;
+export const IconCards = (p: IconProps) => <Icon {...p}><rect x="7" y="4" width="13" height="16" rx="3" /><path d="M4 7.5v10A2.5 2.5 0 0 0 6.5 20" /></Icon>;
+export const IconChart = (p: IconProps) => <Icon {...p}><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" /></Icon>;
+export const IconEar = (p: IconProps) => <Icon {...p}><path d="M6 9a6 6 0 1 1 12 0c0 3-2 4-3 5.5S14 18 12.5 19.5A3 3 0 0 1 7 18" /><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.5-1.5 2-1.5 3.5" /></Icon>;
+export const IconList = (p: IconProps) => <Icon {...p}><path d="M9 6h11M9 12h11M9 18h11" /><circle cx="4.5" cy="6" r="1" fill="currentColor" /><circle cx="4.5" cy="12" r="1" fill="currentColor" /><circle cx="4.5" cy="18" r="1" fill="currentColor" /></Icon>;
+export const IconPuzzle = (p: IconProps) => <Icon {...p}><rect x="3" y="4" width="7" height="6" rx="1.5" /><rect x="14" y="4" width="7" height="6" rx="1.5" /><rect x="3" y="14" width="11" height="6" rx="1.5" /><path d="M18 14v6M15 17h6" /></Icon>;
+export const IconAlert = (p: IconProps) => <Icon {...p}><circle cx="12" cy="12" r="9" /><path d="M12 7v6M12 16.5h.01" /></Icon>;

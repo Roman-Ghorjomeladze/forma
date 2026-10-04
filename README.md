@@ -79,6 +79,24 @@ shortcuts, and the shared Settings (name shown in the greeting, theme, language,
   *Add All*. *Share* sends the schedule as plain text (for a doctor or family).
 - Tables `medications` and `doseLogs` are part of the Settings backup.
 
+## Lingua — languages (`#/lang`)
+
+Two built-in courses, and you can add any other language yourself.
+
+- **Russian (from English):** 9,299 words ranked by frequency (OpenRussian dictionary with stress marks, plus forms: gender, genitive, plural, aspect pairs, conjugation, past tense). Each word has an everyday example. Also 900 sentences and 50 grammar units (A1 → B2), with 659 exercises.
+- **English (from Georgian):** 7,760 words from the CEFR-J A1–B2 list plus C1, with Georgian meanings and examples. Also 900 sentences with Georgian translations and 50 grammar units explained in Georgian (647 exercises).
+- **Cards:** swipe right if you know the word, left if you don't. Tap to flip, or show both sides. Choose RU→EN, EN→RU or mixed. Modes are Today's mix, Reviews, New words, Fix mistakes and Browse a level. Spaced repetition runs separately for *recognise* (passive) and *produce* (active).
+- **Build sentences:** tap word tiles, never the keyboard. Tiles include wrong-form distractors. A listening mode is available. If you use the same words in a different order, the app asks rather than failing you.
+- **Speak:** see the meaning, say it aloud, reveal, shadow it, then grade yourself. You also get 5 **phrases of the day**. If the browser supports it, an optional mic check shows what it heard.
+- **Quiz / Listen:** 4-option quiz in three modes: meaning, reverse and listening.
+- **Grammar:** explanations, paradigm tables, examples with audio, tips, and drills (choice + build). A unit counts as done at 80%.
+- **Mistakes bank:** every wrong word, sentence or drill, kept until you answer it right on a later day.
+- **Placement test:** about 60 words across frequency bands. It estimates your passive vocabulary and can mark the bands you know as known; those words come back later as spot checks.
+- **Stats:** passive/active goals (3,500 active / 7,500 passive), levels, a 30-day chart and a 7-day review forecast.
+- **Configurable:** add a course for any language, set daily new words and round size, voice speed, auto-speak and goals. Add your own words, sentences and grammar notes, and import or export `.lingua.json` packs (format shown in the app).
+
+Built-in content is static JSON in `public/lang/<course>/`. Progress, your content and course settings are in IndexedDB and included in the backup.
+
 ## Backup & restore
 
 *Settings → Export backup* writes one JSON file with **every** table (Forma, Pocket, Family Tree, Flags, Notes, Meds,

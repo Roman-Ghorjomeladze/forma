@@ -11,8 +11,10 @@ import { useAllExpenses, useAllNotes, useAllPersons, useDishMap, useDoseLogs, us
 import { doseLine, dosesOn, nextDose, withStates } from '../lib/meds.js';
 import { accuracy } from '../lib/flags.js';
 import { Screen } from '../ui/components.js';
-import { IconChevron, IconDumbbell, IconFlag, IconNotes, IconPill, IconPlay, IconPlus, IconSettings, IconTree, IconWallet } from '../ui/icons.js';
+import { IconChevron, IconDumbbell, IconFlag, IconNotes, IconPill, IconPlay, IconPlus, IconSettings, IconTree, IconWallet, IconLanguages } from '../ui/icons.js';
 import { displayTitle, relativeTime } from '../lib/notes.js';
+import { useCourses } from '../lib/lingua.js';
+import { useCourseSummaries } from './lingua/home.js';
 
 export function HomeScreen() {
   const t = useT();
@@ -33,6 +35,8 @@ export function HomeScreen() {
   const noteGroups = useNoteGroups();
   const meds = useMedications();
   const doseLogs = useDoseLogs(today);
+  const courses = useCourses();
+  const langStats = useCourseSummaries(courses);
 
   const hour = new Date().getHours();
   const slot = hour < 12 ? 'morning' : hour < 18 ? 'afternoon' : 'evening';
@@ -89,6 +93,16 @@ export function HomeScreen() {
     return t('home.medsLine.next', { when, name: next.med.name, dose: doseLine(next.med, next.slot), taken, total: todays.length });
   }, [meds, doseLogs, today, t]);
 
+  const linguaLine = useMemo(() => {
+    if (!courses) return '';
+    if (courses.length === 0) return t('home.linguaLine.empty');
+    const parts = courses.slice(0, 2).map((c) => {
+      const s = langStats?.get(c.id);
+      return s ? t('home.linguaLine.course', { title: c.title, due: s.due, passive: s.passive.toLocaleString() }) : c.title;
+    });
+    return parts.join(' · ');
+  }, [courses, langStats, t]);
+
   return (
     <Screen className="screen-no-tabs home">
       <header className="topbar topbar-large">
@@ -106,6 +120,7 @@ export function HomeScreen() {
         <AppCard name={t('home.flags')} sub={t('home.flagsSub')} line={flagsLine} icon={<IconFlag size={28} strokeWidth={2.2} />} tone="flags" onClick={() => navigate('/flags')} />
         <AppCard name={t('home.notes')} sub={t('home.notesSub')} line={notesLine} icon={<IconNotes size={28} strokeWidth={2.2} />} tone="notes" onClick={() => navigate('/notes')} />
         <AppCard name={t('home.meds')} sub={t('home.medsSub')} line={medsLine} icon={<IconPill size={28} strokeWidth={2.2} />} tone="meds" onClick={() => navigate('/meds')} />
+        <AppCard name={t('home.lingua')} sub={t('home.linguaSub')} line={linguaLine} icon={<IconLanguages size={28} strokeWidth={2.2} />} tone="lingua" onClick={() => navigate(courses && courses.length === 1 ? `/lang/${courses[0].id}` : '/lang')} />
       </div>
 
       <div className="mt-lg">
@@ -123,7 +138,7 @@ export function HomeScreen() {
   );
 }
 
-function AppCard({ name, sub, line, icon, tone, onClick }: { name: string; sub: string; line: string; icon: ReactNode; tone: 'forma' | 'pocket' | 'tree' | 'flags' | 'notes' | 'meds'; onClick: () => void }) {
+function AppCard({ name, sub, line, icon, tone, onClick }: { name: string; sub: string; line: string; icon: ReactNode; tone: 'forma' | 'pocket' | 'tree' | 'flags' | 'notes' | 'meds' | 'lingua'; onClick: () => void }) {
   return (
     <button type="button" className={`app-card app-${tone}`} onClick={onClick}>
       <span className="app-icon">{icon}</span>

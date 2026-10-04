@@ -1,0 +1,21 @@
+{
+ "id": "ru-en",
+ "format": 1,
+ "version": 1,
+ "title": "Russian",
+ "target": {
+  "code": "ru",
+  "name": "Русский",
+  "tts": "ru-RU"
+ },
+ "source": {
+  "code": "en",
+  "name": "English",
+  "tts": "en-US"
+ },
+ "goals": {
+  "active": 3500,
+  "passive": 7500
+ },
+ "credits": "Dictionary data: OpenRussian.org (CC BY-SA 4.0). Frequency: FrequencyWords / OpenSubtitles 2018 (MIT / CC BY-SA). Examples, sentences and grammar written for Lingua."
+}

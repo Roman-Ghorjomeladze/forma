@@ -1,11 +1,12 @@
 // A tiny promise-based IndexedDB layer with change notifications (no dependencies).
-import type { Category, Dish, DoseLog, Exercise, Expense, MealSlot, Medication, MusicTrack, Note, NoteGroup, Person, Project, QuizResult, ScheduleEntry, Session, StoredBlob, Tree, Union, Workout } from './models.js';
+import type { Category, Dish, DoseLog, Exercise, Expense, MealSlot, LangCourse, LangItem, LangLog, LangProgress, Medication, MusicTrack, Note, NoteGroup, Person, Project, QuizResult, ScheduleEntry, Session, StoredBlob, Tree, Union, Workout } from './models.js';
 
 export const DB_NAME = 'forma';
-export const DB_VERSION = 6;
+export const DB_VERSION = 7;
 
 export type TableName = 'exercises' | 'workouts' | 'sessions' | 'dishes' | 'mealSlots' | 'schedule' | 'blobs' | 'musicTracks' | 'settings'
-  | 'projects' | 'categories' | 'expenses' | 'trees' | 'persons' | 'unions' | 'quizResults' | 'noteGroups' | 'notes' | 'medications' | 'doseLogs';
+  | 'projects' | 'categories' | 'expenses' | 'trees' | 'persons' | 'unions' | 'quizResults' | 'noteGroups' | 'notes' | 'medications' | 'doseLogs'
+  | 'langCourses' | 'langItems' | 'langProgress' | 'langLogs';
 
 interface SettingRow { key: string; value: unknown }
 
@@ -29,11 +30,16 @@ type RowOf<T extends TableName> =
   T extends 'notes' ? Note :
   T extends 'medications' ? Medication :
   T extends 'doseLogs' ? DoseLog :
+  T extends 'langCourses' ? LangCourse :
+  T extends 'langItems' ? LangItem :
+  T extends 'langProgress' ? LangProgress :
+  T extends 'langLogs' ? LangLog :
   SettingRow;
 
 const KEY_PATH: Record<TableName, string> = {
   exercises: 'id', workouts: 'id', sessions: 'id', dishes: 'id', mealSlots: 'id', schedule: 'weekday', blobs: 'id', musicTracks: 'id', settings: 'key',
   projects: 'id', categories: 'id', expenses: 'id', trees: 'id', persons: 'id', unions: 'id', quizResults: 'id', noteGroups: 'id', notes: 'id', medications: 'id', doseLogs: 'id',
+  langCourses: 'id', langItems: 'id', langProgress: 'id', langLogs: 'id',
 };
 
 let dbPromise: Promise<IDBDatabase> | null = null;
@@ -53,6 +59,7 @@ export function openDb(): Promise<IDBDatabase> {
           if (name === 'persons' || name === 'unions') store.createIndex('treeId', 'treeId');
           if (name === 'notes') store.createIndex('groupId', 'groupId');
           if (name === 'doseLogs') { store.createIndex('medId', 'medId'); store.createIndex('date', 'date'); }
+          if (name === 'langItems' || name === 'langProgress' || name === 'langLogs') store.createIndex('courseId', 'courseId');
         }
       }
     };
@@ -170,7 +177,7 @@ export async function count(table: TableName): Promise<number> {
   return reqToPromise(db.transaction(table, 'readonly').objectStore(table).count());
 }
 
-export const ALL_TABLES: TableName[] = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings', 'projects', 'categories', 'expenses', 'trees', 'persons', 'unions', 'quizResults', 'noteGroups', 'notes', 'medications', 'doseLogs'];
+export const ALL_TABLES: TableName[] = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings', 'projects', 'categories', 'expenses', 'trees', 'persons', 'unions', 'quizResults', 'noteGroups', 'notes', 'medications', 'doseLogs', 'langCourses', 'langItems', 'langProgress', 'langLogs'];
 
 // ---- settings helpers ---------------------------------------------------------------------
 export async function getSetting<T>(key: string, fallback: T): Promise<T> {

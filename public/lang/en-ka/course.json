@@ -1,0 +1,21 @@
+{
+ "id": "en-ka",
+ "format": 1,
+ "version": 1,
+ "title": "English",
+ "target": {
+  "code": "en",
+  "name": "English",
+  "tts": "en-US"
+ },
+ "source": {
+  "code": "ka",
+  "name": "ქართული",
+  "tts": "ka-GE"
+ },
+ "goals": {
+  "active": 3500,
+  "passive": 7500
+ },
+ "credits": "Word list: CEFR-J Wordlist 1.5 (Tono Laboratory, TUFS) and Octanove C1/C2 profile (CC BY-SA 4.0). Frequency: FrequencyWords / OpenSubtitles 2018. Georgian glosses, examples, sentences and grammar written for Lingua."
+}

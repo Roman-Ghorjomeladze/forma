@@ -5,7 +5,7 @@ const PRECACHE = __PRECACHE__;
 
 // The app shell must be cached completely; flag images and icons are nice-to-have (they are fetched
 // and cached lazily anyway), so a single missing one must not block the update.
-const isExtra = (p) => p.startsWith('./flags/') || p.startsWith('./icons/');
+const isExtra = (p) => p.startsWith('./flags/') || p.startsWith('./icons/') || p.startsWith('./lang/');
 const fresh = (p) => new Request(p, { cache: 'reload' }); // bypass a stale HTTP cache from a previous deploy
 
 self.addEventListener('install', (event) => {

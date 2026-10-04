@@ -1,8 +1,9 @@
 export const DB_NAME = 'forma';
-export const DB_VERSION = 6;
+export const DB_VERSION = 7;
 const KEY_PATH = {
     exercises: 'id', workouts: 'id', sessions: 'id', dishes: 'id', mealSlots: 'id', schedule: 'weekday', blobs: 'id', musicTracks: 'id', settings: 'key',
     projects: 'id', categories: 'id', expenses: 'id', trees: 'id', persons: 'id', unions: 'id', quizResults: 'id', noteGroups: 'id', notes: 'id', medications: 'id', doseLogs: 'id',
+    langCourses: 'id', langItems: 'id', langProgress: 'id', langLogs: 'id',
 };
 let dbPromise = null;
 export function openDb() {
@@ -29,6 +30,8 @@ export function openDb() {
                         store.createIndex('medId', 'medId');
                         store.createIndex('date', 'date');
                     }
+                    if (name === 'langItems' || name === 'langProgress' || name === 'langLogs')
+                        store.createIndex('courseId', 'courseId');
                 }
             }
         };
@@ -136,7 +139,7 @@ export async function count(table) {
     const db = await openDb();
     return reqToPromise(db.transaction(table, 'readonly').objectStore(table).count());
 }
-export const ALL_TABLES = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings', 'projects', 'categories', 'expenses', 'trees', 'persons', 'unions', 'quizResults', 'noteGroups', 'notes', 'medications', 'doseLogs'];
+export const ALL_TABLES = ['exercises', 'workouts', 'sessions', 'dishes', 'mealSlots', 'schedule', 'blobs', 'musicTracks', 'settings', 'projects', 'categories', 'expenses', 'trees', 'persons', 'unions', 'quizResults', 'noteGroups', 'notes', 'medications', 'doseLogs', 'langCourses', 'langItems', 'langProgress', 'langLogs'];
 // ---- settings helpers ---------------------------------------------------------------------
 export async function getSetting(key, fallback) {
     const row = await get('settings', key);

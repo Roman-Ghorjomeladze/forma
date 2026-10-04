@@ -395,3 +395,72 @@ export interface DoseLog {
   /** When it was marked. */
   at: number;
 }
+
+// ============================================================================================
+// Lingua — language courses. Built-in course content ships as static JSON packs under
+// public/lang/<packId>/ (words / sentences / grammar); the user's own additions, every course's
+// settings and all learning progress live in IndexedDB (and therefore in the backup).
+// ============================================================================================
+export type LLevel = 'A1' | 'A2' | 'B1' | 'B2' | 'C1';
+export type LDirection = 't2s' | 's2t' | 'mix';
+
+export interface LangSide { code: string; name: string; tts: string }
+
+export interface LangCourse {
+  id: string;
+  title: string;
+  target: LangSide;      // the language being learned
+  source: LangSide;      // the language explanations/translations are in
+  /** Built-in pack folder under public/lang/ ("ru-en"), absent for user-made courses. */
+  pack?: string;
+  goals: { active: number; passive: number };
+  dailyNew: number;      // new words to learn per day
+  sessionSize: number;   // cards per round
+  direction: LDirection; // default card direction
+  showBoth: boolean;     // cards: show both sides at once (else tap to flip)
+  autoSpeak: boolean;    // read the target side aloud when a card appears
+  rate: number;          // speech rate for the target language
+  order: number;
+  createdAt: number;
+}
+
+export interface LangItem {
+  id: string;
+  courseId: string;
+  kind: 'word' | 'sentence' | 'grammar';
+  /** LWord / LSentence / LGrammarUnit (see lib/lingua.ts) */
+  data: unknown;
+  createdAt: number;
+}
+
+/** One spaced-repetition card. key: "w:<wordId>:r" (recognise), "w:<wordId>:p" (produce),
+ *  "s:<sentenceId>" (build), "sp:<sentenceId>" (say it), "gd:<unitId>#<n>" (grammar drill), "g:<unitId>" (unit done). */
+export interface LangProgress {
+  id: string;            // `${courseId}|${key}`
+  courseId: string;
+  key: string;
+  state: 'learning' | 'review' | 'known' | 'suspended';
+  ivl: number;           // interval in days (0 = again today)
+  ease: number;
+  reps: number;
+  lapses: number;
+  due: string;           // YYYY-MM-DD
+  last: number;          // timestamp of last answer
+  /** In the mistakes bank until answered right on a later day. */
+  miss?: boolean;
+  lw?: string;           // date of the last wrong answer
+  score?: number;        // grammar units: best drill score %
+  created?: string;      // date the card was first answered
+}
+
+export interface LangLog {
+  id: string;            // `${courseId}|${date}`
+  courseId: string;
+  date: string;
+  answers: number;
+  correct: number;
+  learned: number;       // new words learned
+  sentences: number;
+  drills: number;
+  seconds: number;
+}
