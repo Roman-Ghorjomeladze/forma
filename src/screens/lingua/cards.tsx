@@ -11,7 +11,8 @@ import {
 import type { LDirection, LLevel, LangProgress } from '../../lib/models.js';
 import { navigate, useRoute } from '../../lib/router.js';
 import { Button, Chip, Progress, Screen, Segmented, TopBar } from '../../ui/components.js';
-import { IconCheck, IconClose, IconRepeat } from '../../ui/icons.js';
+import { IconCheck, IconClose, IconRepeat, IconVolume } from '../../ui/icons.js';
+import { toast } from '../../ui/dialogs.js';
 import { isCtx, LevelTag, posLabel, SpeakButton, SwipeCard, useLingua, useStopwatch, type Ctx, type Gate } from './lingua-ui.js';
 
 type Mode = 'daily' | 'review' | 'new' | 'mistakes' | 'level';
@@ -116,11 +117,11 @@ function CardsSession({ ctx, mode, level, dirParam, ids }: { ctx: Ctx; mode: Mod
   const done = pos >= total;
   const firstPass = new Set(queue.slice(0, pos).map((q) => q.qid)).size;
 
-  // speak the target-language side when it becomes visible
+  // Quiet by default. With sound on, the word is read only AFTER the answer side is revealed
+  // (flip, or the reveal after a wrong answer) — never when a card first appears.
   useEffect(() => {
     if (!item || !course.autoSpeak) return;
-    const targetVisible = item.dir === 'r' ? true : flipped || course.showBoth || reveal;
-    if (targetVisible && (item.dir === 'r' ? !flipped : true)) say(item.word.t, course.target.tts, course.rate);
+    if (flipped || reveal) say(item.word.t, course.target.tts, course.rate);
   }, [item?.qid, flipped, reveal]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -251,7 +252,9 @@ function CardsSession({ ctx, mode, level, dirParam, ids }: { ctx: Ctx; mode: Mod
 
   return (
     <Screen className="screen-no-tabs lingua cards-screen">
-      <TopBar title={`${Math.min(firstPass + 1, total)} / ${total}`} eyebrow={course.title} onBack={() => navigate(`/lang/${course.id}`, { replace: true })} />
+      <TopBar title={`${Math.min(firstPass + 1, total)} / ${total}`} eyebrow={course.title} onBack={() => navigate(`/lang/${course.id}`, { replace: true })}
+        right={<button type="button" className={`iconbtn ${course.autoSpeak ? 'iconbtn-lingua' : ''}`} aria-label={course.autoSpeak ? t('lang.soundOn') : t('lang.soundOff')} title={course.autoSpeak ? t('lang.soundOn') : t('lang.soundOff')}
+          onClick={() => { const on = !course.autoSpeak; put('langCourses', { ...course, autoSpeak: on }); toast(on ? t('lang.soundOnToast') : t('lang.soundOffToast')); }}><IconVolume off={!course.autoSpeak} size={20} /></button>} />
       <Progress value={pos} max={total} color="var(--lingua)" height={6} />
       <SwipeCard front={front} back={back} showBoth={course.showBoth} flipped={flipped} onFlip={() => setFlipped((f) => !f)}
         onAnswer={answer} disabled={reveal}

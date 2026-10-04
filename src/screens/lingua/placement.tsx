@@ -38,8 +38,6 @@ function Placement({ ctx }: { ctx: Ctx }) {
     setAnswers((a) => ({ ...a, [s.w.id]: ok }));
     setFlipped(false);
     setI((x) => x + 1);
-    const n = sample[i + 1];
-    if (n && course.autoSpeak) say(n.w.t, course.target.tts, course.rate);
   };
 
   const result = useMemo(() => {
@@ -83,7 +81,7 @@ function Placement({ ctx }: { ctx: Ctx }) {
           <p>{t('lang.placementIntro', { n: sample.length })}</p>
           <p className="small muted">{t('lang.placementHonest')}</p>
         </div>
-        <Button variant="lingua" full size="lg" className="mt-lg" onClick={() => { setStarted(true); if (course.autoSpeak && sample[0]) say(sample[0].w.t, course.target.tts, course.rate); }}>{t('lang.start')}</Button>
+        <Button variant="lingua" full size="lg" className="mt-lg" onClick={() => setStarted(true)}>{t('lang.start')}</Button>
       </Screen>
     );
   }
@@ -123,7 +121,7 @@ function Placement({ ctx }: { ctx: Ctx }) {
     <Screen className="screen-no-tabs lingua cards-screen">
       <TopBar title={`${i + 1} / ${sample.length}`} eyebrow={t('lang.placement')} onBack={() => navigate(`/lang/${course.id}`, { replace: true })} />
       <Progress value={i} max={sample.length} color="var(--lingua)" height={6} />
-      <SwipeCard key={s.w.id} showBoth={false} flipped={flipped} onFlip={() => setFlipped((f) => !f)} onAnswer={answer}
+      <SwipeCard key={s.w.id} showBoth={false} flipped={flipped} onFlip={() => setFlipped((f) => { if (!f && course.autoSpeak) say(s.w.t, course.target.tts, course.rate); return !f; })} onAnswer={answer}
         hintLeft={t('lang.dontKnow')} hintRight={t('lang.iKnowIt')}
         front={<><div className="face-word">{s.w.t}</div><div className="face-q">{t('lang.placementQ')}</div></>}
         back={<><div className="face-word small-word">{s.w.t}</div><div className="face-meaning">{s.w.s}</div></>} />

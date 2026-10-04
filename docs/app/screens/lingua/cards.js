@@ -8,7 +8,8 @@ import { say } from '../../lib/lingua-speech.js';
 import { dailyQueue, dueCards, gradeCard, logActivity, markKnownCard, mistakeCards, newProduction, newWords, saveCards, shuffle, wKey, LEVELS, } from '../../lib/lingua.js';
 import { navigate, useRoute } from '../../lib/router.js';
 import { Button, Chip, Progress, Screen, Segmented, TopBar } from '../../ui/components.js';
-import { IconCheck, IconClose, IconRepeat } from '../../ui/icons.js';
+import { IconCheck, IconClose, IconRepeat, IconVolume } from '../../ui/icons.js';
+import { toast } from '../../ui/dialogs.js';
 import { isCtx, LevelTag, posLabel, SpeakButton, SwipeCard, useLingua, useStopwatch } from './lingua-ui.js';
 export function LinguaCardsScreen({ cid }) {
     const ctx = useLingua(cid);
@@ -82,12 +83,12 @@ function CardsSession({ ctx, mode, level, dirParam, ids }) {
     const item = queue[pos];
     const done = pos >= total;
     const firstPass = new Set(queue.slice(0, pos).map((q) => q.qid)).size;
-    // speak the target-language side when it becomes visible
+    // Quiet by default. With sound on, the word is read only AFTER the answer side is revealed
+    // (flip, or the reveal after a wrong answer) — never when a card first appears.
     useEffect(() => {
         if (!item || !course.autoSpeak)
             return;
-        const targetVisible = item.dir === 'r' ? true : flipped || course.showBoth || reveal;
-        if (targetVisible && (item.dir === 'r' ? !flipped : true))
+        if (flipped || reveal)
             say(item.word.t, course.target.tts, course.rate);
     }, [item?.qid, flipped, reveal]); // eslint-disable-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -174,5 +175,5 @@ function CardsSession({ ctx, mode, level, dirParam, ids }) {
         : _jsxs(_Fragment, { children: [meta, meaning, _jsx("div", { className: "face-q", children: t('lang.qSay', { lang: course.title }) })] });
     const back = item.dir === 'r' ? _jsxs(_Fragment, { children: [_jsx("div", { className: "face-word small-word", children: w.t }), meaning, details] }) : _jsxs(_Fragment, { children: [target, details] });
     const isNew = item.kind === 'new';
-    return (_jsxs(Screen, { className: "screen-no-tabs lingua cards-screen", children: [_jsx(TopBar, { title: `${Math.min(firstPass + 1, total)} / ${total}`, eyebrow: course.title, onBack: () => navigate(`/lang/${course.id}`, { replace: true }) }), _jsx(Progress, { value: pos, max: total, color: "var(--lingua)", height: 6 }), _jsx(SwipeCard, { front: front, back: back, showBoth: course.showBoth, flipped: flipped, onFlip: () => setFlipped((f) => !f), onAnswer: answer, disabled: reveal, hintLeft: isNew ? t('lang.learnIt') : t('lang.dontKnow'), hintRight: isNew ? t('lang.iKnowIt') : t('lang.know') }), reveal ? (_jsx("div", { className: "card-actions", children: _jsx(Button, { variant: "lingua", full: true, size: "lg", onClick: advance, children: t('lang.continue') }) })) : (_jsxs("div", { className: "card-actions", children: [_jsx("button", { type: "button", className: "round-btn no", "aria-label": t('lang.dontKnow'), onClick: () => answer(false), children: _jsx(IconClose, { size: 26 }) }), !course.showBoth && _jsx("button", { type: "button", className: "flip-btn", onClick: () => setFlipped((f) => !f), children: flipped ? t('lang.front') : t('lang.flip') }), _jsx("button", { type: "button", className: "round-btn yes", "aria-label": t('lang.know'), onClick: () => answer(true), children: _jsx(IconCheck, { size: 26 }) })] })), _jsx("div", { className: "small muted center", children: isNew ? t('lang.newHelp') : t('lang.swipeShort') })] }));
+    return (_jsxs(Screen, { className: "screen-no-tabs lingua cards-screen", children: [_jsx(TopBar, { title: `${Math.min(firstPass + 1, total)} / ${total}`, eyebrow: course.title, onBack: () => navigate(`/lang/${course.id}`, { replace: true }), right: _jsx("button", { type: "button", className: `iconbtn ${course.autoSpeak ? 'iconbtn-lingua' : ''}`, "aria-label": course.autoSpeak ? t('lang.soundOn') : t('lang.soundOff'), title: course.autoSpeak ? t('lang.soundOn') : t('lang.soundOff'), onClick: () => { const on = !course.autoSpeak; put('langCourses', { ...course, autoSpeak: on }); toast(on ? t('lang.soundOnToast') : t('lang.soundOffToast')); }, children: _jsx(IconVolume, { off: !course.autoSpeak, size: 20 }) }) }), _jsx(Progress, { value: pos, max: total, color: "var(--lingua)", height: 6 }), _jsx(SwipeCard, { front: front, back: back, showBoth: course.showBoth, flipped: flipped, onFlip: () => setFlipped((f) => !f), onAnswer: answer, disabled: reveal, hintLeft: isNew ? t('lang.learnIt') : t('lang.dontKnow'), hintRight: isNew ? t('lang.iKnowIt') : t('lang.know') }), reveal ? (_jsx("div", { className: "card-actions", children: _jsx(Button, { variant: "lingua", full: true, size: "lg", onClick: advance, children: t('lang.continue') }) })) : (_jsxs("div", { className: "card-actions", children: [_jsx("button", { type: "button", className: "round-btn no", "aria-label": t('lang.dontKnow'), onClick: () => answer(false), children: _jsx(IconClose, { size: 26 }) }), !course.showBoth && _jsx("button", { type: "button", className: "flip-btn", onClick: () => setFlipped((f) => !f), children: flipped ? t('lang.front') : t('lang.flip') }), _jsx("button", { type: "button", className: "round-btn yes", "aria-label": t('lang.know'), onClick: () => answer(true), children: _jsx(IconCheck, { size: 26 }) })] })), _jsx("div", { className: "small muted center", children: isNew ? t('lang.newHelp') : t('lang.swipeShort') })] }));
 }

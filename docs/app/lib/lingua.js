@@ -14,12 +14,12 @@ const BUILTIN = [
     {
         id: 'ru-en', title: 'Russian', pack: 'ru-en',
         target: { code: 'ru', name: 'Русский', tts: 'ru-RU' }, source: { code: 'en', name: 'English', tts: 'en-US' },
-        goals: { active: 3500, passive: 7500 }, dailyNew: 15, sessionSize: 25, direction: 'mix', showBoth: false, autoSpeak: true, rate: 0.9, order: 0,
+        goals: { active: 3500, passive: 7500 }, dailyNew: 15, sessionSize: 25, direction: 'mix', showBoth: false, autoSpeak: false, rate: 0.9, order: 0,
     },
     {
         id: 'en-ka', title: 'English', pack: 'en-ka',
         target: { code: 'en', name: 'English', tts: 'en-US' }, source: { code: 'ka', name: 'ქართული', tts: 'ka-GE' },
-        goals: { active: 3500, passive: 7500 }, dailyNew: 15, sessionSize: 25, direction: 'mix', showBoth: false, autoSpeak: true, rate: 0.95, order: 1,
+        goals: { active: 3500, passive: 7500 }, dailyNew: 15, sessionSize: 25, direction: 'mix', showBoth: false, autoSpeak: false, rate: 0.95, order: 1,
     },
 ];
 export async function seedLangCoursesIfEmpty() {
@@ -31,6 +31,12 @@ export async function seedLangCoursesIfEmpty() {
     const toAdd = missing.filter((b) => !removed.includes(b.id)).map((b) => ({ ...b, createdAt: Date.now() }));
     if (toAdd.length)
         await bulkPut('langCourses', toAdd);
+    // v1.5.1: cards are quiet by default — switch off auto-speak once for courses created before.
+    if (!(await get('settings', 'lang:quietCards'))) {
+        const all = await getAll('langCourses');
+        await bulkPut('langCourses', all.map((c) => ({ ...c, autoSpeak: false })));
+        await put('settings', { key: 'lang:quietCards', value: true });
+    }
 }
 export function restorableBuiltins(courses) {
     return BUILTIN.filter((b) => !courses.some((c) => c.id === b.id));
@@ -47,7 +53,7 @@ export function newCourse(partial) {
     return {
         id: uid('lc'), title: 'New language',
         target: { code: '', name: '', tts: '' }, source: { code: 'en', name: 'English', tts: 'en-US' },
-        goals: { active: 2000, passive: 5000 }, dailyNew: 10, sessionSize: 20, direction: 'mix', showBoth: false, autoSpeak: true, rate: 0.95,
+        goals: { active: 2000, passive: 5000 }, dailyNew: 10, sessionSize: 20, direction: 'mix', showBoth: false, autoSpeak: false, rate: 0.95,
         order: 99, createdAt: Date.now(), ...partial,
     };
 }
