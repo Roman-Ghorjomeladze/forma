@@ -935,7 +935,10 @@ html.wide-app .sheet { max-width: 560px; border-radius: 24px 24px 0 0; }
 
 /* swipe card */
 .cards-screen .progress { margin-bottom: 14px; }
-.swipe-wrap { position: relative; margin: 6px 0 16px; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.swipe-wrap { position: relative; margin: 6px 0 16px; touch-action: pan-y; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.swipe-card { touch-action: none; }
+.cards-screen { overflow-x: hidden; overscroll-behavior-x: none; }
+html:has(.cards-screen), html:has(.cards-screen) body { overflow-x: hidden; overscroll-behavior-x: none; }
 .swipe-hint { position: absolute; top: 14px; z-index: 2; font-weight: 800; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 10px; border-radius: 10px; pointer-events: none; transition: opacity 0.1s; }
 .swipe-hint.left { left: 14px; color: var(--danger); background: var(--danger-soft); }
 .swipe-hint.right { right: 14px; color: var(--meals-strong); background: var(--meals-soft); }

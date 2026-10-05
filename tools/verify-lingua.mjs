@@ -69,6 +69,34 @@ await page.mouse.move(box.x + box.width / 2 + 180, box.y + 100, { steps: 4 });
 await page.mouse.up();
 await page.waitForTimeout(500);
 check(await page.locator('.flip-face.front .face-word').first().textContent() !== 'я', 'drag right advances to the next card');
+// real touch swipe (what iOS sends): the card must move, the page must not
+{
+  const cdp = await ctx.newCDPSession(page);
+  const before = await page.locator('.flip-face.front .face-word').first().textContent();
+  const b2 = await page.locator('.swipe-card').boundingBox();
+  const y = b2.y + 150; let x = b2.x + 80;
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
+  let maxShift = 0;
+  for (let k = 0; k < 10; k++) {
+    x += 20;
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x, y: y + 2 }] });
+    await page.waitForTimeout(16);
+    if (k === 5) maxShift = await page.evaluate(() => { const m = getComputedStyle(document.querySelector('.swipe-card')).transform; return m === 'none' ? 0 : new DOMMatrix(m).m41; });
+  }
+  const scrollX = await page.evaluate(() => window.scrollX);
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await page.waitForTimeout(500);
+  const after = await page.locator('.flip-face.front .face-word').first().textContent();
+  check(maxShift > 60 && scrollX === 0, `touch drag moves the card (${Math.round(maxShift)}px), not the page (scrollX ${scrollX})`);
+  check(after !== before, 'touch swipe right answers and shows the next card');
+  // a tap (touch without movement) flips
+  const b3 = await page.locator('.swipe-card').boundingBox();
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: b3.x + 60, y: b3.y + 300 }] });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await page.waitForTimeout(450);
+  check(await page.locator('.flip.is-flipped').count() === 1, 'touch tap flips the card');
+  await page.locator('.flip-btn').click(); await page.waitForTimeout(400);
+}
 // tap to flip
 await page.locator('.flip-btn').click();
 await page.waitForTimeout(450);

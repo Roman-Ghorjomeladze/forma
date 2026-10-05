@@ -62,30 +62,68 @@ export function SwipeCard({ front, back, showBoth, onAnswer, flipped, onFlip, hi
   onAnswer: (ok: boolean) => void; hintLeft: string; hintRight: string; disabled?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const start = useRef<{ x: number; y: number; id: number } | null>(null);
+  const [dragging, setDragging] = useState(false);
   const [dx, setDx] = useState(0);
   const [leaving, setLeaving] = useState<0 | 1 | -1>(0);
+  // latest props for the native listeners below
+  const live = useRef({ disabled, showBoth, onFlip, onAnswer });
+  live.current = { disabled, showBoth, onFlip, onAnswer };
 
-  const finish = (ok: boolean) => {
-    setLeaving(ok ? 1 : -1);
-    window.setTimeout(() => { setLeaving(0); setDx(0); onAnswer(ok); }, 180);
-  };
-
-  const onDown = (e: PointerEvent) => {
-    if (disabled) return;
-    start.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
-    (ref.current as HTMLDivElement | null)?.setPointerCapture?.(e.pointerId);
-  };
-  const onMove = (e: PointerEvent) => { if (start.current) setDx(e.clientX - start.current.x); };
-  const onUp = (e: PointerEvent) => {
-    const s = start.current;
-    start.current = null;
-    if (!s) return;
-    const d = e.clientX - s.x;
-    const dy = Math.abs(e.clientY - s.y);
-    if (Math.abs(d) > 90) finish(d > 0);
-    else { setDx(0); if (Math.abs(d) < 8 && dy < 8 && !showBoth) onFlip(); }
-  };
+  // Native touch + mouse handling. iOS hands a horizontal drag to the page (it scrolls/rubber-bands
+  // sideways and cancels pointer events), so we listen to touchmove ourselves with passive:false and
+  // preventDefault as soon as the gesture is clearly horizontal.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let st: { x: number; y: number; axis: '' | 'x' | 'y'; onButton: boolean } | null = null;
+    let cur = 0;
+    const begin = (x: number, y: number, target: EventTarget | null) => {
+      if (live.current.disabled) return;
+      st = { x, y, axis: '', onButton: !!(target as HTMLElement | null)?.closest?.('button') };
+      cur = 0;
+    };
+    const move = (x: number, y: number, ev?: Event) => {
+      if (!st) return;
+      const ddx = x - st.x; const ddy = y - st.y;
+      if (!st.axis && (Math.abs(ddx) > 6 || Math.abs(ddy) > 6)) { st.axis = Math.abs(ddx) > Math.abs(ddy) ? 'x' : 'y'; if (st.axis === 'x') setDragging(true); }
+      if (st.axis === 'x') { if (ev?.cancelable) ev.preventDefault(); cur = ddx; setDx(ddx); }
+    };
+    const end = () => {
+      if (!st) return;
+      const s = st; st = null;
+      setDragging(false);
+      if (s.axis === 'x' && Math.abs(cur) > 80) {
+        const ok = cur > 0;
+        setLeaving(ok ? 1 : -1);
+        window.setTimeout(() => { setLeaving(0); setDx(0); live.current.onAnswer(ok); }, 180);
+        return;
+      }
+      setDx(0);
+      if (!s.axis && !s.onButton && !live.current.showBoth) live.current.onFlip();
+    };
+    const ts = (e: TouchEvent) => { const t = e.touches[0]; begin(t.clientX, t.clientY, e.target); };
+    const tm = (e: TouchEvent) => { const t = e.touches[0]; move(t.clientX, t.clientY, e); };
+    const te = () => end();
+    const tc = () => { st = null; setDragging(false); setDx(0); };
+    let touched = 0;
+    const md = (e: MouseEvent) => { if (Date.now() - touched < 800) return; begin(e.clientX, e.clientY, e.target); };
+    const mm = (e: MouseEvent) => move(e.clientX, e.clientY);
+    const mu = () => { if (Date.now() - touched < 800) return; end(); };
+    const mark = () => { touched = Date.now(); };
+    el.addEventListener('touchstart', ts, { passive: true });
+    el.addEventListener('touchstart', mark, { passive: true });
+    el.addEventListener('touchmove', tm, { passive: false });
+    el.addEventListener('touchend', te);
+    el.addEventListener('touchcancel', tc);
+    el.addEventListener('mousedown', md);
+    window.addEventListener('mousemove', mm);
+    window.addEventListener('mouseup', mu);
+    return () => {
+      el.removeEventListener('touchstart', ts); el.removeEventListener('touchstart', mark);
+      el.removeEventListener('touchmove', tm); el.removeEventListener('touchend', te); el.removeEventListener('touchcancel', tc);
+      el.removeEventListener('mousedown', md); window.removeEventListener('mousemove', mm); window.removeEventListener('mouseup', mu);
+    };
+  }, []);
 
   const x = leaving ? leaving * 600 : dx;
   const tint = Math.max(-1, Math.min(1, dx / 120));
@@ -93,9 +131,8 @@ export function SwipeCard({ front, back, showBoth, onAnswer, flipped, onFlip, hi
     <div className="swipe-wrap">
       <div className="swipe-hint left" style={{ opacity: tint < 0 ? -tint : 0 }}>{hintLeft}</div>
       <div className="swipe-hint right" style={{ opacity: tint > 0 ? tint : 0 }}>{hintRight}</div>
-      <div ref={ref} className={`swipe-card ${start.current ? 'dragging' : ''}`}
-        style={{ transform: `translateX(${x}px) rotate(${x / 22}deg)`, transition: start.current ? 'none' : 'transform 0.18s ease' }}
-        onPointerDown={onDown as never} onPointerMove={onMove as never} onPointerUp={onUp as never} onPointerCancel={() => { start.current = null; setDx(0); }}>
+      <div ref={ref} className={`swipe-card ${dragging ? 'dragging' : ''}`}
+        style={{ transform: `translateX(${x}px) rotate(${x / 22}deg)`, transition: dragging ? 'none' : 'transform 0.18s ease' }}>
         <div className={`flip ${flipped || showBoth ? 'is-flipped' : ''} ${showBoth ? 'both' : ''}`}
           style={{ boxShadow: tint ? `0 0 0 3px ${tint > 0 ? 'var(--meals)' : 'var(--danger)'}` : undefined }}>
           {showBoth ? (
